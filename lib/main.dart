@@ -92,7 +92,7 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text(
-              '천용기_고범진_손민수_100억벌자_화이팅~',
+              '천용기_고범진_손민수_100억벌자_화이팅~!!!',
             ),
             Text(
               '$_counter',
