@@ -49,9 +49,20 @@ flutter:
     - lib/assets/images/
 
   fonts:
-    - family: bmjua
+    - family: Noto Sans KR
       fonts:
-      - asset: lib/fonts/BMJUA_ttf.ttf
+      - asset: lib/fonts/NotoSansKR-Thin.otf
+        weight: 100
+      - asset: lib/fonts/NotoSansKR-Light.otf
+        weight: 200
+      - asset: lib/fonts/NotoSansKR-Regular.otf
+        weight: 300
+      - asset: lib/fonts/NotoSansKR-Medium.otf
+        weight: 500
+      - asset: lib/fonts/NotoSansKR-Bold.otf
+        weight: 700
+      - asset: lib/fonts/NotoSansKR-Black.otf
+        weight: 900
 
   # To add assets to your application, add an assets section, like this:
   # assets:

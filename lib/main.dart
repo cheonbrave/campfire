@@ -51,7 +51,7 @@ class MyApp extends StatelessWidget {
             )
         ),
         accentColor: Color(pointColor),
-        fontFamily: 'bmjua'),
+        fontFamily: 'Noto Sans KR'),
 
       /* 홈 페이지 설정 */
       home: RootPage(),
