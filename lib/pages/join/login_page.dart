@@ -1,3 +1,4 @@
+import 'package:campfire/pages/join/input_profile_page.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
@@ -34,10 +35,6 @@ class _LoginPageState extends State<LoginPage> {
       // will pop scope는 화면이 pop가 발생할때 즉 화면이 distory될때를 감안한 이벤트를 줄수있으며 android의 back버튼 클릭이벤트라고 생각하면된다
       onWillPop: _willPopCallback,
       child: Scaffold(
-        appBar: AppBar(
-          title: Text("CAMPFIRE"),
-          elevation: 0.0,
-        ),
         body: _makeBody(),
         backgroundColor: Colors.white,
       ),
@@ -51,15 +48,47 @@ class _LoginPageState extends State<LoginPage> {
         child: SafeArea( // 아이폰 노치 디자인 대응
 
           /* UI 작성 - START */
-          child: Column(
-            children: <Widget>[
-              Text("여기에 UI 만들면됨, 폰트는 어울리는걸 찾아서 적용해보자\n일단 리멤버 만들때 사용던 배달의민족 폰트 적용해봄\n"),
-
-              Text("lib/pages/sample 아래에 샘플 페이지 만들어뒀으니..\n대부분 페이지는 이 포맷을 가지고 개발하면 됨\n")
-            ],
+          child: Container(
+            child: Align(
+              alignment: Alignment.centerRight,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.all(paddingItem),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(paddingItem),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(paddingItem),
+                  ),
+                  InkWell(
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                        children: <Widget>[
+                          Text('GOOGLE', style: TextStyle(inherit: true, fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+                          Text(' ', style: TextStyle(inherit: true, fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+                          Text('LOGIN', style: TextStyle(inherit: true, fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
+                        ],
+                    ),
+                    //onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => InputProfilePage())),
+                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => InputProfilePage())),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(paddingItem),
+                  ),
+                  Text('Your first', style: TextStyle(inherit: true, fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
+                  Text('Blind date', style: TextStyle(inherit: true, fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
+                  Padding(
+                    padding: EdgeInsets.all(paddingItem),
+                  ),
+                  Text('CAMPFIRE', style: TextStyle(inherit: true, fontSize: txtSizeMainTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
+                ],
+              ),
+            ),
           ),
-
-
           /* UI 작성 - END */
 
         ),
