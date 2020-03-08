@@ -46,7 +46,6 @@ class _LoginPageState extends State<LoginPage> {
       body: Padding(
         padding: EdgeInsets.all(paddingAll),
         child: SafeArea( // 아이폰 노치 디자인 대응
-
           /* UI 작성 - START */
           child: Container(
             child: Align(
