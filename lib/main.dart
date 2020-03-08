@@ -8,8 +8,11 @@ void main() => runApp(MyApp());
 /*
 main.dart
 각종 기본셋팅
-  - 화면전환
+  - 페이지 라우팅
   - 언어
+  한국어, 일본어 개별관리는 개발 초반부터 지켜나가는게 좋겠다
+  언어 분리구현방법은 아래 주소를 참고하면 될듯함
+  https://lovelyhongjja.tistory.com/7
   - 테마 (디자인)
   - 홈 페이지 설정
 */
@@ -21,7 +24,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'CAMPFIRE',
 
-      /* 화면전환 */
+      /* 페이지 라우팅 */
       initialRoute: '/',
       routes: {
         // 여기에 '/' 에 해당하는 경로는 들어올 수 없다
@@ -46,15 +49,19 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         primaryTextTheme: TextTheme(
             title: TextStyle(
+              inherit: true,
               color: Color(pointColor),
               fontSize: txtSizeMainTitle,
             )
         ),
         accentColor: Color(pointColor),
-        fontFamily: 'Noto Sans KR'),
+        fontFamily: 'Noto Sans KR', // 폰트
+        // Android, IOS 모두 쿠퍼티노디자인(아이폰)의 화면전환 에니메이션을 따르도록 적용
+        pageTransitionsTheme: PageTransitionsTheme(builders: {TargetPlatform.android: CupertinoPageTransitionsBuilder(),}),
+      ),
 
       /* 홈 페이지 설정 */
-      home: RootPage(),
+      home: RootPage(), // root page에서 로그인 상태 체크
 
     );
   }
