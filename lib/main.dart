@@ -1,4 +1,5 @@
 import 'package:campfire/pages/common/root_page.dart';
+import 'package:campfire/util/language/TranslationsDelegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:campfire/consts/common_values.dart';
@@ -9,10 +10,7 @@ void main() => runApp(MyApp());
 main.dart
 각종 기본셋팅
   - 페이지 라우팅
-  - 언어
-  한국어, 일본어 개별관리는 개발 초반부터 지켜나가는게 좋겠다
-  언어 분리구현방법은 아래 주소를 참고하면 될듯함
-  https://lovelyhongjja.tistory.com/7
+  - 언어 : 한국어, 일본어 개별관리
   - 테마 (디자인)
   - 홈 페이지 설정
 */
@@ -33,14 +31,34 @@ class MyApp extends StatelessWidget {
       },
 
       /* 언어 */
+      supportedLocales: [
+        const Locale('ko', 'KR'), // include country code too
+        const Locale('en', 'US'), // include country code too
+        const Locale('ja', 'JP'), // include country code too
+      ],
       localizationsDelegates: [
+        const TranslationsDelegate(),
         GlobalMaterialLocalizations.delegate,
         GlobalWidgetsLocalizations.delegate, // if it's a RTL language
       ],
-      supportedLocales: [
-        const Locale('ko', 'KR'), // include country code too
-        //const Locale('en', 'US'), // include country code too
-      ],
+      localeResolutionCallback: (Locale locale, Iterable<Locale> supportedLocales) {
+        if (locale == null) {
+          debugPrint("*language locale is null!!!");
+          return supportedLocales.first;
+        }
+
+        for (Locale supportedLocale in supportedLocales) {
+          if (supportedLocale.languageCode == locale.languageCode ||
+              supportedLocale.countryCode == locale.countryCode) {
+            debugPrint("*language ok $supportedLocale");
+            return supportedLocale;
+          }
+        }
+
+        debugPrint("*language to fallback ${supportedLocales.first}");
+        return supportedLocales.first;
+      },
+
 
       /* 테마 */
       theme: ThemeData(
