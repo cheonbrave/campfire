@@ -1,4 +1,5 @@
 import 'package:campfire/pages/join/input_profile_page.dart';
+import 'package:campfire/util/language/Translations.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
@@ -14,14 +15,15 @@ class _LoginPageState extends State<LoginPage> {
     return showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text("종료 하시겠습니까?"),
+          //Translations.of(context).trans('main_center_text')
+          title: Text(Translations.of(context).trans('question_exit')),
           actions: <Widget>[
             FlatButton(
-              child: Text("네"),
+              child: Text(Translations.of(context).trans('response_yes')),
               onPressed: () => Navigator.pop(context, true),
             ),
             FlatButton(
-              child: Text("아니요"),
+              child: Text(Translations.of(context).trans('response_no')),
               onPressed: () => Navigator.pop(context, false),
             ),
           ],
