@@ -10,6 +10,7 @@ const double txtSizeExplain = 12;
 
 // 패딩
 const double paddingAll = 25.0;
+const double paddingAllx2 = 50.0;
 const double paddingItem = 20.0;
 
 // 포인트컬러

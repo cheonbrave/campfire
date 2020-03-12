@@ -7,6 +7,14 @@ class InputProfilePage extends StatefulWidget {
 }
 
 class _InputProfilePageState extends State<InputProfilePage> {
+
+  DateTime today = DateTime.now();
+  DateTime year_20age = null;
+  String dropdownValue =  '태어난 해';
+  // dropdownValue는 DropdownButton에서 현재값을 가리키는 변수이며
+  // 선택할때마다 값을 갱신하기위해 setState를 사용한다
+  // setState에 의해 변경된 값이 화면에 반영되기 위해선 dropdownValue 변수는 PageState 하위에 선언되어있어야 한다
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,12 +32,23 @@ class _InputProfilePageState extends State<InputProfilePage> {
     // 화면 전체높이에 20%
     var height20 = MediaQuery.of(context).size.height * 0.20;
     var mini_circle = height20/5.0;
-    debugPrint("Circle >>> height20 : ${height20}, mini_circle : ${mini_circle}");
+
+    DateTime today = DateTime.now();
+    year_20age = DateTime(today.year - 19); // 빠른생일따윈 이제 없으니 19살 무시, 20살부터만 사용하는걸로!
+    int num_year = year_20age.year;
+    List<String> year_list = new List();
+    year_list.add('태어난 해');
+    for(int i=0; i < 31; i++){
+      year_list.add(num_year.toString());
+      num_year--;
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: Padding(
-        padding: EdgeInsets.all(paddingAll),
+        padding: EdgeInsets.all(paddingAllx2),
+        // 패딩을 주고.. 그 안에 스크롤뷰를 넣으니까 패딩 안에서 스크롤이 발생함 이건 좀 바꿀필요가있겠음
+        // 스크롤뷰가 있고 그 안에서 패딩을 주는게 맞을듯
         child: SafeArea( // 아이폰 노치 디자인 대응
 
           /* UI 작성 - START */
@@ -37,7 +56,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Text('기본 정보를 등록해주세요', style: TextStyle(inherit: true, fontSize: txtSizeBigStr, fontWeight: FontWeight.w500),),
+                Text('기본 정보를 등록해주세요', style: TextStyle(inherit: true, fontSize: txtSizeBigStr, fontWeight: FontWeight.w500, color: Colors.black87),),
                 Padding(
                   padding: EdgeInsets.all(paddingItem),
                 ),
@@ -103,8 +122,51 @@ class _InputProfilePageState extends State<InputProfilePage> {
                   textAlignVertical: TextAlignVertical.center,
                   textAlign: TextAlign.center,
                   style : TextStyle(inherit: true, fontSize: txtSizeBigStr),
-                  decoration: InputDecoration(hintText: '닉네임을 입력하세요', hintStyle: TextStyle(inherit: true, fontSize: txtSizeBigStr), focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor)))),
+                  decoration: InputDecoration(
+                    hintText: '닉네임을 입력하세요',
+                    hintStyle: TextStyle(inherit: true, fontSize: txtSizeBigStr, color: Colors.black54),
+                    focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
+                  ),
                 ),
+                Padding(
+                  padding: EdgeInsets.all(paddingItem),
+                ),
+                DropdownButton<String>(
+                  isExpanded: true,
+                  value: dropdownValue,
+                  icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
+                  iconSize: txtSizeTopTitle,
+                  elevation: 16, // 1,2,3,4,6,8,9,12,16,24
+                  style: TextStyle(
+                      inherit: true,
+                      fontSize: txtSizeBigStr,
+                      color: Colors.black54
+                  ),
+                  underline: Container(
+                      height: 1,
+                      color: Colors.black38
+                  ),
+                  onChanged: (String newValue) {
+                    setState(() {
+                      dropdownValue = newValue;
+                    });
+                  },
+                  items: year_list.map<DropdownMenuItem<String>>((String value) {
+                    return DropdownMenuItem<String>(
+                      value: value,
+                      child: Center(
+                        child: Text(value, style: TextStyle(
+                                                      inherit: true,
+                                                      fontSize: txtSizeBigStr,
+                                                      color: Colors.black54
+                                                  ),
+                        )
+                      ),
+                    );
+                  })
+                      .toList(),
+                ),
+
               ],
             ),
           )
