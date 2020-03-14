@@ -35,7 +35,7 @@ class _SamplePageState extends State<SamplePage> {
       onWillPop: _willPopCallback,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('CAMPFIRE', style: TextStyle(inherit: true, fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+          title: Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
           elevation: 0.0,
         ),
         body: _makeBody(),
@@ -46,15 +46,17 @@ class _SamplePageState extends State<SamplePage> {
 
   Widget _makeBody() {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(paddingAll),
-        child: SafeArea( // 아이폰 노치 디자인 대응
+      backgroundColor: Colors.white,
+      body: SafeArea( // 아이폰 노치 디자인 대응
+        child: Padding(
+          padding: EdgeInsets.all(paddingAll),
+          child: Container(
 
-          /* UI 작성 - START */
-          child: Text("여기에 UI 만들면됨"),
+            /* UI 작성 - START */
+            child: Text("여기에 UI 만들면됨"),
+            /* UI 작성 - END */
 
-          /* UI 작성 - END */
-
+          ),
         ),
       ),
     );

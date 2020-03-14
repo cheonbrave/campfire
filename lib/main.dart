@@ -46,7 +46,6 @@ class MyApp extends StatelessWidget {
           debugPrint("*language locale is null!!!");
           return supportedLocales.first;
         }
-
         for (Locale supportedLocale in supportedLocales) {
           if (supportedLocale.languageCode == locale.languageCode ||
               supportedLocale.countryCode == locale.countryCode) {
@@ -54,7 +53,6 @@ class MyApp extends StatelessWidget {
             return supportedLocale;
           }
         }
-
         debugPrint("*language to fallback ${supportedLocales.first}");
         return supportedLocales.first;
       },
@@ -67,7 +65,6 @@ class MyApp extends StatelessWidget {
         backgroundColor: Colors.white,
         primaryTextTheme: TextTheme(
             title: TextStyle(
-              inherit: true,
               color: Color(pointColor),
               fontSize: txtSizeMainTitle,
             )

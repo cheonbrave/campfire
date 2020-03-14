@@ -45,11 +45,11 @@ class _LoginPageState extends State<LoginPage> {
 
   Widget _makeBody() {
     return Scaffold(
-      body: Padding(
-        padding: EdgeInsets.all(paddingAll),
-        child: SafeArea( // 아이폰 노치 디자인 대응
+      body: SafeArea( // 아이폰 노치 디자인 대응
           /* UI 작성 - START */
-          child: Container(
+        child:Padding(
+          padding: EdgeInsets.all(paddingAll),
+          child:Container(
             child: Align(
               alignment: Alignment.centerRight,
               child: Column(
@@ -69,9 +69,9 @@ class _LoginPageState extends State<LoginPage> {
                     child:Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
-                          Text('GOOGLE', style: TextStyle(inherit: true, fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
-                          Text(' ', style: TextStyle(inherit: true, fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
-                          Text('LOGIN', style: TextStyle(inherit: true, fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
+                          Text('GOOGLE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+                          Text(' ', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+                          Text('LOGIN', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
                         ],
                     ),
                     //onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => InputProfilePage())),
@@ -80,20 +80,19 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.all(paddingItem),
                   ),
-                  Text('Your first', style: TextStyle(inherit: true, fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
-                  Text('Blind date', style: TextStyle(inherit: true, fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
+                  Text('Your first', style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
+                  Text('Blind date', style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
                   Padding(
                     padding: EdgeInsets.all(paddingItem),
                   ),
-                  Text('CAMPFIRE', style: TextStyle(inherit: true, fontSize: txtSizeMainTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
+                  Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeMainTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
                 ],
               ),
             ),
           ),
           /* UI 작성 - END */
-
-        ),
-      ),
+        )
+      )
     );
   }
 }
