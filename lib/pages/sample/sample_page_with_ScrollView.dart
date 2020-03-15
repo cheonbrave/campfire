@@ -30,12 +30,13 @@ class _SamplePage3State extends State<SamplePage3> {
         child: SingleChildScrollView(
           child:Padding(
             padding: EdgeInsets.all(paddingAll),
-            child: Container(
-              /* UI 작성 - START */
-              child: Text("여기에 UI 만들면됨"),
+            /* UI 작성 - START */
 
-              /* UI 작성 - END */
+            child: Container(
+              child: Text("여기에 UI 만들면됨"),
             ),
+
+            /* UI 작성 - END */
           ),
         ),
       ),

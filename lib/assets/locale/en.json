@@ -1,5 +1,24 @@
 {
-  "question_exit": "Are you sure you want to exit?",
-  "response_yes": "Yes",
-  "response_no": "No"
+  "question_exit": "Do you want to exit?",
+  "response_yes": "YES",
+  "response_no": "NO",
+  "next": "Next",
+
+  "app_title": "CAMPFIRE",
+  "intro_1": "Your first",
+  "intro_2": "Blind date",
+
+  "birth_year": "birth year",
+  "man": "MAN",
+  "woman": "WOMAN",
+
+  "input_default_info": "Please register basic information",
+  "input_nick": "nickname",
+
+  "question_code": "Did you get an invitation code from your friend?",
+  "input_code": "invitation code",
+  "code_none": "No code",
+  "code_check": "Confirm invitation code",
+
+  "json_end": "json_end"
 }

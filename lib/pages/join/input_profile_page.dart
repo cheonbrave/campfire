@@ -1,5 +1,10 @@
+import 'package:campfire/pages/join/input_code_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
+import 'package:campfire/util/language/Translations.dart';
+
+enum Genders { man, woman }
 
 class InputProfilePage extends StatefulWidget {
   @override
@@ -8,18 +13,18 @@ class InputProfilePage extends StatefulWidget {
 
 class _InputProfilePageState extends State<InputProfilePage> {
 
+  Genders _gender = null;
+
   DateTime today = DateTime.now();
   DateTime year_20age = null;
-  String dropdownValue =  '태어난 해';
-  // dropdownValue는 DropdownButton에서 현재값을 가리키는 변수이며
-  // 선택할때마다 값을 갱신하기위해 setState를 사용한다
-  // setState에 의해 변경된 값이 화면에 반영되기 위해선 dropdownValue 변수는 PageState 하위에 선언되어있어야 한다
+  String dropdownValue =  null;
+  // dropdownValue - null 로 설정해두면 hint값으로 표시됨
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w500),),
+        title: Text(Translations.of(context).trans('app_title'), style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w500),),
         elevation: 0.0,
       ),
       body: _makeBody(),
@@ -37,7 +42,6 @@ class _InputProfilePageState extends State<InputProfilePage> {
     year_20age = DateTime(today.year - 19); // 빠른생일따윈 이제 없으니 19살 무시, 20살부터만 사용하는걸로!
     int num_year = year_20age.year;
     List<String> year_list = new List();
-    year_list.add('태어난 해');
     for(int i=0; i < 31; i++){
       year_list.add(num_year.toString());
       num_year--;
@@ -46,16 +50,16 @@ class _InputProfilePageState extends State<InputProfilePage> {
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea( // 아이폰 노치 디자인 대응
-        /* UI 작성 - START */
           child: SingleChildScrollView(
               child: Padding(
                     padding: EdgeInsets.all(paddingAllx2),
                 // 패딩을 주고.. 그 안에 스크롤뷰를 넣으니까 패딩 안에서 스크롤이 발생함 이건 좀 바꿀필요가있겠음
                 // 스크롤뷰가 있고 그 안에서 패딩을 주는게 맞을듯
                 child:Column(
+                  /* UI 작성 - START */
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text('기본 정보를 등록해주세요', style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w500, color: Colors.black87),),
+                  Text(Translations.of(context).trans('input_default_info'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w500, color: Colors.black87),),
                   Padding(
                     padding: EdgeInsets.all(paddingItem),
                   ),
@@ -122,8 +126,8 @@ class _InputProfilePageState extends State<InputProfilePage> {
                     textAlign: TextAlign.center,
                     style : TextStyle(fontSize: txtSizeBigStr),
                     decoration: InputDecoration(
-                      hintText: '닉네임을 입력하세요',
-                      hintStyle: TextStyle(fontSize: txtSizeBigStr, color: Colors.black87),
+                      hintText: Translations.of(context).trans('input_nick'),
+                      hintStyle: TextStyle(fontSize: txtSizeBigStr, color: Colors.black54),
                       focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
                       enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
                     ),
@@ -132,6 +136,12 @@ class _InputProfilePageState extends State<InputProfilePage> {
                     padding: EdgeInsets.all(paddingItem),
                   ),
                   DropdownButton<String>(
+                    hint: Center(
+                        child: Text(
+                          Translations.of(context).trans("birth_year"),
+                          style: TextStyle(fontSize: txtSizeBigStr),
+                        )
+                    ),
                     isExpanded: true,
                     value: dropdownValue,
                     icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
@@ -148,6 +158,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
                     onChanged: (String newValue) {
                       setState(() {
                         dropdownValue = newValue;
+                        debugPrint("dropdownValue : ${dropdownValue}");
                       });
                     },
                     items: year_list.map<DropdownMenuItem<String>>((String value) {
@@ -166,21 +177,74 @@ class _InputProfilePageState extends State<InputProfilePage> {
                   Padding(
                     padding: EdgeInsets.all(paddingItem),
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Radio(
+                                    value: Genders.man,
+                                    groupValue: _gender,
+                                    onChanged: (Genders value) {
+                                      setState(() { _gender = value; });
+                                    },
+                                  ),
+                                  Text(Translations.of(context).trans('man'),style: TextStyle(fontSize: txtSizeBigStr)),
+                                ],
+                              )
+                          )
+                      ),
+                      Expanded(
+                          flex: 1,
+                          child: Container(
+                              alignment: Alignment.center,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Radio(
+                                    value: Genders.woman,
+                                    groupValue: _gender,
+                                    onChanged: (Genders value) {
+                                      setState(() { _gender = value; });
+                                    },
+                                  ),
+                                  Text(Translations.of(context).trans('woman'),style: TextStyle(fontSize: txtSizeBigStr)),
+                                ],
+                              )
+                          )
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(paddingItem),
+                  ),
                   SizedBox(
                     width: double.infinity,
                     child: RaisedButton(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.0),
+                      ),
                       padding: const EdgeInsets.all(15.0),
-                      textColor: Color(pointColor),
-                      color: Colors.white,
-                      splashColor: Color(pointColor2),
-                      child: Text('WOMAN', style: TextStyle(fontSize: txtSizeBigStr)),
-                      onPressed: () => Navigator.pop(context),
+                      //textColor: Color(pointColor),
+                      textColor: Colors.white,
+                      //color: Colors.white,
+                      color: Colors.black54,
+                      //splashColor: Color(pointColor2),
+                      splashColor: Colors.black54,
+                      child: Text(Translations.of(context).trans('next'), style: TextStyle(fontSize: txtSizeBigStr)),
+                      //onPressed: () => Navigator.pop(context),
+                      onPressed: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputCodePage())),
                     ),
                   ),
                 ],
+                  /* UI 작성 - END */
               ),
             )
-            /* UI 작성 - END */
           ),
       )
     );
