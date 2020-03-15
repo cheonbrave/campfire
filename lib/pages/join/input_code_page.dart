@@ -53,7 +53,7 @@ class _InputCodePageState extends State<InputCodePage> {
                     ],
                     decoration: InputDecoration(
                       hintText: Translations.of(context).trans('input_code'),
-                      hintStyle: TextStyle(fontSize: txtSizeBigStr, color: Colors.black87),
+                      hintStyle: TextStyle(fontSize: txtSizeBigStr, color: Colors.black54),
                       focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
                       enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
                     ),
