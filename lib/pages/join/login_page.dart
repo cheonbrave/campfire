@@ -1,5 +1,6 @@
 import 'package:campfire/pages/join/input_profile_page.dart';
 import 'package:campfire/util/language/Translations.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
@@ -74,18 +75,17 @@ class _LoginPageState extends State<LoginPage> {
                           Text('LOGIN', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
                         ],
                     ),
-                    //onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => InputProfilePage())),
-                    onTap: () => Navigator.push(context, MaterialPageRoute(builder: (context) => InputProfilePage())),
+                    onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
                   ),
                   Padding(
                     padding: EdgeInsets.all(paddingItem),
                   ),
-                  Text('Your first', style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
-                  Text('Blind date', style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
+                  Text(Translations.of(context).trans('intro_1'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
+                  Text(Translations.of(context).trans('intro_2'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
                   Padding(
                     padding: EdgeInsets.all(paddingItem),
                   ),
-                  Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeMainTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
+                  Text(Translations.of(context).trans('app_title'), style: TextStyle(fontSize: txtSizeMainTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
                 ],
               ),
             ),

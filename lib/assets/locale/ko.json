@@ -1,5 +1,25 @@
 {
   "question_exit": "종료하시겠습니까?",
   "response_yes": "네",
-  "response_no": "아니요"
+  "response_no": "아니요",
+  "next": "다음",
+
+  "app_title": "CAMPFIRE",
+  "intro_1": "Your first",
+  "intro_2": "Blind date",
+
+  "birth_year": "birth year",
+  "man": "MAN",
+  "woman": "WOMAN",
+
+  "input_default_info": "기본 정보를 등록해주세요",
+  "input_nick": "nickname",
+
+  "question_code": "친구로부터 초대코드를 받으셨나요?",
+  "input_code": "invitation code",
+  "code_none": "코드 없음",
+  "code_check": "초대코드 확인",
+
+
+  "json_end": "json_end"
 }

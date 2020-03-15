@@ -50,13 +50,13 @@ class _SamplePageState extends State<SamplePage> {
       body: SafeArea( // 아이폰 노치 디자인 대응
         child: Padding(
           padding: EdgeInsets.all(paddingAll),
+          /* UI 작성 - START */
+
           child: Container(
-
-            /* UI 작성 - START */
             child: Text("여기에 UI 만들면됨"),
-            /* UI 작성 - END */
-
           ),
+
+          /* UI 작성 - END */
         ),
       ),
     );

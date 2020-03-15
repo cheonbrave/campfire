@@ -1,5 +1,24 @@
 {
   "question_exit": "終了しますか?",
   "response_yes": "はい",
-  "response_no": "いいえ"
+  "response_no": "いいえ",
+  "next": "つぎ",
+
+  "app_title": "CAMPFIRE",
+  "intro_1": "Your first",
+  "intro_2": "Blind date",
+
+  "birth_year": "birth year",
+  "man": "男性",
+  "woman": "女性",
+
+  "input_default_info": "基本情報を登録してください。",
+  "input_nick": "nickname",
+
+  "question_code": "友達から招待コードをもらいましたか。?",
+  "input_code": "invitation code",
+  "code_none": "コードなし",
+  "code_check": "招待コード確認",
+
+  "json_end": "json_end"
 }
