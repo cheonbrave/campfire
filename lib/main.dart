@@ -1,4 +1,6 @@
 import 'package:campfire/pages/common/root_page.dart';
+import 'package:campfire/pages/tap_pages/campfire_page.dart';
+import 'package:campfire/pages/tap_pages/tap_page.dart';
 import 'package:campfire/util/language/TranslationsDelegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -26,8 +28,9 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // 여기에 '/' 에 해당하는 경로는 들어올 수 없다
-        //'/root_Page': (BuildContext context) => RootPage(),
-        //'/tap_page': (BuildContext context) => TapPage(),
+        '/root_Page': (context) => RootPage(),
+        '/tap_page': (context) => TapPage(),
+        '/campfire_page': (context) => CampfirePage(),
       },
 
       /* 언어 */
