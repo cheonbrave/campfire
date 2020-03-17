@@ -1,3 +1,4 @@
+import 'package:campfire/pages/tap_pages/tap_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
@@ -66,7 +67,7 @@ class _InputCodePageState extends State<InputCodePage> {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: RaisedButton(
+                    child: FlatButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -74,12 +75,11 @@ class _InputCodePageState extends State<InputCodePage> {
                       //textColor: Color(pointColor),
                       textColor: Colors.white,
                       //color: Colors.white,
-                      color: Colors.black54,
+                      color: Colors.black87,
                       //splashColor: Color(pointColor2),
-                      splashColor: Colors.black54,
+                      splashColor: Colors.black87,
                       child: Text(Translations.of(context).trans('code_none'), style: TextStyle(fontSize: txtSizeBigStr)),
-                      //onPressed: () => Navigator.pop(context),
-                      onPressed: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputCodePage())),
+                      onPressed: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => TapPage()), ModalRoute.withName('/campfire_page')),
                     ),
                   ),
                   Padding(
@@ -90,7 +90,7 @@ class _InputCodePageState extends State<InputCodePage> {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: RaisedButton(
+                    child: FlatButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -98,9 +98,9 @@ class _InputCodePageState extends State<InputCodePage> {
                       //textColor: Color(pointColor),
                       textColor: Colors.white,
                       //color: Colors.white,
-                      color: Colors.black54,
+                      color: Colors.black87,
                       //splashColor: Color(pointColor2),
-                      splashColor: Colors.black54,
+                      splashColor: Colors.black87,
                       child: Text(Translations.of(context).trans('code_check'), style: TextStyle(fontSize: txtSizeBigStr)),
                       //onPressed: () => Navigator.pop(context),
                       onPressed: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputCodePage())),

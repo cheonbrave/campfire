@@ -225,7 +225,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: RaisedButton(
+                    child: FlatButton(
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(10.0),
                       ),
@@ -233,9 +233,9 @@ class _InputProfilePageState extends State<InputProfilePage> {
                       //textColor: Color(pointColor),
                       textColor: Colors.white,
                       //color: Colors.white,
-                      color: Colors.black54,
+                      color: Colors.black87,
                       //splashColor: Color(pointColor2),
-                      splashColor: Colors.black54,
+                      splashColor: Colors.black87,
                       child: Text(Translations.of(context).trans('next'), style: TextStyle(fontSize: txtSizeBigStr)),
                       //onPressed: () => Navigator.pop(context),
                       onPressed: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputCodePage())),
