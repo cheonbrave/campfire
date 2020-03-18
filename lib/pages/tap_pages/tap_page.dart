@@ -8,6 +8,10 @@ import 'package:campfire/pages/tap_pages/notification_page.dart';
 import 'package:campfire/pages/tap_pages/setting_page.dart';
 
 class TapPage extends StatefulWidget {
+  static const routeName = '/tap_page';
+  int tapIndex;
+  TapPage({Key key, @required this.tapIndex}) : super(key: key);
+
   @override
   _TapPageState createState() => _TapPageState();
 }
@@ -36,6 +40,7 @@ class _TapPageState extends State<TapPage> {
 
   int _selectedIdx = 0;
 
+
   List _pages = [
     TeamPage(),
     CampfirePage(),
@@ -46,6 +51,10 @@ class _TapPageState extends State<TapPage> {
 
   @override
   Widget build(BuildContext context) {
+    if(widget.tapIndex != null) {
+      _selectedIdx = widget.tapIndex;
+      widget.tapIndex = null;
+    }
     return WillPopScope(
       // will pop scope는 화면이 pop가 발생할때 즉 화면이 distory될때를 감안한 이벤트를 줄수있으며 android의 back버튼 클릭이벤트라고 생각하면된다
         onWillPop: _willPopCallback,

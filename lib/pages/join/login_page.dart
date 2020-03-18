@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
 class LoginPage extends StatefulWidget {
+  static const routeName = '/login_page';
+
   @override
   _LoginPageState createState() => _LoginPageState();
 }
@@ -74,6 +76,20 @@ class _LoginPageState extends State<LoginPage> {
                           Text(' ', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
                           Text('LOGIN', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
                         ],
+                    ),
+                    onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(paddingItem_small),
+                  ),
+                  InkWell(
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text('APPLE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+                        Text(' ', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+                        Text('LOGIN', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
+                      ],
                     ),
                     onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
                   ),

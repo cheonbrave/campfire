@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
 class SettingPage extends StatefulWidget {
+  static const routeName = '/setting_page';
   @override
   _SettingPageState createState() => _SettingPageState();
 }

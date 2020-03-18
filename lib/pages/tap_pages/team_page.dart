@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
 class TeamPage extends StatefulWidget {
+  static const routeName = '/team_page';
   @override
   _TeamPageState createState() => _TeamPageState();
 }

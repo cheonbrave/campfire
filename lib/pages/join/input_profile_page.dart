@@ -7,6 +7,8 @@ import 'package:campfire/util/language/Translations.dart';
 enum Genders { man, woman }
 
 class InputProfilePage extends StatefulWidget {
+  static const routeName = '/input_profile_page';
+
   @override
   _InputProfilePageState createState() => _InputProfilePageState();
 }

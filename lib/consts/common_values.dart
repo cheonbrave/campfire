@@ -9,9 +9,10 @@ const double txtSizeSmlStr = 14;
 const double txtSizeExplain = 12;
 
 // 패딩
-const double paddingAll = 25.0;
 const double paddingAllx2 = 50.0;
+const double paddingAll = 25.0;
 const double paddingItem = 20.0;
+const double paddingItem_small = 10.0;
 
 // 포인트컬러
 const int pointColor = 0xFFEB0009;

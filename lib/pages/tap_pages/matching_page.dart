@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
 class MatchingPage extends StatefulWidget {
+  static const routeName = '/matching_page';
   @override
   _MatchingPageState createState() => _MatchingPageState();
 }
