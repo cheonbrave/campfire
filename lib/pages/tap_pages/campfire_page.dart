@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
 class CampfirePage extends StatefulWidget {
+  static const routeName = '/campfire_page';
   @override
   _CampfirePageState createState() => _CampfirePageState();
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
 class NotificationPage extends StatefulWidget {
+  static const routeName = '/notification_page';
   @override
   _NotificationPageState createState() => _NotificationPageState();
 }

@@ -1,6 +1,13 @@
 import 'package:campfire/pages/common/root_page.dart';
+import 'package:campfire/pages/join/input_code_page.dart';
+import 'package:campfire/pages/join/input_profile_page.dart';
+import 'package:campfire/pages/join/login_page.dart';
 import 'package:campfire/pages/tap_pages/campfire_page.dart';
+import 'package:campfire/pages/tap_pages/matching_page.dart';
+import 'package:campfire/pages/tap_pages/notification_page.dart';
+import 'package:campfire/pages/tap_pages/setting_page.dart';
 import 'package:campfire/pages/tap_pages/tap_page.dart';
+import 'package:campfire/pages/tap_pages/team_page.dart';
 import 'package:campfire/util/language/TranslationsDelegate.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -28,9 +35,18 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // 여기에 '/' 에 해당하는 경로는 들어올 수 없다
-        '/root_Page': (context) => RootPage(),
-        '/tap_page': (context) => TapPage(),
-        '/campfire_page': (context) => CampfirePage(),
+        RootPage.routeName: (BuildContext context) => RootPage(),
+
+        InputCodePage.routeName: (BuildContext context) =>InputCodePage(),
+        InputProfilePage.routeName: (BuildContext context) =>InputProfilePage(),
+        LoginPage.routeName: (BuildContext context) =>LoginPage(),
+
+        CampfirePage.routeName: (BuildContext context) => CampfirePage(),
+        MatchingPage.routeName: (BuildContext context) => MatchingPage(),
+        NotificationPage.routeName: (BuildContext context) =>NotificationPage(),
+        SettingPage.routeName: (BuildContext context) =>SettingPage(),
+        TapPage.routeName: (BuildContext context) => TapPage(),
+        TeamPage.routeName: (BuildContext context) => TeamPage(),
       },
 
       /* 언어 */

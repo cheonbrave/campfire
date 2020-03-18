@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:campfire/pages/join/login_page.dart';
 
 class RootPage extends StatelessWidget {
+
+  static const routeName = '/root_page';
+
   @override
   Widget build(BuildContext context) {
 

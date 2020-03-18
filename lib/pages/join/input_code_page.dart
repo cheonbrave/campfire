@@ -1,3 +1,4 @@
+import 'package:campfire/pages/tap_pages/campfire_page.dart';
 import 'package:campfire/pages/tap_pages/tap_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,8 @@ import 'package:campfire/util/language/Translations.dart';
 import 'package:flutter/services.dart';
 
 class InputCodePage extends StatefulWidget {
+  static const routeName = '/input_code_page';
+
   @override
   _InputCodePageState createState() => _InputCodePageState();
 }
@@ -79,7 +82,9 @@ class _InputCodePageState extends State<InputCodePage> {
                       //splashColor: Color(pointColor2),
                       splashColor: Colors.black87,
                       child: Text(Translations.of(context).trans('code_none'), style: TextStyle(fontSize: txtSizeBigStr)),
-                      onPressed: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => TapPage()), ModalRoute.withName('/campfire_page')),
+
+                      //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
+                      onPressed: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => TapPage(tapIndex: 1)), ModalRoute.withName(TapPage.routeName)),
                     ),
                   ),
                   Padding(
@@ -102,8 +107,8 @@ class _InputCodePageState extends State<InputCodePage> {
                       //splashColor: Color(pointColor2),
                       splashColor: Colors.black87,
                       child: Text(Translations.of(context).trans('code_check'), style: TextStyle(fontSize: txtSizeBigStr)),
-                      //onPressed: () => Navigator.pop(context),
-                      onPressed: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputCodePage())),
+                      onPressed: () => Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
+                      
                     ),
                   ),
                 ]
