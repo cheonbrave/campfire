@@ -9,6 +9,8 @@ import 'package:campfire/pages/tap_pages/setting_page.dart';
 import 'package:campfire/pages/tap_pages/tap_page.dart';
 import 'package:campfire/pages/tap_pages/team_page.dart';
 import 'package:campfire/util/language/TranslationsDelegate.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:campfire/consts/common_values.dart';
@@ -23,6 +25,8 @@ main.dart
   - 테마 (디자인)
   - 홈 페이지 설정
 */
+
+FirebaseAnalytics analytics = FirebaseAnalytics();
 
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
@@ -96,6 +100,10 @@ class MyApp extends StatelessWidget {
 
       /* 홈 페이지 설정 */
       home: RootPage(), // root page에서 로그인 상태 체크
+
+      navigatorObservers: [
+        FirebaseAnalyticsObserver(analytics: analytics),
+      ],
 
     );
   }

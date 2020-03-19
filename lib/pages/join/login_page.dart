@@ -3,6 +3,11 @@ import 'package:campfire/util/language/Translations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:google_sign_in/google_sign_in.dart';
+
+final GoogleSignIn _googleSignIn = GoogleSignIn();
+final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login_page';
@@ -32,6 +37,31 @@ class _LoginPageState extends State<LoginPage> {
           ],
         )) ??
         false;
+  }
+
+  Future<FirebaseUser> _handleSignIn() async {
+
+    debugPrint("_handleSignIn 11");
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
+
+    debugPrint("_handleSignIn 22");
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    debugPrint("_handleSignIn 33");
+
+    final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
+
+    debugPrint("_handleSignIn signed in " + user.displayName);
+
+    if(user != null){
+      Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage()));
+    }
+
+    return user;
   }
 
   @override
@@ -77,7 +107,8 @@ class _LoginPageState extends State<LoginPage> {
                           Text('LOGIN', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
                         ],
                     ),
-                    onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
+                    //onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
+                    onTap: () => _handleSignIn().then((FirebaseUser user) => print(user)).catchError((e) => print(e)),
                   ),
                   Padding(
                     padding: EdgeInsets.all(paddingItem_small),

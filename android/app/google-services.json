@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "1032518102195",
+    "firebase_url": "https://campfire-blind-date.firebaseio.com",
+    "project_id": "campfire-blind-date",
+    "storage_bucket": "campfire-blind-date.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1032518102195:android:b8d79b81b99877957e14c6",
+        "android_client_info": {
+          "package_name": "cheon.go.son.campfire"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1032518102195-429gjh7n9fvkjnvcl5a7plpnqf2v25te.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "cheon.go.son.campfire",
+            "certificate_hash": "98d0067d4a761592f8d16bee21b791979bd91df7"
+          }
+        },
+        {
+          "client_id": "1032518102195-gnfvjhrjuijsc38vlpr46q2a28tg8qe8.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDpZzEdxLjbsO-IC_7M6GyXiZXNxQphIUk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1032518102195-gnfvjhrjuijsc38vlpr46q2a28tg8qe8.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "1032518102195-b16iphbaidh17i0u8nulqt0okk0jpbsu.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "cheon.go.son.campfire"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
