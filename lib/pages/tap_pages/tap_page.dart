@@ -64,6 +64,7 @@ class _TapPageState extends State<TapPage> {
               child: _pages[_selectedIdx],
             ),
             bottomNavigationBar: BottomNavigationBar(
+              backgroundColor: Colors.white,
               showSelectedLabels: false,
               showUnselectedLabels: false,
               selectedItemColor: Color(pointColor),
@@ -72,14 +73,19 @@ class _TapPageState extends State<TapPage> {
               currentIndex: _selectedIdx,
               items: <BottomNavigationBarItem>[
                 BottomNavigationBarItem(
+                    backgroundColor: Colors.white,
                     icon: Icon(Icons.group_work), title: Text('TEAM', style: TextStyle(fontSize: txtSizeExplain))),
                 BottomNavigationBarItem(
+                    backgroundColor: Colors.white,
                     icon: Icon(Icons.whatshot), title: Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeExplain))),
                 BottomNavigationBarItem(
+                    backgroundColor: Colors.white,
                     icon: Icon(Icons.favorite_border), title: Text('MATCHING', style: TextStyle(fontSize: txtSizeExplain))),
                 BottomNavigationBarItem(
+                    backgroundColor: Colors.white,
                     icon: Icon(Icons.notifications_none), title: Text('NOTIFICATION', style: TextStyle(fontSize: txtSizeExplain))),
                 BottomNavigationBarItem(
+                    backgroundColor: Colors.white,
                     icon: Icon(Icons.info_outline), title: Text('SETTING', style: TextStyle(fontSize: txtSizeExplain))),
               ],
             )

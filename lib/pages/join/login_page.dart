@@ -41,17 +41,13 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<FirebaseUser> _handleSignIn() async {
 
-    debugPrint("_handleSignIn 11");
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
-    debugPrint("_handleSignIn 22");
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
-
-    debugPrint("_handleSignIn 33");
 
     final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
 
