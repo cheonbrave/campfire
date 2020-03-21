@@ -107,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () => _handleSignIn().then((FirebaseUser user) => print(user)).catchError((e) => print(e)),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem_small),
+                    padding: EdgeInsets.all(paddingItem),
                   ),
                   InkWell(
                     child:Row(
