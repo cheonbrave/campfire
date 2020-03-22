@@ -31,8 +31,9 @@ dependencies:
   # #import "UserAgent.h"
 
   firebase_core: 0.4.4  # add dependency for Firebase Core
-  firebase_auth: 0.15.3
+  firebase_auth: 0.15.3 # 0.15.3 부터 apple_sign_in 지원
   google_sign_in: 4.1.4
+  apple_sign_in: ^0.1.0
 
   #firebase_core: ^0.4.4+3
   #firebase_auth: ^0.15.5+3
