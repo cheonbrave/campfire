@@ -20,5 +20,10 @@
   "code_none": "No code",
   "code_check": "Confirm invitation code",
 
+  "team_code_input_explain" : "Please enter your code and join the team",
+
+  "team_make_explain" : "We need to form a team so we can start dating",
+  "team_make" : "Create a team",
+
   "json_end": "json_end"
 }

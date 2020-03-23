@@ -8,18 +8,23 @@
   "intro_1": "Your first",
   "intro_2": "Blind date",
 
-  "birth_year": "birth year",
-  "man": "MAN",
-  "woman": "WOMAN",
+  "birth_year": "태어난 해",
+  "man": "남자",
+  "woman": "여자",
 
   "input_default_info": "기본 정보를 등록해주세요",
-  "input_nick": "nickname",
+  "input_nick": "닉네임",
 
   "question_code": "친구로부터 초대코드를 받으셨나요?",
-  "input_code": "invitation code",
+  "input_code": "초대 코드",
   "code_none": "코드 없음",
+
   "code_check": "초대코드 확인",
 
+  "team_code_input_explain" : "코드를 입력하고 팀에 합류 하세요",
+
+  "team_make_explain" : "팀을 만들어야 블라인드 데이트를 시작할 수 있어요",
+  "team_make" : "팀 만들기",
 
   "json_end": "json_end"
 }

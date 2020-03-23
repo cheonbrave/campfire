@@ -39,18 +39,23 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // 여기에 '/' 에 해당하는 경로는 들어올 수 없다
+
+        // common
         RootPage.routeName: (BuildContext context) => RootPage(),
 
+        // join
         InputCodePage.routeName: (BuildContext context) =>InputCodePage(),
         InputProfilePage.routeName: (BuildContext context) =>InputProfilePage(),
         LoginPage.routeName: (BuildContext context) =>LoginPage(),
 
+        // tap_pages
         CampfirePage.routeName: (BuildContext context) => CampfirePage(),
         MatchingPage.routeName: (BuildContext context) => MatchingPage(),
         NotificationPage.routeName: (BuildContext context) =>NotificationPage(),
         SettingPage.routeName: (BuildContext context) =>SettingPage(),
         TapPage.routeName: (BuildContext context) => TapPage(),
         TeamPage.routeName: (BuildContext context) => TeamPage(),
+
       },
 
       /* 언어 */

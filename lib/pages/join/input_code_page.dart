@@ -32,7 +32,7 @@ class _InputCodePageState extends State<InputCodePage> {
       body: SafeArea( // 아이폰 노치 디자인 대응
         child: SingleChildScrollView(
           child:Padding(
-            padding: EdgeInsets.all(paddingAllx2),
+              padding: EdgeInsets.only(left: paddingAllx2, right: paddingAllx2, top: paddingAll, bottom: paddingAllx2),
             /* UI 작성 - START */
 
             child:Column(
@@ -48,12 +48,14 @@ class _InputCodePageState extends State<InputCodePage> {
                   ),
                   TextField(
                     maxLines : 1,
+                    maxLength: 8,
+                    maxLengthEnforced: true,
                     textAlignVertical: TextAlignVertical.center,
                     textAlign: TextAlign.center,
                     style : TextStyle(fontSize: txtSizeBigStr),
                     keyboardType: TextInputType.number,
                     inputFormatters: <TextInputFormatter>[
-                      WhitelistingTextInputFormatter.digitsOnly
+                      WhitelistingTextInputFormatter.digitsOnly,
                     ],
                     decoration: InputDecoration(
                       hintText: Translations.of(context).trans('input_code'),
