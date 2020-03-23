@@ -8,7 +8,7 @@
   "intro_1": "Your first",
   "intro_2": "Blind date",
 
-  "birth_year": "birth year",
+  "birth_year": "生年",
   "man": "男性",
   "woman": "女性",
 
@@ -19,6 +19,11 @@
   "input_code": "invitation code",
   "code_none": "コードなし",
   "code_check": "招待コード確認",
+
+  "team_code_input_explain" : "コードを入力してください。",
+
+  "team_make_explain" : "チームを作ればブラインドデートを始めることができます。",
+  "team_make" : "チーム作り",
 
   "json_end": "json_end"
 }

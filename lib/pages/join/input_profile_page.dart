@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 import 'package:campfire/util/language/Translations.dart';
+import 'package:flutter/services.dart';
 
 enum Genders { man, woman }
 
@@ -17,9 +18,11 @@ class _InputProfilePageState extends State<InputProfilePage> {
 
   Genders _gender = null;
 
+  /*
   DateTime today = DateTime.now();
   DateTime year_20age = null;
   String dropdownValue =  null;
+  */
   // dropdownValue - null 로 설정해두면 hint값으로 표시됨
 
   @override
@@ -29,6 +32,8 @@ class _InputProfilePageState extends State<InputProfilePage> {
         title: Text(Translations.of(context).trans('app_title'), style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w500),),
         elevation: 0.0,
       ),
+      resizeToAvoidBottomInset: false,
+      resizeToAvoidBottomPadding: false,
       body: _makeBody(),
       backgroundColor: Colors.white,
     );
@@ -40,6 +45,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
     var height20 = MediaQuery.of(context).size.height * 0.20;
     var mini_circle = height20/5.0;
 
+    /*
     DateTime today = DateTime.now();
     year_20age = DateTime(today.year - 19); // 빠른생일따윈 이제 없으니 19살 무시, 20살부터만 사용하는걸로!
     int num_year = year_20age.year;
@@ -48,16 +54,16 @@ class _InputProfilePageState extends State<InputProfilePage> {
       year_list.add(num_year.toString());
       num_year--;
     }
+    */
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea( // 아이폰 노치 디자인 대응
           child: SingleChildScrollView(
               child: Padding(
-                    padding: EdgeInsets.all(paddingAllx2),
-                // 패딩을 주고.. 그 안에 스크롤뷰를 넣으니까 패딩 안에서 스크롤이 발생함 이건 좀 바꿀필요가있겠음
-                // 스크롤뷰가 있고 그 안에서 패딩을 주는게 맞을듯
+                padding: EdgeInsets.only(left: paddingAllx2, right: paddingAllx2, top: paddingAll, bottom: paddingAllx2),
                 child:Column(
+
                   /* UI 작성 - START */
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -137,6 +143,25 @@ class _InputProfilePageState extends State<InputProfilePage> {
                   Padding(
                     padding: EdgeInsets.all(paddingItem),
                   ),
+                  TextField(
+                    maxLines : 1,
+                    maxLength: 4,
+                    maxLengthEnforced: true,
+                    textAlignVertical: TextAlignVertical.center,
+                    textAlign: TextAlign.center,
+                    style : TextStyle(fontSize: txtSizeBigStr),
+                    keyboardType: TextInputType.number,
+                    inputFormatters: <TextInputFormatter>[
+                      WhitelistingTextInputFormatter.digitsOnly
+                    ],
+                    decoration: InputDecoration(
+                      hintText: Translations.of(context).trans('birth_year'),
+                      hintStyle: TextStyle(fontSize: txtSizeBigStr, color: Colors.black54),
+                      focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
+                      enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
+                    ),
+                  ),
+                  /*
                   DropdownButton<String>(
                     hint: Center(
                         child: Text(
@@ -176,6 +201,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
                       );
                     }).toList(),
                   ),
+                  */
                   Padding(
                     padding: EdgeInsets.all(paddingItem),
                   ),
