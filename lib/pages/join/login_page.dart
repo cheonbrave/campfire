@@ -18,6 +18,8 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
 
+  bool exec_login = false;
+
   // Android 에서 Back 버튼 사용하면 감지해서 팝업다이얼로그 발생시키는 함수
   Future<bool> _willPopCallback() async {
     return showDialog(
@@ -39,8 +41,12 @@ class _LoginPageState extends State<LoginPage> {
         false;
   }
 
-  Future<FirebaseUser> _handleSignIn() async {
-
+  Future<void> _handleSignIn() async {
+    if(exec_login){
+      return;
+    }else{
+      exec_login = true;
+    }
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
@@ -53,11 +59,13 @@ class _LoginPageState extends State<LoginPage> {
 
     debugPrint("_handleSignIn signed in " + user.displayName);
 
+    exec_login = false;
+
     if(user != null){
       Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage()));
     }
 
-    return user;
+    return;
   }
 
   @override
@@ -104,7 +112,7 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                     ),
                     //onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
-                    onTap: () => _handleSignIn().then((FirebaseUser user) => print(user)).catchError((e) => print(e)),
+                    onTap: () => _handleSignIn(),
                   ),
                   Padding(
                     padding: EdgeInsets.all(paddingItem),
