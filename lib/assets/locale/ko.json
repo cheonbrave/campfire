@@ -19,11 +19,10 @@
   "input_code": "초대 코드",
   "code_none": "코드 없음",
 
+  "team_code_input_explain" : "이미 초대받은 팀이 있다면\n코드를 입력하고 팀에 합류하세요",
   "code_check": "초대코드 확인",
 
-  "team_code_input_explain" : "코드를 입력하고 팀에 합류 하세요",
-
-  "team_make_explain" : "팀을 만들어야 블라인드 데이트를 시작할 수 있어요",
+  "team_make_explain" : "친구들을 초대해서 팀을 만들고\n블라인드 데이트를 신청해볼까요?",
   "team_make" : "팀 만들기",
 
   "json_end": "json_end"

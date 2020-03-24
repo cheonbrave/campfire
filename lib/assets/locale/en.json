@@ -18,12 +18,12 @@
   "question_code": "Did you get an invitation code from your friend?",
   "input_code": "invitation code",
   "code_none": "No code",
+
+  "team_code_input_explain" : "If there's a team that's already,\nEnter your code and join the team",
   "code_check": "Confirm invitation code",
 
-  "team_code_input_explain" : "Please enter your code and join the team",
-
-  "team_make_explain" : "We need to form a team so we can start dating",
-  "team_make" : "Create a team",
+  "team_make_explain" : "Invite your friends to form a team\nlet's go on a blind date.",
+  "team_make" : "팀 만들기",
 
   "json_end": "json_end"
 }

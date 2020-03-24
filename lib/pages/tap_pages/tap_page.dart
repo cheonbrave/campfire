@@ -43,11 +43,11 @@ class _TapPageState extends State<TapPage> {
 
 
   List _pages = [
-    TeamPage(),
-    CampfirePage(),
-    MatchingPage(),
-    NotificationPage(),
-    SettingPage()
+    TeamPage(),         // 0
+    CampfirePage(),     // 1
+    MatchingPage(),     // 2
+    NotificationPage(), // 3
+    SettingPage()       // 4
   ];
 
   @override
