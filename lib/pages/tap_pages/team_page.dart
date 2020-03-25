@@ -28,6 +28,9 @@ class _TeamPageState extends State<TeamPage> {
   }
 
   Widget _makePage_team() {
+
+    var height10 = MediaQuery.of(context).size.height * 0.10;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -45,35 +48,199 @@ class _TeamPageState extends State<TeamPage> {
             child: Column(
               children: <Widget>[
                 Container(
-                  height: 100.0,
+                  height: height10,
                   child: ListView(
+                    padding: EdgeInsets.only(left: 5.0),
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
                       Container(
-                        width: 160.0,
-                        color: Colors.red,
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                                width: height10,
+                                height: height10,
+                                child: CircleAvatar(
+                                  backgroundColor: Color(pointColor),
+                                  backgroundImage: NetworkImage(
+                                      'https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'
+                                  ),
+                                )
+                            ),
+                          ],
+                        ),
                       ),
                       Container(
-                        width: 160.0,
-                        color: Colors.blue,
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                                width: height10,
+                                height: height10,
+                                child: CircleAvatar(
+                                  backgroundColor: Color(pointColor),
+                                  backgroundImage: NetworkImage(
+                                      'https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'
+                                  ),
+                                )
+                            ),
+                          ],
+                        ),
                       ),
                       Container(
-                        width: 160.0,
-                        color: Colors.green,
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                                width: height10,
+                                height: height10,
+                                child: CircleAvatar(
+                                  child: Text('wait', style: TextStyle(fontSize: txtSizeSmlStr, fontWeight: FontWeight.w700),),
+                                  backgroundColor: Color(pointColor),
+                                )
+                            ),
+                          ],
+                        ),
                       ),
                       Container(
-                        width: 160.0,
-                        color: Colors.yellow,
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                                width: height10,
+                                height: height10,
+                                child: CircleAvatar(
+                                  child: Text('wait', style: TextStyle(fontSize: txtSizeSmlStr, fontWeight: FontWeight.w700),),
+                                  backgroundColor: Color(pointColor),
+                                )
+                            ),
+                          ],
+                        ),
                       ),
                       Container(
-                        width: 160.0,
-                        color: Colors.orange,
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                                width: height10,
+                                height: height10,
+                                child: CircleAvatar(
+                                  child: Text('wait', style: TextStyle(fontSize: txtSizeSmlStr, fontWeight: FontWeight.w700),),
+                                  backgroundColor: Color(pointColor),
+                                )
+                            ),
+                          ],
+                        ),
                       ),
+                      Container(
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                                width: height10,
+                                height: height10,
+                                child: CircleAvatar(
+                                  child: Text('wait', style: TextStyle(fontSize: txtSizeSmlStr, fontWeight: FontWeight.w700),),
+                                  backgroundColor: Color(pointColor),
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                                width: height10,
+                                height: height10,
+                                child: CircleAvatar(
+                                  child: Text('wait', style: TextStyle(fontSize: txtSizeSmlStr, fontWeight: FontWeight.w700),),
+                                  backgroundColor: Color(pointColor),
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                                width: height10,
+                                height: height10,
+                                child: CircleAvatar(
+                                  child: Text('wait', style: TextStyle(fontSize: txtSizeSmlStr, fontWeight: FontWeight.w700),),
+                                  backgroundColor: Color(pointColor),
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                                width: height10,
+                                height: height10,
+                                child: CircleAvatar(
+                                  child: Text('wait', style: TextStyle(fontSize: txtSizeSmlStr, fontWeight: FontWeight.w700),),
+                                  backgroundColor: Color(pointColor),
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        child: Stack(
+                          children: <Widget>[
+                            SizedBox(
+                                width: height10,
+                                height: height10,
+                                child: CircleAvatar(
+                                  child: Text('wait', style: TextStyle(fontSize: txtSizeSmlStr, fontWeight: FontWeight.w700),),
+                                  backgroundColor: Color(pointColor),
+                                )
+                            ),
+                          ],
+                        ),
+                      ),
+
+
+                      /*
+                      Container(
+                        padding: EdgeInsets.all(paddingImg),
+                        width: height10,
+                        height: height10,
+                        child: SizedBox(
+                            width: height10,
+                            height: height10,
+                            child: FloatingActionButton(
+                              heroTag: 'btnAddImage',
+                              onPressed: null,
+                              backgroundColor: Color(pointColor),
+                              child: Icon(Icons.person_add),
+                            )
+                        )
+                      )
+                       */
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: paddingAllx2, right: paddingAllx2, top: paddingAll, bottom: paddingAllx2),
+                  padding: EdgeInsets.only(left: paddingAllx2, right: paddingAllx2, top: paddingItem, bottom: paddingItem),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -91,7 +258,7 @@ class _TeamPageState extends State<TeamPage> {
                           //splashColor: Color(pointColor2),
                           splashColor: Colors.black87,
                           //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
-                          child: Text("친구 초대하기 (0/10)", style: TextStyle(fontSize: txtSizeMidStr)),
+                          child: Text("친구 초대하기 (2/10)", style: TextStyle(fontSize: txtSizeMidStr)),
 
                           //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
                           onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),

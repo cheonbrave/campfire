@@ -17,7 +17,10 @@ class _CampfirePageState extends State<CampfirePage> {
         elevation: 1.0,
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.filter_list), onPressed: (){},
+            icon: Icon(Icons.filter_list),
+            onPressed: (){
+
+            },
           ),
         ],
       ),
