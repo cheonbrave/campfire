@@ -11,14 +11,13 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login_page';
+  bool isClicked = false;
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
-
-  bool exec_login = false;
 
   // Android 에서 Back 버튼 사용하면 감지해서 팝업다이얼로그 발생시키는 함수
   Future<bool> _willPopCallback() async {
@@ -41,12 +40,14 @@ class _LoginPageState extends State<LoginPage> {
         false;
   }
 
-  Future<void> _handleSignIn() async {
-    if(exec_login){
-      return;
+  Future<FirebaseUser> _handleSignIn() async {
+
+    if(widget.isClicked){
+      return null;
     }else{
-      exec_login = true;
+      widget.isClicked = true;
     }
+
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
@@ -56,16 +57,9 @@ class _LoginPageState extends State<LoginPage> {
     );
 
     final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
-
     debugPrint("_handleSignIn signed in " + user.displayName);
-
-    exec_login = false;
-
-    if(user != null){
-      Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage()));
-    }
-
-    return;
+    widget.isClicked = false;
+    return user;
   }
 
   @override
@@ -112,7 +106,17 @@ class _LoginPageState extends State<LoginPage> {
                         ],
                     ),
                     //onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
-                    onTap: () => _handleSignIn(),
+                    onTap: () => _handleSignIn().then((FirebaseUser user) {
+                      if(user == null) {
+                        debugPrint("_handleSignIn return is null");
+                        return;
+                      }
+                      else {
+                        debugPrint("_handleSignIn return : " + user.displayName);
+                        Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage()));
+                      }
+
+                    }),
                   ),
                   Padding(
                     padding: EdgeInsets.all(paddingItem),
