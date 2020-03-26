@@ -1,4 +1,5 @@
 import 'package:campfire/pages/join/input_code_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
@@ -10,13 +11,27 @@ enum Genders { man, woman }
 class InputProfilePage extends StatefulWidget {
   static const routeName = '/input_profile_page';
 
+  final FirebaseUser user; // 탭화면 인덱스 수신
+  InputProfilePage({Key key, @required this.user}) : super(key: key);
+
+  Genders _gender = null;
+  String photoUrl = "";
+  String nickname = "";
+  TextEditingController input_nick = TextEditingController();
+
   @override
   _InputProfilePageState createState() => _InputProfilePageState();
 }
 
 class _InputProfilePageState extends State<InputProfilePage> {
 
-  Genders _gender = null;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    widget.photoUrl = widget.user.photoUrl;
+    widget.input_nick.text = widget.user.displayName;
+  }
 
   /*
   DateTime today = DateTime.now();
@@ -80,9 +95,10 @@ class _InputProfilePageState extends State<InputProfilePage> {
                               width: height20,
                               height: height20,
                               child: CircleAvatar(
-                                backgroundColor: Color(pointColor),
+                                backgroundColor: Colors.black12,
                                 backgroundImage: NetworkImage(
-                                    'https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'
+                                    widget.photoUrl
+                                    //'https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'
                                 ),
                               )
                           ),
@@ -129,7 +145,9 @@ class _InputProfilePageState extends State<InputProfilePage> {
                     padding: EdgeInsets.all(paddingItem),
                   ),
                   TextField(
+                    controller: widget.input_nick,
                     maxLines : 1,
+                    maxLength: 20,
                     textAlignVertical: TextAlignVertical.center,
                     textAlign: TextAlign.center,
                     style : TextStyle(fontSize: txtSizeBigStr),
@@ -217,9 +235,9 @@ class _InputProfilePageState extends State<InputProfilePage> {
                                 children: <Widget>[
                                   Radio(
                                     value: Genders.man,
-                                    groupValue: _gender,
+                                    groupValue: widget._gender,
                                     onChanged: (Genders value) {
-                                      setState(() { _gender = value; });
+                                      setState(() { widget._gender = value; });
                                     },
                                   ),
                                   Text(Translations.of(context).trans('man'),style: TextStyle(fontSize: txtSizeBigStr)),
@@ -236,9 +254,9 @@ class _InputProfilePageState extends State<InputProfilePage> {
                                 children: <Widget>[
                                   Radio(
                                     value: Genders.woman,
-                                    groupValue: _gender,
+                                    groupValue: widget._gender,
                                     onChanged: (Genders value) {
-                                      setState(() { _gender = value; });
+                                      setState(() { widget._gender = value; });
                                     },
                                   ),
                                   Text(Translations.of(context).trans('woman'),style: TextStyle(fontSize: txtSizeBigStr)),

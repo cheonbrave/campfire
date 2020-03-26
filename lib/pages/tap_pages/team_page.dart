@@ -267,8 +267,12 @@ class _TeamPageState extends State<TeamPage> {
                       Container(
                         width: double.infinity,
                         alignment: Alignment.centerRight,
-                        child: Text("초대코드 : 0000", style: TextStyle(fontSize: txtSizeMidStr)),
+                        child: Text("초대코드 : 0000", style: TextStyle(fontSize: txtSizeSmlStr)),
                       ),
+                      Padding(
+                        padding: EdgeInsets.all(paddingItem),
+                      ),
+                      Text("인원", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
                       Padding(
                         padding: EdgeInsets.all(paddingItem),
                       ),
@@ -281,10 +285,20 @@ class _TeamPageState extends State<TeamPage> {
                         padding: EdgeInsets.all(paddingItem),
                       ),
                       Text("장소", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
-                      Padding(
-                        padding: EdgeInsets.all(paddingItem),
+                      TextField(
+                        //controller: widget.input_place,
+                        maxLines : 1,
+                        maxLength: 20,
+                        textAlignVertical: TextAlignVertical.center,
+                        textAlign: TextAlign.center,
+                        style : TextStyle(fontSize: txtSizeSmlStr),
+                        decoration: InputDecoration(
+                          hintText: '만나고 싶은 장소를 알려주세요',
+                          hintStyle: TextStyle(fontSize: txtSizeSmlStr, color: Colors.black54),
+                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
+                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
+                        ),
                       ),
-                      Text("인원", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
                       Padding(
                         padding: EdgeInsets.all(paddingItem),
                       ),
@@ -292,7 +306,76 @@ class _TeamPageState extends State<TeamPage> {
                       Padding(
                         padding: EdgeInsets.all(paddingItem),
                       ),
-                      Text("태그", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                      Text("매력 포인트", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                      TextField(
+                        //controller: widget.input_place,
+                        maxLines : 1,
+                        maxLength: 10,
+                        textAlignVertical: TextAlignVertical.center,
+                        textAlign: TextAlign.center,
+                        style : TextStyle(fontSize: txtSizeSmlStr),
+                        decoration: InputDecoration(
+                          hintText: '우리팀의 매력은?',
+                          hintStyle: TextStyle(fontSize: txtSizeSmlStr, color: Colors.black54),
+                          focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
+                          enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(paddingItem),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          padding: const EdgeInsets.all(12.0),
+                          //textColor: Color(pointColor),
+                          textColor: Colors.white,
+                          //color: Colors.white,
+                          color: Colors.black87,
+                          //splashColor: Color(pointColor2),
+                          splashColor: Colors.black87,
+                          //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
+                          child: Text("블라인드 데이트 시작", style: TextStyle(fontSize: txtSizeMidStr)),
+
+                          //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
+                          onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(paddingItem),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        child: FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          padding: const EdgeInsets.all(12.0),
+                          //textColor: Color(pointColor),
+                          textColor: Colors.white,
+                          //color: Colors.white,
+                          color: Colors.black87,
+                          //splashColor: Color(pointColor2),
+                          splashColor: Colors.black87,
+                          //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
+                          child: Text("우리팀 UP 하기", style: TextStyle(fontSize: txtSizeMidStr)),
+
+                          //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
+                          onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
+                        ),
+                      ),
+                      Container(
+                        width: double.infinity,
+                        alignment: Alignment.center,
+                        child: Text("현재 우리팀 노출순위 : 100번째", style: TextStyle(fontSize: txtSizeSmlStr)),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(paddingItem),
+                      ),
+
                     ],
                   ),
                 ),
