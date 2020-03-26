@@ -113,7 +113,10 @@ class _LoginPageState extends State<LoginPage> {
                       }
                       else {
                         debugPrint("_handleSignIn return : " + user.displayName);
-                        Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage()));
+                        debugPrint("_handleSignIn return : " + user.uid);
+                        debugPrint("_handleSignIn return : " + user.email);
+                        debugPrint("_handleSignIn return : " + user.photoUrl);
+                        Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage(user: user,)));
                       }
 
                     }),
