@@ -11,13 +11,14 @@ final FirebaseAuth _auth = FirebaseAuth.instance;
 
 class LoginPage extends StatefulWidget {
   static const routeName = '/login_page';
-  bool isClicked = false;
 
   @override
   _LoginPageState createState() => _LoginPageState();
 }
 
 class _LoginPageState extends State<LoginPage> {
+
+  bool isClicked = false;
 
   // Android 에서 Back 버튼 사용하면 감지해서 팝업다이얼로그 발생시키는 함수
   Future<bool> _willPopCallback() async {
@@ -42,10 +43,10 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<FirebaseUser> _handleSignIn() async {
 
-    if(widget.isClicked){
+    if(isClicked){
       return null;
     }else{
-      widget.isClicked = true;
+      isClicked = true;
     }
 
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
@@ -58,7 +59,7 @@ class _LoginPageState extends State<LoginPage> {
 
     final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
     debugPrint("_handleSignIn signed in " + user.displayName);
-    widget.isClicked = false;
+    isClicked = false;
     return user;
   }
 
