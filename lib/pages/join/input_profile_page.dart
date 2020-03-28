@@ -14,23 +14,23 @@ class InputProfilePage extends StatefulWidget {
   final FirebaseUser user; // 탭화면 인덱스 수신
   InputProfilePage({Key key, @required this.user}) : super(key: key);
 
-  Genders _gender = null;
-  String photoUrl = "";
-  String nickname = "";
-  TextEditingController input_nick = TextEditingController();
-
   @override
   _InputProfilePageState createState() => _InputProfilePageState();
 }
 
 class _InputProfilePageState extends State<InputProfilePage> {
 
+  Genders _gender = null;
+  String photoUrl = "";
+  String nickname = "";
+  TextEditingController input_nick = TextEditingController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    widget.photoUrl = widget.user.photoUrl;
-    widget.input_nick.text = widget.user.displayName;
+    photoUrl = widget.user.photoUrl;
+    input_nick.text = widget.user.displayName;
   }
 
   /*
@@ -97,7 +97,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
                               child: CircleAvatar(
                                 backgroundColor: Colors.black12,
                                 backgroundImage: NetworkImage(
-                                    widget.photoUrl
+                                    photoUrl
                                     //'https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'
                                 ),
                               )
@@ -145,7 +145,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
                     padding: EdgeInsets.all(paddingItem),
                   ),
                   TextField(
-                    controller: widget.input_nick,
+                    controller: input_nick,
                     maxLines : 1,
                     maxLength: 20,
                     textAlignVertical: TextAlignVertical.center,
@@ -235,9 +235,9 @@ class _InputProfilePageState extends State<InputProfilePage> {
                                 children: <Widget>[
                                   Radio(
                                     value: Genders.man,
-                                    groupValue: widget._gender,
+                                    groupValue: _gender,
                                     onChanged: (Genders value) {
-                                      setState(() { widget._gender = value; });
+                                      setState(() { _gender = value; });
                                     },
                                   ),
                                   Text(Translations.of(context).trans('man'),style: TextStyle(fontSize: txtSizeBigStr)),
@@ -254,9 +254,9 @@ class _InputProfilePageState extends State<InputProfilePage> {
                                 children: <Widget>[
                                   Radio(
                                     value: Genders.woman,
-                                    groupValue: widget._gender,
+                                    groupValue: _gender,
                                     onChanged: (Genders value) {
-                                      setState(() { widget._gender = value; });
+                                      setState(() { _gender = value; });
                                     },
                                   ),
                                   Text(Translations.of(context).trans('woman'),style: TextStyle(fontSize: txtSizeBigStr)),

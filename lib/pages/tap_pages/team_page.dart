@@ -13,6 +13,11 @@ class TeamPage extends StatefulWidget {
 }
 
 class _TeamPageState extends State<TeamPage> {
+
+  String dropdownValue_cnt =  null;
+  String dropdownValue_type =  null;
+  String dropdownValue_city =  null;
+
   @override
   Widget build(BuildContext context) {
     /*
@@ -30,6 +35,23 @@ class _TeamPageState extends State<TeamPage> {
   Widget _makePage_team() {
 
     var height10 = MediaQuery.of(context).size.height * 0.10;
+
+    /* 인원선택 드랍다운 */
+    List<String> member_cnt_list = new List();
+    for(int i=2; i < 16; i++){
+      member_cnt_list.add(i.toString());
+    }
+
+    /* 데이트유형 드랍다운 */
+    List<String> date_type_list = new List();
+    date_type_list.add('약속하고 만나요');
+    date_type_list.add('오늘밤에 만나요');
+
+    /* 지역 드랍다운 */
+    List<String> city_list = new List();
+    city_list.add('서울시');
+    city_list.add('남양주시');
+
 
     return Scaffold(
       appBar: AppBar(
@@ -273,14 +295,131 @@ class _TeamPageState extends State<TeamPage> {
                         padding: EdgeInsets.all(paddingItem),
                       ),
                       Text("인원", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                      DropdownButton<String>(
+                        hint: Center(
+                            child: Text(
+                              '선택',
+                              style: TextStyle(fontSize: txtSizeMidStr),
+                            )
+                        ),
+                        isExpanded: true,
+                        value: dropdownValue_cnt,
+                        icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
+                        iconSize: txtSizeTopTitle,
+                        elevation:16, // 1,2,3,4,6,8,9,12,16,24
+                        style: TextStyle(
+                            fontSize: txtSizeBigStr,
+                            color: Colors.black87
+                        ),
+                        underline: Container(
+                            height: 1,
+                            color: Colors.black87
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownValue_cnt = newValue;
+                            debugPrint("dropdownValue_cnt : ${dropdownValue_cnt}");
+                          });
+                        },
+                        items: member_cnt_list.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Center(
+                                child: Text(value, style: TextStyle(
+                                    fontSize: txtSizeBigStr,
+                                    color: Colors.black87
+                                ),
+                                )
+                            ),
+                          );
+                        }).toList(),
+                      ),
                       Padding(
                         padding: EdgeInsets.all(paddingItem),
                       ),
                       Text("데이트 유형", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                      DropdownButton<String>(
+                        hint: Center(
+                            child: Text(
+                              '선택',
+                              style: TextStyle(fontSize: txtSizeMidStr),
+                            )
+                        ),
+                        isExpanded: true,
+                        value: dropdownValue_type,
+                        icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
+                        iconSize: txtSizeTopTitle,
+                        elevation:16, // 1,2,3,4,6,8,9,12,16,24
+                        style: TextStyle(
+                            fontSize: txtSizeBigStr,
+                            color: Colors.black87
+                        ),
+                        underline: Container(
+                            height: 1,
+                            color: Colors.black87
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownValue_type = newValue;
+                            debugPrint("dropdownValue_type : ${dropdownValue_type}");
+                          });
+                        },
+                        items: date_type_list.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Center(
+                                child: Text(value, style: TextStyle(
+                                    fontSize: txtSizeBigStr,
+                                    color: Colors.black87
+                                ),
+                                )
+                            ),
+                          );
+                        }).toList(),
+                      ),
                       Padding(
                         padding: EdgeInsets.all(paddingItem),
                       ),
                       Text("지역", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                      DropdownButton<String>(
+                        hint: Center(
+                            child: Text(
+                              '선택',
+                              style: TextStyle(fontSize: txtSizeMidStr),
+                            )
+                        ),
+                        isExpanded: true,
+                        value: dropdownValue_city,
+                        icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
+                        iconSize: txtSizeTopTitle,
+                        elevation:16, // 1,2,3,4,6,8,9,12,16,24
+                        style: TextStyle(
+                            fontSize: txtSizeBigStr,
+                            color: Colors.black87
+                        ),
+                        underline: Container(
+                            height: 1,
+                            color: Colors.black87
+                        ),
+                        onChanged: (String newValue) {
+                          setState(() {
+                            dropdownValue_city = newValue;
+                            debugPrint("dropdownValue_city : ${dropdownValue_city}");
+                          });
+                        },
+                        items: city_list.map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Center(
+                                child: Text(value, style: TextStyle(
+                                    fontSize: txtSizeBigStr,
+                                    color: Colors.black87
+                                ),
+                                )
+                            ),
+                          );
+                        }).toList(),
+                      ),
                       Padding(
                         padding: EdgeInsets.all(paddingItem),
                       ),
@@ -291,10 +430,10 @@ class _TeamPageState extends State<TeamPage> {
                         maxLength: 20,
                         textAlignVertical: TextAlignVertical.center,
                         textAlign: TextAlign.center,
-                        style : TextStyle(fontSize: txtSizeSmlStr),
+                        style : TextStyle(fontSize: txtSizeMidStr),
                         decoration: InputDecoration(
                           hintText: '만나고 싶은 장소를 알려주세요',
-                          hintStyle: TextStyle(fontSize: txtSizeSmlStr, color: Colors.black54),
+                          hintStyle: TextStyle(fontSize: txtSizeMidStr, color: Colors.black54),
                           focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
                           enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
                         ),
@@ -313,10 +452,10 @@ class _TeamPageState extends State<TeamPage> {
                         maxLength: 10,
                         textAlignVertical: TextAlignVertical.center,
                         textAlign: TextAlign.center,
-                        style : TextStyle(fontSize: txtSizeSmlStr),
+                        style : TextStyle(fontSize: txtSizeMidStr),
                         decoration: InputDecoration(
                           hintText: '우리팀의 매력은?',
-                          hintStyle: TextStyle(fontSize: txtSizeSmlStr, color: Colors.black54),
+                          hintStyle: TextStyle(fontSize: txtSizeMidStr, color: Colors.black54),
                           focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
                           enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
                         ),
