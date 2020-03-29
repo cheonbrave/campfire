@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:campfire/pages/tap_pages/tap_page.dart';
 import 'package:campfire/util/language/Translations.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,6 +38,8 @@ class _TeamPageState extends State<TeamPage> {
 
     var height10 = MediaQuery.of(context).size.height * 0.10;
 
+    var image_width = (MediaQuery.of(context).size.width - paddingAllx2 - paddingAllx2) / 3;
+
     /* 인원선택 드랍다운 */
     List<String> member_cnt_list = new List();
     for(int i=2; i < 16; i++){
@@ -48,10 +52,7 @@ class _TeamPageState extends State<TeamPage> {
     date_type_list.add('오늘밤에 만나요');
 
     /* 지역 드랍다운 */
-    List<String> city_list = new List();
-    city_list.add('서울시');
-    city_list.add('남양주시');
-
+    List<String> city_list = Translations.of(context).trans('city').split(",");
 
     return Scaffold(
       appBar: AppBar(
@@ -308,7 +309,8 @@ class _TeamPageState extends State<TeamPage> {
                         iconSize: txtSizeTopTitle,
                         elevation:16, // 1,2,3,4,6,8,9,12,16,24
                         style: TextStyle(
-                            fontSize: txtSizeBigStr,
+                            fontSize: txtSizeMidStr,
+                            fontFamily: 'Noto Sans KR', // 폰트
                             color: Colors.black87
                         ),
                         underline: Container(
@@ -324,13 +326,20 @@ class _TeamPageState extends State<TeamPage> {
                         items: member_cnt_list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Center(
-                                child: Text(value, style: TextStyle(
-                                    fontSize: txtSizeBigStr,
-                                    color: Colors.black87
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Padding(
+                                  padding: EdgeInsets.all(10.0),
                                 ),
+                                  Center(
+                                      child: Text(value, style: TextStyle(
+                                          fontSize: txtSizeMidStr,
+                                          color: Colors.black87
+                                      ),
                                 )
                             ),
+                          ]),
                           );
                         }).toList(),
                       ),
@@ -351,8 +360,9 @@ class _TeamPageState extends State<TeamPage> {
                         iconSize: txtSizeTopTitle,
                         elevation:16, // 1,2,3,4,6,8,9,12,16,24
                         style: TextStyle(
-                            fontSize: txtSizeBigStr,
-                            color: Colors.black87
+                            fontSize: txtSizeMidStr,
+                            color: Colors.black87,
+                          fontFamily: 'Noto Sans KR', // 폰트
                         ),
                         underline: Container(
                             height: 1,
@@ -367,13 +377,20 @@ class _TeamPageState extends State<TeamPage> {
                         items: date_type_list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Center(
+                            child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                            Padding(
+                            padding: EdgeInsets.all(10.0),
+                          ),
+                          Center(
                                 child: Text(value, style: TextStyle(
-                                    fontSize: txtSizeBigStr,
+                                    fontSize: txtSizeMidStr,
                                     color: Colors.black87
                                 ),
                                 )
                             ),
+                                ]),
                           );
                         }).toList(),
                       ),
@@ -394,7 +411,8 @@ class _TeamPageState extends State<TeamPage> {
                         iconSize: txtSizeTopTitle,
                         elevation:16, // 1,2,3,4,6,8,9,12,16,24
                         style: TextStyle(
-                            fontSize: txtSizeBigStr,
+                            fontSize: txtSizeMidStr,
+                            fontFamily: 'Noto Sans KR', // 폰트
                             color: Colors.black87
                         ),
                         underline: Container(
@@ -410,13 +428,21 @@ class _TeamPageState extends State<TeamPage> {
                         items: city_list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Center(
-                                child: Text(value, style: TextStyle(
-                                    fontSize: txtSizeBigStr,
-                                    color: Colors.black87
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Padding(
+                                  padding: EdgeInsets.all(10.0),
                                 ),
-                                )
-                            ),
+                                Center(
+                                    child: Text(value, style: TextStyle(
+                                      fontSize: txtSizeMidStr,
+                                      color: Colors.black87,
+                                    ),
+                                    )
+                                ),
+                              ],
+                            )
                           );
                         }).toList(),
                       ),
@@ -442,6 +468,85 @@ class _TeamPageState extends State<TeamPage> {
                         padding: EdgeInsets.all(paddingItem),
                       ),
                       Text("사진", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                      Row(
+                        children: <Widget>[
+                          Container(
+                            width: image_width,
+                            height: image_width,
+                            decoration: BoxDecoration(
+                              color: Colors.black87,
+                              image: DecorationImage(
+                                image:NetworkImage('https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'),
+                                fit:BoxFit.cover,
+                              ),
+                            ),
+                            child: Stack(
+                              children: <Widget>[
+                                SizedBox(
+                                    width: image_width,
+                                    height: image_width,
+                                    child: Icon(
+                                      Icons.add_circle_outline,
+                                      color: Colors.white,
+                                      //size: image_width/4,
+                                    )
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: image_width,
+                            height: image_width,
+                            decoration: BoxDecoration(
+                              color: Colors.black87,
+                              image: DecorationImage(
+                                image:NetworkImage('https://ww.namu.la/s/df6823100023af724c38aecf72153b741d12f8e8bc21707d1265a79b0bea9f597083fbab05c4a4d6b4f4068f447b4fb8fd3c8184c2ec21638ffae1b7230175ba911e49566a63b5aee47b64e873a5b9ff2122d2f52b5219782e454f2fd03db743274510fc76e20cdde8d0175de4f92323'),
+                                fit:BoxFit.cover,
+                              ),
+                              border: Border.all(
+                                color: Colors.black38,
+                              ),
+                            ),
+                            child: Stack(
+                              children: <Widget>[
+                                SizedBox(
+                                    width: image_width,
+                                    height: image_width,
+                                    child: Icon(
+                                      Icons.add_circle_outline,
+                                      color: Colors.white,
+                                      //size: image_width/4,
+                                    )
+                                ),
+                              ],
+                            ),
+                          ),
+                          Container(
+                            width: image_width,
+                            height: image_width,
+                            decoration: BoxDecoration(
+                              color: Colors.black87,
+                              image: DecorationImage(
+                                image:NetworkImage('http://cdn.bizwatch.co.kr/news/photo/2019/10/11/f3120682b1ea7d5f10428bb7a50a9b6d.jpg'),
+                                fit:BoxFit.cover,
+                              ),
+                            ),
+                            child: Stack(
+                              children: <Widget>[
+                                SizedBox(
+                                    width: image_width,
+                                    height: image_width,
+                                    child: Icon(
+                                      Icons.add_circle_outline,
+                                      color: Colors.white,
+                                      //size: image_width/4,
+                                    )
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                       Padding(
                         padding: EdgeInsets.all(paddingItem),
                       ),

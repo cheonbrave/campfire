@@ -20,6 +20,7 @@ class _InputCodePageState extends State<InputCodePage> {
       appBar: AppBar(
         title: Text(Translations.of(context).trans('app_title'), style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w500),),
         elevation: 0.0,
+        centerTitle: false,
       ),
       body: _makeBody(),
       backgroundColor: Colors.white,
