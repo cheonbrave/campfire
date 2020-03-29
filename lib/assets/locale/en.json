@@ -23,7 +23,9 @@
   "code_check": "Confirm invitation code",
 
   "team_make_explain" : "Invite your friends to form a team\nlet's go on a blind date.",
-  "team_make" : "팀 만들기",
+  "team_make" : "Create a team",
+
+  "city": "Washington,New York",
 
   "json_end": "json_end"
 }

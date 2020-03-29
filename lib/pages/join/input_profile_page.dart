@@ -45,6 +45,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
     return Scaffold(
       appBar: AppBar(
         title: Text(Translations.of(context).trans('app_title'), style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w500),),
+        centerTitle: false,
         elevation: 0.0,
       ),
       resizeToAvoidBottomInset: false,
