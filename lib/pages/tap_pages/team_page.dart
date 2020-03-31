@@ -38,7 +38,7 @@ class _TeamPageState extends State<TeamPage> {
 
     var height10 = MediaQuery.of(context).size.height * 0.10;
 
-    var image_width = (MediaQuery.of(context).size.width - paddingAllx2 - paddingAllx2) / 3;
+    var image_width = (MediaQuery.of(context).size.width - padding50 - padding50) / 3;
 
     /* 인원선택 드랍다운 */
     List<String> member_cnt_list = new List();
@@ -77,7 +77,7 @@ class _TeamPageState extends State<TeamPage> {
                     scrollDirection: Axis.horizontal,
                     children: <Widget>[
                       Container(
-                        padding: EdgeInsets.all(paddingImg),
+                        padding: EdgeInsets.all(padding10),
                         width: height10,
                         child: Stack(
                           children: <Widget>[
@@ -95,7 +95,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(paddingImg),
+                        padding: EdgeInsets.all(padding10),
                         width: height10,
                         child: Stack(
                           children: <Widget>[
@@ -113,7 +113,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(paddingImg),
+                        padding: EdgeInsets.all(padding10),
                         width: height10,
                         child: Stack(
                           children: <Widget>[
@@ -129,7 +129,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(paddingImg),
+                        padding: EdgeInsets.all(padding10),
                         width: height10,
                         child: Stack(
                           children: <Widget>[
@@ -145,7 +145,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(paddingImg),
+                        padding: EdgeInsets.all(padding10),
                         width: height10,
                         child: Stack(
                           children: <Widget>[
@@ -161,7 +161,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(paddingImg),
+                        padding: EdgeInsets.all(padding10),
                         width: height10,
                         child: Stack(
                           children: <Widget>[
@@ -177,7 +177,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(paddingImg),
+                        padding: EdgeInsets.all(padding10),
                         width: height10,
                         child: Stack(
                           children: <Widget>[
@@ -193,7 +193,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(paddingImg),
+                        padding: EdgeInsets.all(padding10),
                         width: height10,
                         child: Stack(
                           children: <Widget>[
@@ -209,7 +209,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(paddingImg),
+                        padding: EdgeInsets.all(padding10),
                         width: height10,
                         child: Stack(
                           children: <Widget>[
@@ -225,7 +225,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Container(
-                        padding: EdgeInsets.all(paddingImg),
+                        padding: EdgeInsets.all(padding10),
                         width: height10,
                         child: Stack(
                           children: <Widget>[
@@ -263,7 +263,7 @@ class _TeamPageState extends State<TeamPage> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(left: paddingAllx2, right: paddingAllx2, top: paddingItem, bottom: paddingItem),
+                  padding: EdgeInsets.only(left: padding50, right: padding50, top: padding15, bottom: padding15),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -293,7 +293,7 @@ class _TeamPageState extends State<TeamPage> {
                         child: Text("초대코드 : 0000", style: TextStyle(fontSize: txtSizeSmlStr)),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(paddingItem),
+                        padding: EdgeInsets.all(padding15),
                       ),
                       Text("인원", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
                       DropdownButton<String>(
@@ -326,25 +326,18 @@ class _TeamPageState extends State<TeamPage> {
                         items: member_cnt_list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Padding(
-                                  padding: EdgeInsets.all(10.0),
+                            child: Center(
+                                child: Text(value, style: TextStyle(
+                                    fontSize: txtSizeMidStr,
+                                    color: Colors.black87
                                 ),
-                                  Center(
-                                      child: Text(value, style: TextStyle(
-                                          fontSize: txtSizeMidStr,
-                                          color: Colors.black87
-                                      ),
                                 )
                             ),
-                          ]),
                           );
                         }).toList(),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(paddingItem),
+                        padding: EdgeInsets.all(padding15),
                       ),
                       Text("데이트 유형", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
                       DropdownButton<String>(
@@ -377,25 +370,18 @@ class _TeamPageState extends State<TeamPage> {
                         items: date_type_list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                            Padding(
-                            padding: EdgeInsets.all(10.0),
-                          ),
-                          Center(
+                            child: Center(
                                 child: Text(value, style: TextStyle(
                                     fontSize: txtSizeMidStr,
                                     color: Colors.black87
                                 ),
                                 )
                             ),
-                                ]),
                           );
                         }).toList(),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(paddingItem),
+                        padding: EdgeInsets.all(padding15),
                       ),
                       Text("지역", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
                       DropdownButton<String>(
@@ -428,26 +414,18 @@ class _TeamPageState extends State<TeamPage> {
                         items: city_list.map<DropdownMenuItem<String>>((String value) {
                           return DropdownMenuItem<String>(
                             value: value,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: <Widget>[
-                                Padding(
-                                  padding: EdgeInsets.all(10.0),
+                            child: Center(
+                                child: Text(value, style: TextStyle(
+                                    fontSize: txtSizeMidStr,
+                                    color: Colors.black87
                                 ),
-                                Center(
-                                    child: Text(value, style: TextStyle(
-                                      fontSize: txtSizeMidStr,
-                                      color: Colors.black87,
-                                    ),
-                                    )
-                                ),
-                              ],
-                            )
+                                )
+                            ),
                           );
                         }).toList(),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(paddingItem),
+                        padding: EdgeInsets.all(padding15),
                       ),
                       Text("장소", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
                       TextField(
@@ -465,7 +443,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(paddingItem),
+                        padding: EdgeInsets.all(padding15),
                       ),
                       Text("사진", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
                       Row(
@@ -548,7 +526,7 @@ class _TeamPageState extends State<TeamPage> {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.all(paddingItem),
+                        padding: EdgeInsets.all(padding15),
                       ),
                       Text("매력 포인트", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
                       TextField(
@@ -565,8 +543,13 @@ class _TeamPageState extends State<TeamPage> {
                           enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
                         ),
                       ),
+
+                      // listview를 사용하면 오류남, column을 사용해서 children을 동적으로 추가하는 방식을 써야하거나..
+                      // 텍스트필드......에추가하면 지우고싶을때 수정이 어렵겠지..? 
+                      //https://stackoverflow.com/questions/50671619/how-to-dynamically-append-to-the-children-of-a-column-widget-in-flutter
+
                       Padding(
-                        padding: EdgeInsets.all(paddingItem),
+                        padding: EdgeInsets.all(padding15),
                       ),
                       SizedBox(
                         width: double.infinity,
@@ -589,7 +572,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(paddingItem),
+                        padding: EdgeInsets.all(padding15),
                       ),
                       SizedBox(
                         width: double.infinity,
@@ -617,9 +600,8 @@ class _TeamPageState extends State<TeamPage> {
                         child: Text("현재 우리팀 노출순위 : 100번째", style: TextStyle(fontSize: txtSizeSmlStr)),
                       ),
                       Padding(
-                        padding: EdgeInsets.all(paddingItem),
+                        padding: EdgeInsets.all(padding15),
                       ),
-
                     ],
                   ),
                 ),
@@ -642,7 +624,7 @@ class _TeamPageState extends State<TeamPage> {
       body: SafeArea( // 아이폰 노치 디자인 대응
         child: SingleChildScrollView(
           child: Padding(
-            padding: EdgeInsets.only(left: paddingAllx2, right: paddingAllx2, top: paddingAll, bottom: paddingAllx2),
+            padding: EdgeInsets.only(left: padding50, right: padding50, top: padding25, bottom: padding50),
             /* UI 작성 - START */
   /*
             "team_code_input_explain" : "코드를 입력하고 팀에 합류 하세요",
@@ -656,7 +638,7 @@ class _TeamPageState extends State<TeamPage> {
                 children: <Widget>[
                   Text(Translations.of(context).trans('team_make_explain'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w500, color: Colors.black87),),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   SizedBox(
                     width: double.infinity,
@@ -678,15 +660,15 @@ class _TeamPageState extends State<TeamPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem2),
+                    padding: EdgeInsets.all(padding20),
                   ),
                   Divider(color: Colors.black),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   Text(Translations.of(context).trans('team_code_input_explain'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w500, color: Colors.black87),),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   TextField(
                     maxLines : 1,
@@ -707,7 +689,7 @@ class _TeamPageState extends State<TeamPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   SizedBox(
                     width: double.infinity,

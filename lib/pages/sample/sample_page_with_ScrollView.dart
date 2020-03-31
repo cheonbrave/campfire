@@ -29,7 +29,7 @@ class _SamplePage3State extends State<SamplePage3> {
       body: SafeArea( // 아이폰 노치 디자인 대응
         child: SingleChildScrollView(
           child:Padding(
-            padding: EdgeInsets.all(paddingAll),
+            padding: EdgeInsets.all(padding25),
             /* UI 작성 - START */
 
             child: Container(

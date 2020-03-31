@@ -9,11 +9,12 @@ const double txtSizeSmlStr = 14;
 const double txtSizeExplain = 12;
 
 // 패딩
-const double paddingAllx2 = 50.0;
-const double paddingAll = 25.0;
-const double paddingItem2 = 20.0;
-const double paddingItem = 15.0;
-const double paddingImg = 10.0;
+const double padding50 = 50.0;
+const double padding25 = 25.0;
+const double padding20 = 20.0;
+const double padding15 = 15.0;
+const double padding10 = 10.0;
+const double padding5 = 5.0;
 
 
 // 포인트컬러
