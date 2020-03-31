@@ -33,7 +33,7 @@ class _InputCodePageState extends State<InputCodePage> {
       body: SafeArea( // 아이폰 노치 디자인 대응
         child: SingleChildScrollView(
           child:Padding(
-              padding: EdgeInsets.only(left: paddingAllx2, right: paddingAllx2, top: paddingAll, bottom: paddingAllx2),
+              padding: EdgeInsets.only(left: padding50, right: padding50, top: padding25, bottom: padding50),
             /* UI 작성 - START */
 
             child:Column(
@@ -42,10 +42,10 @@ class _InputCodePageState extends State<InputCodePage> {
                 children: <Widget>[
                   Text(Translations.of(context).trans('question_code'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w500, color: Colors.black87),),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   TextField(
                     maxLines : 1,
@@ -66,10 +66,10 @@ class _InputCodePageState extends State<InputCodePage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   SizedBox(
                     width: double.infinity,
@@ -91,10 +91,10 @@ class _InputCodePageState extends State<InputCodePage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   SizedBox(
                     width: double.infinity,

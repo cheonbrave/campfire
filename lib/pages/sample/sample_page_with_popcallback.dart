@@ -49,7 +49,7 @@ class _SamplePageState extends State<SamplePage> {
       backgroundColor: Colors.white,
       body: SafeArea( // 아이폰 노치 디자인 대응
         child: Padding(
-          padding: EdgeInsets.all(paddingAll),
+          padding: EdgeInsets.all(padding25),
           /* UI 작성 - START */
 
           child: Container(

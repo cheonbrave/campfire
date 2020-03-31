@@ -80,7 +80,7 @@ class _LoginPageState extends State<LoginPage> {
       body: SafeArea( // 아이폰 노치 디자인 대응
           /* UI 작성 - START */
         child:Padding(
-          padding: EdgeInsets.all(paddingAll),
+          padding: EdgeInsets.all(padding25),
           child:Container(
             child: Align(
               alignment: Alignment.centerRight,
@@ -89,13 +89,13 @@ class _LoginPageState extends State<LoginPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: <Widget>[
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   InkWell(
                     child:Row(
@@ -123,7 +123,7 @@ class _LoginPageState extends State<LoginPage> {
                     }),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   InkWell(
                     child:Row(
@@ -137,12 +137,12 @@ class _LoginPageState extends State<LoginPage> {
                     onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   Text(Translations.of(context).trans('intro_1'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
                   Text(Translations.of(context).trans('intro_2'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
                   Padding(
-                    padding: EdgeInsets.all(paddingItem),
+                    padding: EdgeInsets.all(padding15),
                   ),
                   Text(Translations.of(context).trans('app_title'), style: TextStyle(fontSize: txtSizeMainTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
                 ],
