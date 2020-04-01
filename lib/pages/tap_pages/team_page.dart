@@ -20,6 +20,8 @@ class _TeamPageState extends State<TeamPage> {
   String dropdownValue_type =  null;
   String dropdownValue_city =  null;
 
+  List<Widget> v = [];
+
   @override
   Widget build(BuildContext context) {
     /*
@@ -32,6 +34,32 @@ class _TeamPageState extends State<TeamPage> {
      */
 
     return _makePage_team();
+  }
+
+  buildRow(String str) {
+    v.add(
+      Column(
+        children: <Widget>[
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: <Widget>[
+              Expanded(
+                flex: 2,
+                child: Center(child: Text(str),),
+              ),
+              Expanded(
+                flex: 1,
+                child: Center(child: Icon(Icons.remove_circle_outline)),
+              ),
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.all(padding5),
+          )
+        ],
+      ),
+
+    );
   }
 
   Widget _makePage_team() {
@@ -537,17 +565,22 @@ class _TeamPageState extends State<TeamPage> {
                         textAlign: TextAlign.center,
                         style : TextStyle(fontSize: txtSizeMidStr),
                         decoration: InputDecoration(
-                          hintText: '우리팀의 매력은?',
+                          hintText: '우리팀의 매력 포인트는?',
                           hintStyle: TextStyle(fontSize: txtSizeMidStr, color: Colors.black54),
                           focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
                           enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
+                          suffixIcon: IconButton(
+                            icon: Icon(Icons.add_circle_outline, color: Color(pointColor)),
+                            onPressed: () {
+                              setState(() {
+                                buildRow('item1111111');
+                              });
+                            },
+                          ),
+
                         ),
                       ),
-
-                      // listview를 사용하면 오류남, column을 사용해서 children을 동적으로 추가하는 방식을 써야하거나..
-                      // 텍스트필드......에추가하면 지우고싶을때 수정이 어렵겠지..? 
-                      //https://stackoverflow.com/questions/50671619/how-to-dynamically-append-to-the-children-of-a-column-widget-in-flutter
-
+                      Column(children: v),
                       Padding(
                         padding: EdgeInsets.all(padding15),
                       ),
@@ -569,6 +602,7 @@ class _TeamPageState extends State<TeamPage> {
 
                           //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
                           onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
+
                         ),
                       ),
                       Padding(
