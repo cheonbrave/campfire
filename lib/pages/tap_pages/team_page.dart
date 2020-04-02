@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 import 'package:flutter/services.dart';
 
+
 class TeamPage extends StatefulWidget {
   static const routeName = '/team_page';
 
@@ -20,7 +21,15 @@ class _TeamPageState extends State<TeamPage> {
   String dropdownValue_type =  null;
   String dropdownValue_city =  null;
 
-  List<Widget> v = [];
+  final List<Widget> tags = [];
+
+  final txtTagController = TextEditingController();
+
+  @override
+  void dispose() {
+    txtTagController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -36,29 +45,41 @@ class _TeamPageState extends State<TeamPage> {
     return _makePage_team();
   }
 
-  buildRow(String str) {
-    v.add(
+  buildTagRow(String str) {
+
+    if(str.isEmpty) {
+      return; // 빈 텍스트 무시
+    }
+    if(tags.length == 10) {
+      Scaffold.of(context).showSnackBar(SnackBar(
+        content: Text("더 이상 추가할 수 없습니다"),
+        duration: Duration(seconds: 2),
+      ));
+      return; // 최대 10개
+    }
+
+    str = '#' + str;
+    tags.add(
       Column(
         children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(padding5),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: <Widget>[
               Expanded(
                 flex: 2,
-                child: Center(child: Text(str),),
+                child: Container(child: Text(str), alignment: Alignment.center,),
               ),
               Expanded(
                 flex: 1,
-                child: Center(child: Icon(Icons.remove_circle_outline)),
+                child: Container(child: Icon(Icons.remove_circle_outline), alignment: Alignment.center,),
               ),
             ],
           ),
-          Padding(
-            padding: EdgeInsets.all(padding5),
-          )
         ],
       ),
-
     );
   }
 
@@ -556,9 +577,9 @@ class _TeamPageState extends State<TeamPage> {
                       Padding(
                         padding: EdgeInsets.all(padding15),
                       ),
-                      Text("매력 포인트", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                      Text("매력 포인트", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
                       TextField(
-                        //controller: widget.input_place,
+                        controller: txtTagController,
                         maxLines : 1,
                         maxLength: 10,
                         textAlignVertical: TextAlignVertical.center,
@@ -573,14 +594,14 @@ class _TeamPageState extends State<TeamPage> {
                             icon: Icon(Icons.add_circle_outline, color: Color(pointColor)),
                             onPressed: () {
                               setState(() {
-                                buildRow('item1111111');
+                                buildTagRow(txtTagController.text);
+                                txtTagController.text = '';
                               });
                             },
                           ),
-
                         ),
                       ),
-                      Column(children: v),
+                      Column(children: tags),
                       Padding(
                         padding: EdgeInsets.all(padding15),
                       ),
