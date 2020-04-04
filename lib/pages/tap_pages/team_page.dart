@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 import 'package:flutter/services.dart';
+import 'package:campfire/util/global.dart';
 
 
 class TeamPage extends StatefulWidget {
@@ -33,16 +34,13 @@ class _TeamPageState extends State<TeamPage> {
 
   @override
   Widget build(BuildContext context) {
-    /*
-    초대코드 유무에 따라 표시할 화면 분기
-    if() {
+    //초대코드 유무에 따라 표시할 화면 분기
+    debugPrint("team_code : ${team_code}");
+    if(team_code == null || team_code == "") {
       return _makePage_init();
     }else{
       return _makePage_team();
     }
-     */
-
-    return _makePage_team();
   }
 
   buildTagRow(String str) {
@@ -52,33 +50,26 @@ class _TeamPageState extends State<TeamPage> {
     }
     if(tags.length == 10) {
       Scaffold.of(context).showSnackBar(SnackBar(
-        content: Text("더 이상 추가할 수 없습니다"),
+        content: Text("더 이상 추가할 수 없습니다", style: TextStyle(fontSize: txtSizeMidStr),),
         duration: Duration(seconds: 2),
       ));
       return; // 최대 10개
     }
-
     str = '#' + str;
     tags.add(
-      Column(
-        children: <Widget>[
-          Padding(
-            padding: EdgeInsets.all(padding5),
+      Card(
+        key: Key(str),
+        child: ListTile(
+          title: Center(child: Text(str, style: TextStyle(fontSize: txtSizeMidStr),)),
+          trailing: IconButton(
+            icon: Icon(Icons.remove_circle_outline),
+            onPressed: () {
+              setState(() {
+                tags.removeWhere((item) => item.key == Key(str));
+              });
+            },
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: <Widget>[
-              Expanded(
-                flex: 2,
-                child: Container(child: Text(str), alignment: Alignment.center,),
-              ),
-              Expanded(
-                flex: 1,
-                child: Container(child: Icon(Icons.remove_circle_outline), alignment: Alignment.center,),
-              ),
-            ],
-          ),
-        ],
+        )
       ),
     );
   }
@@ -578,8 +569,15 @@ class _TeamPageState extends State<TeamPage> {
                         padding: EdgeInsets.all(padding15),
                       ),
                       Text("매력 포인트", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
+                      Column(children: tags),
                       TextField(
                         controller: txtTagController,
+                        onSubmitted: (input_str){
+                          setState(() {
+                            buildTagRow(input_str);
+                            txtTagController.text = '';
+                          });
+                        },
                         maxLines : 1,
                         maxLength: 10,
                         textAlignVertical: TextAlignVertical.center,
@@ -601,7 +599,6 @@ class _TeamPageState extends State<TeamPage> {
                           ),
                         ),
                       ),
-                      Column(children: tags),
                       Padding(
                         padding: EdgeInsets.all(padding15),
                       ),

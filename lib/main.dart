@@ -14,6 +14,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:campfire/consts/common_values.dart';
+import 'package:campfire/util/global.dart';
 
 void main() => runApp(MyApp());
 
@@ -35,11 +36,10 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'CAMPFIRE',
 
-      /* 페이지 라우팅 */
+      /* 페이지 라우팅 일단 만들어는 뒀는데 쓰이느곳은 없는상태 ~ */
       initialRoute: '/',
       routes: {
         // 여기에 '/' 에 해당하는 경로는 들어올 수 없다
-
         // common
         RootPage.routeName: (BuildContext context) => RootPage(),
 

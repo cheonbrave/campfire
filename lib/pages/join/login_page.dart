@@ -97,6 +97,23 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.all(padding15),
                   ),
+                  Padding(
+                    padding: EdgeInsets.all(padding15),
+                  ),
+                  InkWell(
+                    child:Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[
+                        Text('APPLE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+                        Text(' ', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+                        Text('LOGIN', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
+                      ],
+                    ),
+                    onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(padding15),
+                  ),
                   InkWell(
                     child:Row(
                       mainAxisAlignment: MainAxisAlignment.end,
@@ -123,26 +140,12 @@ class _LoginPageState extends State<LoginPage> {
                     }),
                   ),
                   Padding(
-                    padding: EdgeInsets.all(padding15),
+                    padding: EdgeInsets.all(padding20),
                   ),
-                  InkWell(
-                    child:Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[
-                        Text('APPLE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
-                        Text(' ', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
-                        Text('LOGIN', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
-                      ],
-                    ),
-                    onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
-                  ),
+                  Text(Translations.of(context).trans('intro_1'), style: TextStyle(fontSize: txtSizeAppBarTitle, fontWeight: FontWeight.w700),),
+                  Text(Translations.of(context).trans('intro_2'), style: TextStyle(fontSize: txtSizeAppBarTitle, fontWeight: FontWeight.w700),),
                   Padding(
-                    padding: EdgeInsets.all(padding15),
-                  ),
-                  Text(Translations.of(context).trans('intro_1'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
-                  Text(Translations.of(context).trans('intro_2'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w700),),
-                  Padding(
-                    padding: EdgeInsets.all(padding15),
+                    padding: EdgeInsets.all(padding20),
                   ),
                   Text(Translations.of(context).trans('app_title'), style: TextStyle(fontSize: txtSizeMainTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
                 ],

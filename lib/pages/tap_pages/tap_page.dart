@@ -52,6 +52,7 @@ class _TapPageState extends State<TapPage> {
 
   @override
   Widget build(BuildContext context) {
+    
     if(widget.tapIndex != null) { // widget 은 현재 State에 선언된 변수를 참조할때 사용, this 같은 의미
       _selectedIdx = widget.tapIndex;
       widget.tapIndex = null;

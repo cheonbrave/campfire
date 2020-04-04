@@ -1,12 +1,12 @@
-const double txtSizeMainTitle = 35;
-const double txtSizeTopTitle = 25;
+const double txtSizeMainTitle = 36;
+const double txtSizeTopTitle = 24;
 const double txtSizeAppBarTitle = 20;
 
-const double txtSizeBigStr = 18;
-const double txtSizeMidStr = 16;
-const double txtSizeSmlStr = 14;
+const double txtSizeBigStr = 16;
+const double txtSizeMidStr = 14;
+const double txtSizeSmlStr = 12;
 
-const double txtSizeExplain = 12;
+const double txtSizeExplain = 10;
 
 // 패딩
 const double padding50 = 50.0;
