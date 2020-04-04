@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 import 'package:campfire/util/language/Translations.dart';
 import 'package:flutter/services.dart';
+import 'package:campfire/util/global.dart';
 
 class InputCodePage extends StatefulWidget {
   static const routeName = '/input_code_page';
@@ -14,6 +15,9 @@ class InputCodePage extends StatefulWidget {
 }
 
 class _InputCodePageState extends State<InputCodePage> {
+
+  final txtCodeController = TextEditingController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,6 +32,7 @@ class _InputCodePageState extends State<InputCodePage> {
   }
 
   Widget _makeBody() {
+
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea( // 아이폰 노치 디자인 대응
@@ -48,6 +53,7 @@ class _InputCodePageState extends State<InputCodePage> {
                     padding: EdgeInsets.all(padding15),
                   ),
                   TextField(
+                    controller: txtCodeController,
                     maxLines : 1,
                     maxLength: 8,
                     maxLengthEnforced: true,
@@ -98,20 +104,33 @@ class _InputCodePageState extends State<InputCodePage> {
                   ),
                   SizedBox(
                     width: double.infinity,
-                    child: FlatButton(
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10.0),
-                      ),
-                      padding: const EdgeInsets.all(15.0),
-                      //textColor: Color(pointColor),
-                      textColor: Colors.white,
-                      //color: Colors.white,
-                      color: Colors.black87,
-                      //splashColor: Color(pointColor2),
-                      splashColor: Colors.black87,
-                      child: Text(Translations.of(context).trans('code_check'), style: TextStyle(fontSize: txtSizeBigStr)),
-                      onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
-                      
+                    child: Builder(
+                      builder: (context) {
+                        return FlatButton(
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                          ),
+                          padding: const EdgeInsets.all(15.0),
+                          //textColor: Color(pointColor),
+                          textColor: Colors.white,
+                          //color: Colors.white,
+                          color: Colors.black87,
+                          //splashColor: Color(pointColor2),
+                          splashColor: Colors.black87,
+                          child: Text(Translations.of(context).trans('code_check'), style: TextStyle(fontSize: txtSizeBigStr)),
+                          onPressed: () {
+                            if(txtCodeController.text != null && txtCodeController.text != ''){
+                              team_code = txtCodeController.text;
+                              Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName));
+                            }else{
+                              Scaffold.of(context).showSnackBar(SnackBar(
+                                content: Text("초대 코드를 입력하세요", style: TextStyle(fontSize: txtSizeMidStr),),
+                                duration: Duration(seconds: 2),
+                              ));
+                            }
+                          },
+                        );
+                      },
                     ),
                   ),
                 ]
