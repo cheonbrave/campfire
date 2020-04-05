@@ -17,6 +17,24 @@ class InputCodePage extends StatefulWidget {
 class _InputCodePageState extends State<InputCodePage> {
 
   final txtCodeController = TextEditingController();
+  FocusNode txtCodeFocusNode;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+    txtCodeFocusNode = FocusNode();
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+
+    txtCodeFocusNode.dispose();
+
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -53,6 +71,7 @@ class _InputCodePageState extends State<InputCodePage> {
                     padding: EdgeInsets.all(padding15),
                   ),
                   TextField(
+                    focusNode: txtCodeFocusNode,
                     controller: txtCodeController,
                     maxLines : 1,
                     maxLength: 8,
@@ -127,6 +146,7 @@ class _InputCodePageState extends State<InputCodePage> {
                                 content: Text("초대 코드를 입력하세요", style: TextStyle(fontSize: txtSizeMidStr),),
                                 duration: Duration(seconds: 2),
                               ));
+                              txtCodeFocusNode.requestFocus();
                             }
                           },
                         );

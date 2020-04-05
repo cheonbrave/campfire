@@ -1,1 +1,1 @@
-var team_code;
+String team_code;
