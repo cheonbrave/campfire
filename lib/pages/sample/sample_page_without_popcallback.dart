@@ -16,7 +16,7 @@ class _SamplePage2State extends State<SamplePage2> {
     return Scaffold(
       appBar: AppBar(
         title: Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
-        elevation: 0.0,
+        elevation: 1.0,
       ),
       body: _makeBody(),
       backgroundColor: Colors.white,

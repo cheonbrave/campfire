@@ -2,6 +2,7 @@ import 'package:campfire/pages/common/root_page.dart';
 import 'package:campfire/pages/join/input_code_page.dart';
 import 'package:campfire/pages/join/input_profile_page.dart';
 import 'package:campfire/pages/join/login_page.dart';
+import 'package:campfire/pages/sub_pages/campfire_filter_page.dart';
 import 'package:campfire/pages/tap_pages/campfire_page.dart';
 import 'package:campfire/pages/tap_pages/matching_page.dart';
 import 'package:campfire/pages/tap_pages/notification_page.dart';
@@ -55,6 +56,9 @@ class MyApp extends StatelessWidget {
         SettingPage.routeName: (BuildContext context) =>SettingPage(),
         TapPage.routeName: (BuildContext context) => TapPage(),
         TeamPage.routeName: (BuildContext context) => TeamPage(),
+
+        // sub_pages
+        CampfireFilterPage.routeName: (BuildContext context) =>CampfireFilterPage(),
 
       },
 

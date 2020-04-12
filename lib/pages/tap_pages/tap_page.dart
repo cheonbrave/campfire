@@ -65,6 +65,7 @@ class _TapPageState extends State<TapPage> {
               child: _pages[_selectedIdx],
             ),
             bottomNavigationBar: BottomNavigationBar(
+              type: BottomNavigationBarType.fixed,
               backgroundColor: Colors.white,
               showSelectedLabels: false,
               showUnselectedLabels: false,
