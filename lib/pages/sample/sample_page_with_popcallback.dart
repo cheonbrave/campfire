@@ -36,7 +36,7 @@ class _SamplePageState extends State<SamplePage> {
       child: Scaffold(
         appBar: AppBar(
           title: Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
-          elevation: 0.0,
+          elevation: 1.0,
         ),
         body: _makeBody(),
         backgroundColor: Colors.white,

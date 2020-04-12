@@ -22,7 +22,7 @@ class _TeamPageState extends State<TeamPage> {
   String dropdownValue_type =  null;
   String dropdownValue_city =  null;
 
-  final List<Widget> tags = [];
+  final List<Widget> tag_list = [];
 
   final txtCodeController = TextEditingController();
   final txtTagController = TextEditingController();
@@ -31,7 +31,6 @@ class _TeamPageState extends State<TeamPage> {
   @override
   void initState() {
     super.initState();
-
     txtCodeFocusNode = FocusNode();
   }
 
@@ -59,7 +58,7 @@ class _TeamPageState extends State<TeamPage> {
     if(str.isEmpty) {
       return; // 빈 텍스트 무시
     }
-    if(tags.length == 10) {
+    if(tag_list.length == 10) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("더 이상 추가할 수 없습니다", style: TextStyle(fontSize: txtSizeMidStr),),
         duration: Duration(seconds: 2),
@@ -67,7 +66,7 @@ class _TeamPageState extends State<TeamPage> {
       return; // 최대 10개
     }
     str = '#' + str;
-    tags.add(
+    tag_list.add(
       Card(
         key: Key(str),
         child: ListTile(
@@ -76,7 +75,7 @@ class _TeamPageState extends State<TeamPage> {
             icon: Icon(Icons.remove_circle_outline),
             onPressed: () {
               setState(() {
-                tags.removeWhere((item) => item.key == Key(str));
+                tag_list.removeWhere((item) => item.key == Key(str));
               });
             },
           ),
@@ -113,9 +112,31 @@ class _TeamPageState extends State<TeamPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.exit_to_app), onPressed: (){
-              setState(() {
-                team_code = "";
-              });
+
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  //Translations.of(context).trans('main_center_text')
+                  title: Text("팀에서 나가시겠습니까?"),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text(Translations.of(context).trans('response_yes')),
+                      onPressed: () {
+                        setState(() {
+                          team_code = "";
+                          txtCodeController.text = '';
+                        });
+                        Navigator.pop(context, true);
+                      },
+                    ),
+                    FlatButton(
+                      child: Text(Translations.of(context).trans('response_no')),
+                      onPressed: () => Navigator.pop(context, false),
+                    ),
+                  ],
+                ));
+
+
           },
           ),
         ],
@@ -587,7 +608,7 @@ class _TeamPageState extends State<TeamPage> {
                               padding: EdgeInsets.all(padding15),
                             ),
                             Text("매력 포인트", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
-                            Column(children: tags),
+                            Column(children: tag_list),
                             TextField(
                               controller: txtTagController,
                               onSubmitted: (input_str){
@@ -634,7 +655,7 @@ class _TeamPageState extends State<TeamPage> {
                                 //splashColor: Color(pointColor2),
                                 splashColor: Colors.black87,
                                 //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
-                                child: Text("블라인드 데이트 시작", style: TextStyle(fontSize: txtSizeMidStr)),
+                                child: Text("매칭 시작", style: TextStyle(fontSize: txtSizeMidStr)),
 
                                 //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
                                 onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
@@ -708,7 +729,7 @@ class _TeamPageState extends State<TeamPage> {
             "team_code_input_explain" : "코드를 입력하고 팀에 합류 하세요",
             "team_code_input_hint" : "초대코드를 입력하세요",
             "code_check": "초대코드 확인",
-            "team_make_explain" : "팀을 만들어야 블라인드 데이트를 시작할 수 있어요",
+            "team_make_explain" : "팀을 만들어야 매칭을 시작할 수 있어요",
             "team_make" : "팀 만들기",
   */
                   child:Column(
