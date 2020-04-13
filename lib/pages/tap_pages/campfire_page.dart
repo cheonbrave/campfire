@@ -64,7 +64,7 @@ class _CampfirePageState extends State<CampfirePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('[오늘밤] 서울특별시, 홍대 어디든, 4명 (20살)'),
+            Text('[오늘밤] 서울특별시, 홍대 어디든, 4명 (20살)', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
             Container(
               height: height55,
               child: ListView(
@@ -72,12 +72,34 @@ class _CampfirePageState extends State<CampfirePage> {
                   children: profiles
               ),
             ),
-            Text('#20학번 #서울대 #한양대 #법학과'),
+            Padding(
+              padding: EdgeInsets.all(padding5),
+            ),
+            Wrap(
+              children: <Widget>[
+                Chip(
+                  backgroundColor: Color(pointColor2),
+                  label: Text('#20학번'),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(right: padding5),
+                ),
+              ],
+            ),
+            Text('1분 전', style: TextStyle(fontSize: txtSizeExplain),),
+
+            Padding(
+              padding: EdgeInsets.all(padding15),
+            ),
+
+
 
           ],
         ),
       ),
     );
+
+    team_list.add(team_list.first);
 
     return Scaffold(
       backgroundColor: Colors.white,
