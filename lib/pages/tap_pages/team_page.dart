@@ -525,6 +525,9 @@ class _TeamPageState extends State<TeamPage> {
                               padding: EdgeInsets.all(padding15),
                             ),
                             Text("사진", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                            Padding(
+                              padding: EdgeInsets.all(padding3),
+                            ),
                             Row(
                               children: <Widget>[
                                 Container(
@@ -684,6 +687,9 @@ class _TeamPageState extends State<TeamPage> {
                                 //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
                                 onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
                               ),
+                            ),
+                            Padding(
+                              padding: EdgeInsets.all(padding3),
                             ),
                             Container(
                               width: double.infinity,
