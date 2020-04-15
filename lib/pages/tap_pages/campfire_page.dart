@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
+
 class CampfirePage extends StatefulWidget {
   static const routeName = '/campfire_page';
   @override
@@ -11,7 +12,17 @@ class CampfirePage extends StatefulWidget {
 
 class _CampfirePageState extends State<CampfirePage> {
 
-  final List<Widget> team_list = [];
+  /* 매칭상대 리스트 */
+  final List<Widget> w_team_list = [];
+
+  /* 프로필이미지 리스트 */
+  final List<Widget> w_profile_img_list = [];
+
+  /* 소개이미지 리스트 */
+  final List<Widget> w_intro_img_list = [];
+
+  /* 태그 리스트 */
+  final List<Widget> w_tag_list = [];
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +47,38 @@ class _CampfirePageState extends State<CampfirePage> {
 
   Widget _makeBody() {
 
-    var height55 = 55.0;
+    var height_profile_img = 40.0;
+    var width_img_slide = MediaQuery.of(context).size.width;
+    var height_img_slide = MediaQuery.of(context).size.height * 0.2;
 
-    final List<Widget> profiles = [];
-    for(int i=0; i < 4; i++){
-      profiles.add(
+    /* 태그 리스트 */
+    for(int i=0; i < 2; i++){
+      w_tag_list.add(
+          Text('#어깨깡패')
+        );
+        w_tag_list.add(
+            Text('#20학번')
+        );
+        w_tag_list.add(
+            Text('#서울대학교')
+        );
+        w_tag_list.add(
+            Text('#법학과')
+        );
+        w_tag_list.add(
+            Text('#맥주보다소주')
+        );
+    }
+
+    /* 프로필이미지 리스트 */
+    for(int i=0; i < 30; i++){
+      w_profile_img_list.add(
           Container(
             padding: EdgeInsets.only(right: 5.0, top: 5.0),
-            width: height55,
+            width: height_profile_img,
             child: SizedBox(
-                width: height55,
-                height: height55,
+                width: height_profile_img,
+                height: height_profile_img,
                 child: CircleAvatar(
                   backgroundColor: Color(pointColor),
                   backgroundImage: NetworkImage(
@@ -58,62 +90,103 @@ class _CampfirePageState extends State<CampfirePage> {
       );
     }
 
+    for(int i=0; i<3; i++){
+      w_intro_img_list.add(
+        Container(
+          width: width_img_slide,
+          height: height_img_slide,
+          decoration: BoxDecoration(
+            color: Colors.black87,
+            image: DecorationImage(
+              image:NetworkImage('https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'),
+              fit:BoxFit.cover,
+            ),
+          ),
+        )
+      );
+    }
+
     // initState에서 화면에 뿌려질 리스트를 수신받아서 리스트 구성
-    team_list.add(
+    w_team_list.add(
       Container(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Text('[오늘밤] 서울특별시, 홍대 어디든, 4명 (20살)', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
+            Padding(
+              padding: EdgeInsets.only(left: padding15, right: padding15, top: padding5, bottom: padding5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text('[오늘밤] 서울특별시, 홍대 어디든, 4명 (20살)', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
+                  Padding(
+                    padding: EdgeInsets.all(padding3),
+                  ),
+                  Container(
+                    height: height_profile_img,
+                    child: ListView(
+                        scrollDirection: Axis.horizontal,
+                        children: w_profile_img_list,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(padding3),
+                  ),
+                ],
+              ),
+            ),
             Container(
-              height: height55,
+              height: width_img_slide,
               child: ListView(
                   scrollDirection: Axis.horizontal,
-                  children: profiles
+                  children: w_intro_img_list
               ),
             ),
             Padding(
-              padding: EdgeInsets.all(padding5),
+              padding: EdgeInsets.all(padding3),
             ),
-            Wrap(
-              children: <Widget>[
-                Chip(
-                  backgroundColor: Color(pointColor2),
-                  label: Text('#20학번'),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(right: padding5),
-                ),
-              ],
+            Padding(
+              padding: EdgeInsets.only(left: padding15, right: padding15, top: padding5, bottom: padding5),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Wrap(
+                    spacing: 7.0,
+                    children: w_tag_list,
+                  ),
+                  Padding(
+                    padding: EdgeInsets.all(padding3),
+                  ),
+                  Text('1분 전', style: TextStyle(fontSize: txtSizeExplain),),
+                ]
+              )
             ),
-            Text('1분 전', style: TextStyle(fontSize: txtSizeExplain),),
-
             Padding(
               padding: EdgeInsets.all(padding15),
             ),
-
-
-
           ],
         ),
       ),
     );
 
-    team_list.add(team_list.first);
+    w_team_list.add(w_team_list.first);
+    w_team_list.add(w_team_list.first);
+    w_team_list.add(w_team_list.first);
+    w_team_list.add(w_team_list.first);
+    w_team_list.add(w_team_list.first);
+    w_team_list.add(w_team_list.first);
+    w_team_list.add(w_team_list.first);
+    w_team_list.add(w_team_list.first);
+    w_team_list.add(w_team_list.first);
+
+
 
     return Scaffold(
       backgroundColor: Colors.white,
       body: SafeArea( // 아이폰 노치 디자인 대응
 
         child: SingleChildScrollView(
-          child:Padding(
-            padding: EdgeInsets.only(left: padding15, right: padding15, top: padding5, bottom: padding5),
-            /* UI 작성 - START */
-
-            child: Column(children: team_list),
-
+          child: Column(children: w_team_list),
             /* UI 작성 - END */
-          ),
         ),
       ),
     );
