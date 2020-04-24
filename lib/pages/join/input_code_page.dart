@@ -89,6 +89,12 @@ class _InputCodePageState extends State<InputCodePage> {
                       focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
                       enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
                     ),
+                    onChanged: (text) {
+                      if(text.length == 8){
+                        /* 사용중인 포커스를 다른곳으로 옮겨줌에따라 키보드가 사라지게 된다 */
+                        FocusScope.of(context).requestFocus(FocusNode());
+                      }
+                    },
                   ),
                   Padding(
                     padding: EdgeInsets.all(padding15),

@@ -560,7 +560,7 @@ class _TeamPageState extends State<TeamPage> {
                                   decoration: BoxDecoration(
                                     color: Colors.black87,
                                     image: DecorationImage(
-                                      image:NetworkImage('https://ww.namu.la/s/df6823100023af724c38aecf72153b741d12f8e8bc21707d1265a79b0bea9f597083fbab05c4a4d6b4f4068f447b4fb8fd3c8184c2ec21638ffae1b7230175ba911e49566a63b5aee47b64e873a5b9ff2122d2f52b5219782e454f2fd03db743274510fc76e20cdde8d0175de4f92323'),
+                                      image:NetworkImage('http://cdn.bizwatch.co.kr/news/photo/2019/10/11/f3120682b1ea7d5f10428bb7a50a9b6d.jpg'),
                                       fit:BoxFit.cover,
                                     ),
                                     border: Border.all(

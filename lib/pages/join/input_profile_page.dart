@@ -179,6 +179,12 @@ class _InputProfilePageState extends State<InputProfilePage> {
                       focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
                       enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
                     ),
+                    onChanged: (text) {
+                      if(text.length == 4){
+                        /* 사용중인 포커스를 다른곳으로 옮겨줌에따라 키보드가 사라지게 된다 */
+                        FocusScope.of(context).requestFocus(FocusNode());
+                      }
+                    },
                   ),
                   /*
                   DropdownButton<String>(
@@ -231,38 +237,24 @@ class _InputProfilePageState extends State<InputProfilePage> {
                           flex: 1,
                           child: Container(
                               alignment: Alignment.center,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Radio(
-                                    value: Genders.man,
-                                    groupValue: _gender,
-                                    onChanged: (Genders value) {
-                                      setState(() { _gender = value; });
-                                    },
-                                  ),
-                                  Text(Translations.of(context).trans('man'),style: TextStyle(fontSize: txtSizeBigStr)),
-                                ],
-                              )
+                              child:RadioListTile<Genders>(
+                                title: Text(Translations.of(context).trans('man'),style: TextStyle(fontSize: txtSizeBigStr)),
+                                value: Genders.man,
+                                groupValue: _gender,
+                                onChanged: (Genders value) { setState(() { _gender = value; }); },
+                              ),
                           )
                       ),
                       Expanded(
                           flex: 1,
                           child: Container(
                               alignment: Alignment.center,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Radio(
-                                    value: Genders.woman,
-                                    groupValue: _gender,
-                                    onChanged: (Genders value) {
-                                      setState(() { _gender = value; });
-                                    },
-                                  ),
-                                  Text(Translations.of(context).trans('woman'),style: TextStyle(fontSize: txtSizeBigStr)),
-                                ],
-                              )
+                              child: RadioListTile<Genders>(
+                                title: Text(Translations.of(context).trans('woman'),style: TextStyle(fontSize: txtSizeBigStr)),
+                                value: Genders.woman,
+                                groupValue: _gender,
+                                onChanged: (Genders value) { setState(() { _gender = value; }); },
+                              ),
                           )
                       ),
                     ],
