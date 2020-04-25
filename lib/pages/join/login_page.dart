@@ -100,7 +100,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.all(padding15),
                   ),
-                  InkWell(
+                  GestureDetector(
                     child:Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
@@ -114,7 +114,7 @@ class _LoginPageState extends State<LoginPage> {
                   Padding(
                     padding: EdgeInsets.all(padding15),
                   ),
-                  InkWell(
+                  GestureDetector(
                     child:Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                         children: <Widget>[
