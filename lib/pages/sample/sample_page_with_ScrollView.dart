@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 
 class SamplePage3 extends StatefulWidget {
+  static const routeName = '/sample_page3';
   @override
   _SamplePage3State createState() => _SamplePage3State();
 }
