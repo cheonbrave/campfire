@@ -12,26 +12,32 @@ class CampfireDetailPage extends StatefulWidget {
 class _CampfireDetailPageState extends State<CampfireDetailPage> {
 
   final List<Widget> w_profile_img_list = [];
+  /* 태그 리스트 */
+  final List<Widget> w_tag_list = [];
 
   final List<String> imgList = [];
   int _current = 0;
 
   @override
   void initState() {
-    // TODO: implement initState
-    super.initState();
 
     imgList.add('https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg');
     imgList.add('https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80');
     imgList.add('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80');
 
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      imgList.forEach((imageUrl) {
+        precacheImage(NetworkImage(imageUrl), context);
+      });
+    });
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+        title: Text('TEAM', style: TextStyle(fontSize: txtSizeTopTitle)),
         elevation: 1.0,
       ),
       body: _makeBody(),
@@ -86,15 +92,25 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
     w_profile_img_list.add(w_profile_img_list[0]);
     w_profile_img_list.add(w_profile_img_list[0]);
     w_profile_img_list.add(w_profile_img_list[0]);
-    w_profile_img_list.add(w_profile_img_list[0]);
-    w_profile_img_list.add(w_profile_img_list[0]);
-    w_profile_img_list.add(w_profile_img_list[0]);
-    w_profile_img_list.add(w_profile_img_list[0]);
-    w_profile_img_list.add(w_profile_img_list[0]);
-    w_profile_img_list.add(w_profile_img_list[0]);
-    w_profile_img_list.add(w_profile_img_list[0]);
-    w_profile_img_list.add(w_profile_img_list[0]);
-    w_profile_img_list.add(w_profile_img_list[0]);
+
+    /* 태그 리스트 */
+    w_tag_list.clear();
+    /* 태그 리스트 */
+    w_tag_list.add(
+        Text('#어깨깡패', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500))
+    );
+    w_tag_list.add(
+        Text('#20학번', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500))
+    );
+    w_tag_list.add(
+        Text('#서울대학교', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500))
+    );
+    w_tag_list.add(
+        Text('#법학과', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500))
+    );
+    w_tag_list.add(
+        Text('#맥주보다소주', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500))
+    );
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -111,22 +127,11 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
                   children: w_profile_img_list,
                 ),
               ),
-              Padding(
-                padding: EdgeInsets.only(left: padding15, right: padding15, top: padding5, bottom: padding5),
-                child: Column(
-                  children: <Widget>[
-                    Text('[오늘밤] 서울특별시, 홍대 어디든, 4명 (20살)',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
-                    Padding(
-                      padding: EdgeInsets.all(padding3),
-                    ),
-                  ],
-                ),
-              ),
+
               Column(
                 children: <Widget>[
-                  CarouselSlider(
+                  CarouselSlider.builder(
+                    itemCount: imgList.length,
                     options: CarouselOptions(
                       autoPlay: false,
                       aspectRatio: 1/1, // 1/1, 4/3, 16/9
@@ -138,11 +143,13 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
                         });
                       },
                     ),
-                    items: imgList.map((item) => Container(
-                      child: Center(
-                          child: Image.network(item, fit: BoxFit.cover, width: width_img_slide)
-                      ),
-                    )).toList(),
+                    itemBuilder: (context, index) {
+                      return Container(
+                        child: Center(
+                            child: Image.network(imgList[index], fit: BoxFit.cover, width: width_img_slide)
+                        ),
+                      );
+                    }
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -164,18 +171,37 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.all(padding5),
-              ),
-              Padding(
-                padding: EdgeInsets.only(left: padding50, right: padding50, top: padding15, bottom: padding15),
+                padding: EdgeInsets.only(left: padding50, right: padding50, top: padding15, bottom: padding25),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('~~~~~~~~~~~',
-                      overflow: TextOverflow.ellipsis,
-                      style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
+                    Text('오늘밤',
+                      style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),
+                    ),
                     Padding(
-                      padding: EdgeInsets.all(padding15),
+                      padding: EdgeInsets.all(padding10),
+                    ),
+                    Text('서울특별시 "홍대 어디든" 에서',
+                      style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(padding10),
+                    ),
+                    Text('20살 남자 4명과 함께',
+                      style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                        '만나볼까요?', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(padding10),
+                    ),
+                    Wrap(
+                      spacing: 7.0,
+                      children: w_tag_list,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.all(padding10),
                     ),
                     SizedBox(
                       width: double.infinity,

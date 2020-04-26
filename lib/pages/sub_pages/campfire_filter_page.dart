@@ -14,7 +14,7 @@ class _CampfireFilterPageState extends State<CampfireFilterPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('FILTERING', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+        title: Text('FILTERING', style: TextStyle(fontSize: txtSizeTopTitle)),
         elevation: 1.0,
       ),
       body: _makeBody(),

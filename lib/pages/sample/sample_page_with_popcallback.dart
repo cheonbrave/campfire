@@ -36,7 +36,7 @@ class _SamplePageState extends State<SamplePage> {
       onWillPop: _willPopCallback,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+          title: Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeTopTitle),),
           elevation: 1.0,
         ),
         body: _makeBody(),
