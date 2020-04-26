@@ -16,7 +16,7 @@ class _SamplePage3State extends State<SamplePage3> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700),),
+        title: Text('CAMPFIRE', style: TextStyle(fontSize: txtSizeTopTitle),),
         elevation: 1.0,
       ),
       body: _makeBody(),

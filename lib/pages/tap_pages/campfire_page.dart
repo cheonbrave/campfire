@@ -3,7 +3,7 @@ import 'package:campfire/pages/sub_pages/campfire_filter_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
-
+import 'package:carousel_slider/carousel_slider.dart';
 
 class CampfirePage extends StatefulWidget {
   static const routeName = '/campfire_page';
@@ -20,7 +20,8 @@ class _CampfirePageState extends State<CampfirePage> {
   final List<Widget> w_profile_img_list = [];
 
   /* 소개이미지 리스트 */
-  final List<Widget> w_intro_img_list = [];
+  final List<String> imgList = [];
+  int _current = 0;
 
   /* 태그 리스트 */
   final List<Widget> w_tag_list = [];
@@ -31,9 +32,6 @@ class _CampfirePageState extends State<CampfirePage> {
 
     /* 프로필이미지 리스트 */
     w_profile_img_list.clear();
-
-    /* 소개이미지 리스트 */
-    w_intro_img_list.clear();
 
     /* 태그 리스트 */
     w_tag_list.clear();
@@ -76,11 +74,19 @@ class _CampfirePageState extends State<CampfirePage> {
     /* 프로필이미지 리스트 */
     w_profile_img_list.clear();
 
-    /* 소개이미지 리스트 */
-    w_intro_img_list.clear();
-
     /* 태그 리스트 */
     w_tag_list.clear();
+
+    imgList.clear();
+    imgList.add('https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg');
+    imgList.add('https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80');
+    imgList.add('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80');
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      imgList.forEach((imageUrl) {
+        precacheImage(NetworkImage(imageUrl), context);
+      });
+    });
 
     /* 태그 리스트 */
     for(int i=0; i < 1; i++){
@@ -102,7 +108,7 @@ class _CampfirePageState extends State<CampfirePage> {
     }
 
     /* 프로필이미지 리스트 */
-    for(int i=0; i < 10; i++){
+    for(int i=0; i < 4; i++){
       w_profile_img_list.add(
           Container(
             padding: EdgeInsets.only(right: 5.0, top: 5.0),
@@ -118,33 +124,6 @@ class _CampfirePageState extends State<CampfirePage> {
                 )
             ),
           )
-      );
-    }
-
-    for(int i=0; i<3; i++){
-      w_intro_img_list.add(
-
-        GestureDetector(
-          child: Container(
-            width: width_img_slide,
-            height: height_img_slide,
-            decoration: BoxDecoration(
-              color: Colors.black87,
-              image: DecorationImage(
-                image:NetworkImage('https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'),
-                fit:BoxFit.cover,
-              ),
-            ),
-          ),
-          onTap: () {
-            setState(() {
-              clearLists();
-            });
-            Navigator.push(context, CupertinoPageRoute(builder: (context) => CampfireDetailPage()));
-          },
-        )
-
-
       );
     }
 
@@ -178,12 +157,52 @@ class _CampfirePageState extends State<CampfirePage> {
                 ],
               ),
             ),
-            Container(
-              height: width_img_slide,
-              child: ListView(
-                  scrollDirection: Axis.horizontal,
-                  children: w_intro_img_list
-              ),
+            Column(
+              children: <Widget>[
+                CarouselSlider(
+                  options: CarouselOptions(
+                    autoPlay: false,
+                    aspectRatio: 1/1, // 1/1, 4/3, 16/9
+                    enlargeCenterPage: false,
+                    viewportFraction: 1.0,
+                    onPageChanged: (index, reason) {
+                      setState(() {
+                        _current = index;
+                      });
+                    },
+                  ),
+                  items: imgList.map((item) => GestureDetector(
+                    child: Container(
+                      child: Center(
+                          child: Image.network(item, fit: BoxFit.cover, width: width_img_slide)
+                      ),
+                    ),
+                    onTap: () {
+                      setState(() {
+                        clearLists();
+                      });
+                      Navigator.push(context, CupertinoPageRoute(builder: (context) => CampfireDetailPage()));
+                    },
+                  )).toList(),
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: imgList.map((url) {
+                    int index = imgList.indexOf(url);
+                    return Container(
+                      width: 8.0,
+                      height: 8.0,
+                      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: _current == index
+                            ? Color(pointColor)
+                            : Colors.black26,
+                      ),
+                    );
+                  }).toList(),
+                ),
+              ],
             ),
             Padding(
               padding: EdgeInsets.all(padding3),
