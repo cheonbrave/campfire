@@ -90,8 +90,9 @@ class _TeamPageState extends State<TeamPage> {
 
     var height10 = MediaQuery.of(context).size.height * 0.10;
     var listHeight = MediaQuery.of(context).size.height * 0.10 + 50.0;
-
     var image_width = (MediaQuery.of(context).size.width - padding50 - padding50) / 3;
+
+    var paddingRL = MediaQuery.of(context).size.width * 0.1;
 
     w_profile_img_list.clear();
     w_intro_img_list.clear();
@@ -263,7 +264,7 @@ class _TeamPageState extends State<TeamPage> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(left: padding50, right: padding50, top: padding15, bottom: padding15),
+                        padding: EdgeInsets.only(left: paddingRL, right: paddingRL, top: padding15, bottom: padding15),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
@@ -562,6 +563,8 @@ class _TeamPageState extends State<TeamPage> {
 
   Widget _makePage_init() {
 
+    var paddingRL = MediaQuery.of(context).size.width * 0.1;
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: false,
@@ -574,7 +577,7 @@ class _TeamPageState extends State<TeamPage> {
             children: <Widget>[
               SingleChildScrollView(
                 child: Padding(
-                  padding: EdgeInsets.only(left: padding50, right: padding50, top: padding25, bottom: padding50),
+                  padding: EdgeInsets.only(left: paddingRL, right: paddingRL, top: padding25, bottom: padding50),
                   /* UI 작성 - START */
                   /*
             "team_code_input_explain" : "코드를 입력하고 팀에 합류 하세요",

@@ -1,4 +1,5 @@
 import 'package:campfire/pages/join/login_page.dart';
+import 'package:campfire/util/language/Translations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -23,11 +24,30 @@ class _SettingPageState extends State<SettingPage> {
         actions: <Widget>[
           /* 임시로 이곳에 로그아웃버튼 추가 */
           IconButton(
-            icon: Icon(Icons.exit_to_app),
-            onPressed: (){
-              FirebaseAuth.instance.signOut();
-              _gsi.signOut();
-              Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LoginPage()));
+            icon: Icon(Icons.exit_to_app), onPressed: (){
+
+            showDialog(
+                context: context,
+                builder: (context) => AlertDialog(
+                  //Translations.of(context).trans('main_center_text')
+                  title: Text("로그아웃 하시겠습니까?"),
+                  actions: <Widget>[
+                    FlatButton(
+                      child: Text(Translations.of(context).trans('response_yes')),
+                      onPressed: () {
+                        setState(() {
+                          FirebaseAuth.instance.signOut();
+                          _gsi.signOut();
+                          Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LoginPage()));
+                        });
+                      },
+                    ),
+                    FlatButton(
+                      child: Text(Translations.of(context).trans('response_no')),
+                      onPressed: () => Navigator.pop(context, false),
+                    ),
+                  ],
+                ));
             },
           ),
         ],
