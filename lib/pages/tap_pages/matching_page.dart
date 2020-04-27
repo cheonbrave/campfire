@@ -53,6 +53,7 @@ class _MatchingPageState extends State<MatchingPage> {
 
   Widget _makeBody() {
 
+    var paddingRL = MediaQuery.of(context).size.width * 0.035;
     var height_profile_img = 40.0;
     var width_img_slide = MediaQuery.of(context).size.width;
     var height_img_slide = MediaQuery.of(context).size.height * 0.2;
@@ -123,7 +124,7 @@ class _MatchingPageState extends State<MatchingPage> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
             Padding(
-              padding: EdgeInsets.only(left: padding15, right: padding15, top: padding5, bottom: padding5),
+              padding: EdgeInsets.only(left: paddingRL, right: paddingRL, top: padding5, bottom: padding5),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -197,7 +198,7 @@ class _MatchingPageState extends State<MatchingPage> {
               padding: EdgeInsets.all(padding3),
             ),
             Padding(
-                padding: EdgeInsets.only(left: padding15, right: padding15, top: padding5, bottom: padding5),
+                padding: EdgeInsets.only(left: paddingRL, right: paddingRL, top: padding5, bottom: padding5),
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -218,7 +219,7 @@ class _MatchingPageState extends State<MatchingPage> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0),
                           ),
-                          padding: const EdgeInsets.all(12.0),
+                          padding: const EdgeInsets.all(13.0),
                           //textColor: Color(pointColor),
                           textColor: Colors.black87,
                           //color: Colors.white,
@@ -237,7 +238,7 @@ class _MatchingPageState extends State<MatchingPage> {
                 )
             ),
             Padding(
-              padding: EdgeInsets.all(padding15),
+              padding: EdgeInsets.all(paddingRL),
             ),
           ],
         ),
