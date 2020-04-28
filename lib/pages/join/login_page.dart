@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
@@ -30,7 +31,7 @@ class _LoginPageState extends State<LoginPage> {
           actions: <Widget>[
             FlatButton(
               child: Text(Translations.of(context).trans('response_yes')),
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () => SystemNavigator.pop(),
             ),
             FlatButton(
               child: Text(Translations.of(context).trans('response_no')),

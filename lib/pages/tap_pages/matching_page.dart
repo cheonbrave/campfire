@@ -1,5 +1,6 @@
 import 'package:campfire/pages/sub_pages/campfire_detail_page.dart';
 import 'package:campfire/pages/sub_pages/campfire_filter_page.dart';
+import 'package:campfire/pages/sub_pages/chatting_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
@@ -134,7 +135,7 @@ class _MatchingPageState extends State<MatchingPage> {
                   Padding(
                     padding: EdgeInsets.all(padding3),
                   ),
-                  Container(
+                  /*Container(
                     height: height_profile_img,
                     child: ListView(
                       scrollDirection: Axis.horizontal,
@@ -143,10 +144,19 @@ class _MatchingPageState extends State<MatchingPage> {
                   ),
                   Padding(
                     padding: EdgeInsets.all(padding3),
-                  ),
+                  ),*/
                 ],
               ),
             ),
+            GestureDetector(
+                child: Image.network(imgList[0], fit: BoxFit.contain, width: width_img_slide, height: width_img_slide,),
+                onTap: () {
+                  setState(() {
+                    clearLists();
+                  });
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) => CampfireDetailPage()));
+                }),
+            /*
             Column(
               children: <Widget>[
                 CarouselSlider(
@@ -194,6 +204,7 @@ class _MatchingPageState extends State<MatchingPage> {
                 ),
               ],
             ),
+            */
             Padding(
               padding: EdgeInsets.all(padding3),
             ),
@@ -229,7 +240,7 @@ class _MatchingPageState extends State<MatchingPage> {
                           //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
                           child: Text("아직 미팅신청을 확인하지 못했어요", style: TextStyle(fontSize: txtSizeMidStr)),
                           onPressed: () {
-                            debugPrint('on pressed');
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => ChattingPage()));
                           },
 
                         ),

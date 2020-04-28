@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
+import 'package:flutter/services.dart';
 
 class SamplePage extends StatefulWidget {
   static const routeName = '/sample_page';
@@ -18,7 +19,7 @@ class _SamplePageState extends State<SamplePage> {
           actions: <Widget>[
             FlatButton(
               child: Text("네"),
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () => SystemNavigator.pop(),
             ),
             FlatButton(
               child: Text("아니요"),
