@@ -1,4 +1,5 @@
 import 'package:campfire/pages/join/input_code_page.dart';
+import 'package:campfire/util/dbio/dbio.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,6 +25,8 @@ class _InputProfilePageState extends State<InputProfilePage> {
   String photoUrl = "";
   String nickname = "";
   TextEditingController input_nick = TextEditingController();
+  TextEditingController input_birth = TextEditingController();
+
 
   @override
   void initState() {
@@ -163,6 +166,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
                     padding: EdgeInsets.all(padding15),
                   ),
                   TextField(
+                    controller: input_birth,
                     maxLines : 1,
                     maxLength: 4,
                     maxLengthEnforced: true,
@@ -186,47 +190,6 @@ class _InputProfilePageState extends State<InputProfilePage> {
                       }
                     },
                   ),
-                  /*
-                  DropdownButton<String>(
-                    hint: Center(
-                        child: Text(
-                          Translations.of(context).trans("birth_year"),
-                          style: TextStyle(fontSize: txtSizeBigStr),
-                        )
-                    ),
-                    isExpanded: true,
-                    value: dropdownValue,
-                    icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
-                    iconSize: txtSizeTopTitle,
-                    elevation:16, // 1,2,3,4,6,8,9,12,16,24
-                    style: TextStyle(
-                        fontSize: txtSizeBigStr,
-                        color: Colors.black87
-                    ),
-                    underline: Container(
-                        height: 1,
-                        color: Colors.black87
-                    ),
-                    onChanged: (String newValue) {
-                      setState(() {
-                        dropdownValue = newValue;
-                        debugPrint("dropdownValue : ${dropdownValue}");
-                      });
-                    },
-                    items: year_list.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Center(
-                            child: Text(value, style: TextStyle(
-                                fontSize: txtSizeBigStr,
-                                color: Colors.black87
-                            ),
-                            )
-                        ),
-                      );
-                    }).toList(),
-                  ),
-                  */
                   Padding(
                     padding: EdgeInsets.all(padding15),
                   ),
@@ -277,7 +240,24 @@ class _InputProfilePageState extends State<InputProfilePage> {
                       splashColor: Colors.black87,
                       child: Text(Translations.of(context).trans('next'), style: TextStyle(fontSize: txtSizeBigStr)),
                       //onPressed: () => Navigator.pop(context),
-                      onPressed: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputCodePage())),
+                      onPressed: () {
+
+                        String _genderStr = 'man';
+                        if(_gender == Genders.woman){
+                          _genderStr = 'woman';
+                        }
+                        Map<String, dynamic> data = {
+                          'profile_img' : null,
+                          'nickname' : input_nick.text,
+                          'birth_year' : input_birth.text,
+                          'gender' : _genderStr,
+                        };
+
+                        DBIO dbio = new DBIO();
+                        dbio.upsert(collection_accounts, widget.user.email, data).then((onValue) {
+                          Navigator.push(context, CupertinoPageRoute(builder: (context) => InputCodePage()));
+                        });
+                      },
                     ),
                   ),
                 ],

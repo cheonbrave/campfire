@@ -1,4 +1,5 @@
 import 'package:campfire/pages/join/input_profile_page.dart';
+import 'package:campfire/pages/tap_pages/tap_page.dart';
 import 'package:campfire/util/language/Translations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:campfire/consts/common_values.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -44,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
 
   Future<FirebaseUser> _handleSignIn() async {
 
+    /* 반복 터치 방지 */
     if(isClicked){
       return null;
     }else{
@@ -53,14 +56,19 @@ class _LoginPageState extends State<LoginPage> {
     final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
     final GoogleSignInAuthentication googleAuth = await googleUser.authentication;
 
+    /* 구글 로그인정보를 사용해서 credential 생성 */
     final AuthCredential credential = GoogleAuthProvider.getCredential(
       accessToken: googleAuth.accessToken,
       idToken: googleAuth.idToken,
     );
 
+    /* credential를 사용해서 파이어베이스 로그인 */
     final FirebaseUser user = (await _auth.signInWithCredential(credential)).user;
     debugPrint("_handleSignIn signed in " + user.displayName);
+
     isClicked = false;
+
+    /* 파이어베이스에 기록한 사용자정보 반환 */
     return user;
   }
 
@@ -110,7 +118,10 @@ class _LoginPageState extends State<LoginPage> {
                         Text('LOGIN', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
                       ],
                     ),
-                    onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
+                    onTap: () {
+                      debugPrint('clicked apple login');
+                      //Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage()));
+                    },
                   ),
                   Padding(
                     padding: EdgeInsets.all(padding15),
@@ -124,18 +135,37 @@ class _LoginPageState extends State<LoginPage> {
                           Text('LOGIN', style: TextStyle(fontSize: txtSizeTopTitle, fontWeight: FontWeight.w700, color: Color(pointColor)),),
                         ],
                     ),
-                    //onTap: () => Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage())),
                     onTap: () => _handleSignIn().then((FirebaseUser user) {
                       if(user == null) {
                         debugPrint("_handleSignIn return is null");
                         return;
                       }
                       else {
-                        debugPrint("_handleSignIn return : " + user.displayName);
-                        debugPrint("_handleSignIn return : " + user.uid);
-                        debugPrint("_handleSignIn return : " + user.email);
-                        debugPrint("_handleSignIn return : " + user.photoUrl);
-                        Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage(user: user,)));
+                        /* 로그인 성공 */
+                        debugPrint("_handleSignIn return user.displayName : " + user.displayName);
+                        debugPrint("_handleSignIn return user.uid : " + user.uid);
+                        debugPrint("_handleSignIn return user.email : " + user.email);
+                        debugPrint("_handleSignIn return user.photoUrl : " + user.photoUrl);
+
+                        /* accounts 컬렉션에서 기존 가입정보가 있는지 조회 */
+                        /* 사용자의 이메일주소를 key로 갖는 document를 탐색 */
+
+                        var fdb = Firestore.instance.collection(collection_accounts);
+
+                        fdb.document(user.email).get().then((DocumentSnapshot ds){
+                          if( ds.data == null ||
+                              ds.data['profile_img'] == null ||
+                              ds.data['nickname'] == null ||
+                              ds.data['birth_year'] == null ||
+                              ds.data['gender'] == null){
+                            //debugPrint('기존 가입정보 없음~~~');
+                            Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage(user: user,)));
+                          }else{
+                            //debugPrint('기존 가입정보 있음!!!');
+                            Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 1)), ModalRoute.withName(TapPage.routeName));
+                          }
+                        });
+
                       }
 
                     }),

@@ -21,3 +21,6 @@ const double padding3 = 3.0;
 // 포인트컬러
 const int pointColor = 0xFFEB0009;
 const int pointColor2 = 0xFFFDE5E6;
+
+// DB 컬렉션 이름
+const String collection_accounts = 'accounts';
