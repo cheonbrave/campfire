@@ -47,8 +47,8 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
 
   Widget _makeBody() {
 
-    var height10 = MediaQuery.of(context).size.height * 0.10;
-    var listHeight = MediaQuery.of(context).size.height * 0.10 + 50.0;
+    var height10 = MediaQuery.of(context).size.height * 0.07;
+    var listHeight = MediaQuery.of(context).size.height * 0.07 + 50.0;
 
     var width_img_slide = MediaQuery.of(context).size.width;
     var height_img_slide = MediaQuery.of(context).size.height * 0.2;
@@ -146,7 +146,10 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
                     itemBuilder: (context, index) {
                       return Container(
                         child: Center(
-                            child: Image.network(imgList[index], fit: BoxFit.cover, width: width_img_slide)
+                            child: Hero(
+                              tag: imgList[index],
+                              child: Image.network(imgList[index], fit: BoxFit.contain, width: width_img_slide),
+                            )
                         ),
                       );
                     }
@@ -171,7 +174,7 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
                 ],
               ),
               Padding(
-                padding: EdgeInsets.only(left: padding50, right: padding50, top: padding15, bottom: padding25),
+                padding: EdgeInsets.only(left: padding50, right: padding50, top: padding15, bottom: padding50),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
@@ -201,7 +204,7 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
                       children: w_tag_list,
                     ),
                     Padding(
-                      padding: EdgeInsets.all(padding10),
+                      padding: EdgeInsets.all(padding20),
                     ),
                     SizedBox(
                       width: double.infinity,

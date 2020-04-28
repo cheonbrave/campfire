@@ -146,7 +146,7 @@ class _CampfirePageState extends State<CampfirePage> {
                   Padding(
                     padding: EdgeInsets.all(padding3),
                   ),
-                  Container(
+                  /*Container(
                     height: height_profile_img,
                     child: ListView(
                         scrollDirection: Axis.horizontal,
@@ -155,11 +155,19 @@ class _CampfirePageState extends State<CampfirePage> {
                   ),
                   Padding(
                     padding: EdgeInsets.all(padding3),
-                  ),
+                  ),*/
                 ],
               ),
             ),
-            Column(
+            GestureDetector(
+                child: Image.network(imgList[0], fit: BoxFit.contain, width: width_img_slide, height: width_img_slide,),
+                onTap: () {
+                  setState(() {
+                    clearLists();
+                  });
+                  Navigator.push(context, CupertinoPageRoute(builder: (context) => CampfireDetailPage()));
+                }),
+            /*Column(
               children: <Widget>[
                 CarouselSlider(
                   options: CarouselOptions(
@@ -205,7 +213,7 @@ class _CampfirePageState extends State<CampfirePage> {
                   }).toList(),
                 ),
               ],
-            ),
+            ),*/
             Padding(
               padding: EdgeInsets.all(padding3),
             ),
@@ -233,11 +241,11 @@ class _CampfirePageState extends State<CampfirePage> {
       ),
     );
 
-    w_team_list.add(w_team_list.first);
-    w_team_list.add(w_team_list.first);
-    w_team_list.add(w_team_list.first);
-    w_team_list.add(w_team_list.first);
-    w_team_list.add(w_team_list.first);
+    w_team_list.add(w_team_list[0]);
+    w_team_list.add(w_team_list[0]);
+    w_team_list.add(w_team_list[0]);
+    w_team_list.add(w_team_list[0]);
+
 
     return Scaffold(
       backgroundColor: Colors.white,

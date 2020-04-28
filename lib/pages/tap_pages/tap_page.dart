@@ -6,6 +6,7 @@ import 'package:campfire/pages/tap_pages/campfire_page.dart';
 import 'package:campfire/pages/tap_pages/matching_page.dart';
 import 'package:campfire/pages/tap_pages/notification_page.dart';
 import 'package:campfire/pages/tap_pages/setting_page.dart';
+import 'package:flutter/services.dart';
 
 class TapPage extends StatefulWidget {
   static const routeName = '/tap_page';
@@ -28,7 +29,7 @@ class _TapPageState extends State<TapPage> {
           actions: <Widget>[
             FlatButton(
               child: Text(Translations.of(context).trans('response_yes')),
-              onPressed: () => Navigator.pop(context, true),
+              onPressed: () => SystemNavigator.pop(),
             ),
             FlatButton(
               child: Text(Translations.of(context).trans('response_no')),
@@ -52,11 +53,19 @@ class _TapPageState extends State<TapPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    debugPrint("before - widget.tapIndex : ${widget.tapIndex}");
+    debugPrint("before - _selectedIdx : ${_selectedIdx}");
     
     if(widget.tapIndex != null) { // widget 은 현재 State에 선언된 변수를 참조할때 사용, this 같은 의미
       _selectedIdx = widget.tapIndex;
       widget.tapIndex = null;
     }
+
+    debugPrint("after - widget.tapIndex : ${widget.tapIndex}");
+    debugPrint("after - _selectedIdx : ${_selectedIdx}");
+
+
     return WillPopScope(
       // will pop scope는 화면이 pop가 발생할때 즉 화면이 distory될때를 감안한 이벤트를 줄수있으며 android의 back버튼 클릭이벤트라고 생각하면된다
         onWillPop: _willPopCallback,
@@ -97,7 +106,12 @@ class _TapPageState extends State<TapPage> {
 
   void _onTapped(int idx) {
     setState(() {
+
+      debugPrint("onTapped - idx : ${idx}");
+
       _selectedIdx = idx;
+
+      debugPrint("onTapped - _selectedIdx : ${_selectedIdx}");
     });
   }
 }

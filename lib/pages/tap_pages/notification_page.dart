@@ -31,8 +31,24 @@ class _NotificationPageState extends State<NotificationPage> {
 
     w_noti_list.clear();
     w_noti_list.add(
-      Padding(
-        padding: EdgeInsets.only(bottom: padding20),
+      ListTile(
+        leading: Icon(Icons.mail_outline, size: txtSizeTopTitle,),
+        title: Text(
+          '매칭 신청을 받았습니다',
+          style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)
+        ),
+        subtitle: Text(
+          '3월 1일, 오후 5시 30분',
+          style: TextStyle(fontSize: txtSizeSmlStr, fontWeight: FontWeight.w500),
+        ),
+        trailing: Icon(Icons.keyboard_arrow_right),
+        //isThreeLine: true,
+        onTap: (){
+
+        },
+      ),
+      /*Padding(
+        padding: EdgeInsets.only(bottom: padding25),
         child: Row(
           children: <Widget>[
             Container(
@@ -75,7 +91,7 @@ class _NotificationPageState extends State<NotificationPage> {
             ),
           ],
         ),
-      ),
+      ),*/
     );
 
     w_noti_list.add(w_noti_list[0]);
