@@ -123,6 +123,7 @@ class _ChattingPageState extends State<ChattingPage> {
           ),
         ),
         onTap: (){
+          // 화면 터치를 통해 키보드 제거
           FocusScope.of(context).requestFocus(FocusNode());
         },
       )
