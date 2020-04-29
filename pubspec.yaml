@@ -38,6 +38,14 @@ dependencies:
   cloud_firestore: ^0.13.5
   # cloud firestore 위치는 us-east4 (북버지니아)로 설정함.. 청구 비용이 가장 저렴해서 여기로함
 
+  firebase_storage: ^3.1.5
+
+  image_picker: ^0.6.5+3
+  image_cropper: ^1.2.1
+  flutter_image_compress: ^0.6.7
+  path_provider: ^1.6.7
+
+
   #firebase_core: ^0.4.4+3
   #firebase_auth: ^0.15.5+3
   #google_sign_in: ^4.2.0

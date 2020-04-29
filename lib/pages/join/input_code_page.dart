@@ -16,7 +16,7 @@ class InputCodePage extends StatefulWidget {
 
 class _InputCodePageState extends State<InputCodePage> {
 
-  final txtCodeController = TextEditingController();
+  TextEditingController txtCodeController;
   FocusNode txtCodeFocusNode;
 
   @override
@@ -24,6 +24,7 @@ class _InputCodePageState extends State<InputCodePage> {
     // TODO: implement initState
     super.initState();
 
+    txtCodeController = TextEditingController();
     txtCodeFocusNode = FocusNode();
   }
 
@@ -31,6 +32,7 @@ class _InputCodePageState extends State<InputCodePage> {
   void dispose() {
     // TODO: implement dispose
 
+    txtCodeController.dispose();
     txtCodeFocusNode.dispose();
 
     super.dispose();
