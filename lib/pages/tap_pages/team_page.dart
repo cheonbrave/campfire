@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 import 'package:flutter/services.dart';
 import 'package:campfire/util/global.dart';
+import 'package:kakao_flutter_sdk/all.dart';
 
 
 class TeamPage extends StatefulWidget {
@@ -283,9 +284,21 @@ class _TeamPageState extends State<TeamPage> {
                                 splashColor: Colors.black87,
                                 //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
                                 child: Text("친구 초대하기 (2/10)", style: TextStyle(fontSize: txtSizeMidStr)),
+                                onPressed: () async {
 
-                                //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
-                                onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
+                                  debugPrint('초대 클릭');
+
+                                  KakaoContext.clientId = "8a859e5bd31345db3d2afaac61111a91";
+                                  KakaoContext.javascriptClientId = "6a46541295b0c6578cf168632da58cab";
+
+                                  Uri uri = await LinkClient.instance.customWithTalk(24325, templateArgs: {
+                                    "code":"1234",
+                                  });
+                                  //defaultWithTalk(, serverCallbackArgs: null);
+                                  //custom(16761, templateArgs: {"key1": "value1"});
+                                  await LinkClient.instance.launchKakaoTalk(uri);
+
+                                },
                               ),
                             ),
                             Container(
