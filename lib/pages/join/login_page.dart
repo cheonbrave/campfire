@@ -1,5 +1,6 @@
 import 'package:campfire/pages/join/input_profile_page.dart';
 import 'package:campfire/pages/tap_pages/tap_page.dart';
+import 'package:campfire/util/global.dart';
 import 'package:campfire/util/language/Translations.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -8,6 +9,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/services.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+
+
 
 final GoogleSignIn _googleSignIn = GoogleSignIn();
 final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -188,4 +191,6 @@ class _LoginPageState extends State<LoginPage> {
       )
     );
   }
+
+
 }

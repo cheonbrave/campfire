@@ -19,7 +19,7 @@
   "input_code": "초대 코드",
   "code_none": "코드 없음",
 
-  "team_code_input_explain" : "이미 초대받은 팀이 있다면\n코드를 입력하고 팀에 합류하세요",
+  "invitation_code_input_explain" : "이미 초대받은 팀이 있다면\n코드를 입력하고 팀에 합류하세요",
   "code_check": "초대코드 확인",
 
   "team_make_explain" : "친구들을 초대해서 팀을 만들면\n매칭에 참여할 수 있습니다",

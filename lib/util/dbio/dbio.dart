@@ -28,7 +28,7 @@ class DBIO {
   }
 
   /* document의 이름에 해당하는것 find */
-  Future<DocumentSnapshot> find_useDocName(String collection_name, String doc_name){
+  Future<DocumentSnapshot>  find_useDocName(String collection_name, String doc_name){
     var fdb = Firestore.instance.collection(collection_name);
     return fdb.document(doc_name).get();
   }

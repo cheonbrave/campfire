@@ -26,7 +26,7 @@ class _MatchingPageState extends State<MatchingPage> {
   int _current = 0;
 
   /* 태그 리스트 */
-  final List<Widget> w_tag_list = [];
+  final List<Widget> w_w_tag_list = [];
 
   clearLists(){
     /* 매칭상대 리스트 */
@@ -36,7 +36,7 @@ class _MatchingPageState extends State<MatchingPage> {
     w_profile_img_list.clear();
 
     /* 태그 리스트 */
-    w_tag_list.clear();
+    w_w_tag_list.clear();
   }
 
   @override
@@ -66,7 +66,7 @@ class _MatchingPageState extends State<MatchingPage> {
     w_profile_img_list.clear();
 
     /* 태그 리스트 */
-    w_tag_list.clear();
+    w_w_tag_list.clear();
 
     imgList.clear();
     imgList.add('https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg');
@@ -81,19 +81,19 @@ class _MatchingPageState extends State<MatchingPage> {
 
     /* 태그 리스트 */
     for(int i=0; i < 1; i++){
-      w_tag_list.add(
+      w_w_tag_list.add(
           Text('#어깨깡패')
       );
-      w_tag_list.add(
+      w_w_tag_list.add(
           Text('#20학번')
       );
-      w_tag_list.add(
+      w_w_tag_list.add(
           Text('#서울대학교')
       );
-      w_tag_list.add(
+      w_w_tag_list.add(
           Text('#법학과')
       );
-      w_tag_list.add(
+      w_w_tag_list.add(
           Text('#맥주보다소주')
       );
     }
@@ -215,7 +215,7 @@ class _MatchingPageState extends State<MatchingPage> {
                     children: <Widget>[
                       Wrap(
                         spacing: 7.0,
-                        children: w_tag_list,
+                        children: w_w_tag_list,
                       ),
                       Padding(
                         padding: EdgeInsets.all(padding10),

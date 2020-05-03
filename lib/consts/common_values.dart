@@ -24,3 +24,4 @@ const int pointColor2 = 0xFFFDE5E6;
 
 // DB 컬렉션 이름
 const String collection_accounts = 'accounts';
+const String collection_teams = 'teams';
