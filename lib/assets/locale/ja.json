@@ -19,7 +19,7 @@
   "input_code": "invitation code",
   "code_none": "コードなし",
 
-  "team_code_input_explain" : "すでに招待されたチームがあるなら\nコードを入力してください。",
+  "invitation_code_input_explain" : "すでに招待されたチームがあるなら\nコードを入力してください。",
   "code_check": "招待コード確認",
 
   "team_make_explain" : "友達を招待してチームを作ったら\nマッチングに参加できます",

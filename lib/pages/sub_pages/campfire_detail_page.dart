@@ -13,7 +13,7 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
 
   final List<Widget> w_profile_img_list = [];
   /* 태그 리스트 */
-  final List<Widget> w_tag_list = [];
+  final List<Widget> w_w_tag_list = [];
 
   final List<String> imgList = [];
   int _current = 0;
@@ -94,21 +94,21 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
     w_profile_img_list.add(w_profile_img_list[0]);
 
     /* 태그 리스트 */
-    w_tag_list.clear();
+    w_w_tag_list.clear();
     /* 태그 리스트 */
-    w_tag_list.add(
+    w_w_tag_list.add(
         Text('#어깨깡패', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500))
     );
-    w_tag_list.add(
+    w_w_tag_list.add(
         Text('#20학번', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500))
     );
-    w_tag_list.add(
+    w_w_tag_list.add(
         Text('#서울대학교', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500))
     );
-    w_tag_list.add(
+    w_w_tag_list.add(
         Text('#법학과', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500))
     );
-    w_tag_list.add(
+    w_w_tag_list.add(
         Text('#맥주보다소주', style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500))
     );
 
@@ -201,7 +201,7 @@ class _CampfireDetailPageState extends State<CampfireDetailPage> {
                     ),
                     Wrap(
                       spacing: 7.0,
-                      children: w_tag_list,
+                      children: w_w_tag_list,
                     ),
                     Padding(
                       padding: EdgeInsets.all(padding20),

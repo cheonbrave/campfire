@@ -1,13 +1,23 @@
-import 'dart:convert';
-
+import 'dart:io';
+import 'dart:math';
 import 'package:campfire/pages/tap_pages/tap_page.dart';
+import 'package:campfire/util/dbio/dbio.dart';
 import 'package:campfire/util/language/Translations.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 import 'package:flutter/services.dart';
 import 'package:campfire/util/global.dart';
 import 'package:kakao_flutter_sdk/all.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_cropper/image_cropper.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+
 
 
 class TeamPage extends StatefulWidget {
@@ -19,22 +29,57 @@ class TeamPage extends StatefulWidget {
 
 class _TeamPageState extends State<TeamPage> {
 
-  String dropdownValue_cnt =  null;
+  String dropdownValue_memberCnt =  '2';
   String dropdownValue_type =  null;
   String dropdownValue_city =  null;
 
-  final List<Widget> tag_list = [];
+  double g_image_width = 0.0;
+  double g_height10 = 0.0;
+
+  final List<Widget> w_tag_list = [];
+  List<String> tag_list = [];
   final List<Widget> w_profile_img_list = [];
+  List<String> profile_img_url_list = [];
   final List<Widget> w_intro_img_list = [];
+  List<String> intro_img_list = ['','',''];
 
   final txtCodeController = TextEditingController();
-  final txtTagController = TextEditingController();
   FocusNode txtCodeFocusNode;
+
+  final txtPlaceController = TextEditingController();
+  FocusNode txtPlaceFocusNode;
+
+  final txtTagController = TextEditingController();
+
+  final List<String> member_cnt_list = new List();
+  final List<String> date_type_list = new List();
+
+  Map<String, dynamic> _data = null;
+
+  Map<String, dynamic> _teamData = null;
+
+  DBIO dbio = new DBIO();
 
   @override
   void initState() {
     super.initState();
     txtCodeFocusNode = FocusNode();
+    txtPlaceFocusNode = FocusNode();
+
+    /* 인원선택 드랍다운 */
+    for(int i=2; i < 16; i++){
+      member_cnt_list.add(i.toString());
+    }
+
+    /* 데이트유형 드랍다운 */
+    date_type_list.add('같이 결정해요');
+    date_type_list.add('오늘밤에 만나요');
+
+    if(g_invitation_code != null && g_invitation_code != ''){
+      dbio.find_useDocName(collection_teams, g_invitation_code).then((DocumentSnapshot ds){
+        _teamData = ds.data;
+      });
+    }
   }
 
   @override
@@ -48,10 +93,39 @@ class _TeamPageState extends State<TeamPage> {
   @override
   Widget build(BuildContext context) {
     //초대코드 유무에 따라 표시할 화면 분기
-    debugPrint("team_code : ${team_code}");
-    if(team_code == null || team_code == "") {
+
+    g_prefs.setString('invitation_code', g_invitation_code);
+
+    debugPrint("build : g_invitation_code : ${g_invitation_code}");
+    if(g_invitation_code == null || g_invitation_code == "") {
       return _makePage_init();
     }else{
+
+      dbio.find_useDocName(collection_teams, g_invitation_code).then((DocumentSnapshot ds){
+        /*
+        Map<String, dynamic> data = {
+          'members':[],
+          'count':2,
+          'date_type':'',
+          'area':'',
+          'place':'',
+          'intro_img_list':['','',''],
+          'tags':[],
+          'is_view':'n',
+          'up_time':'',
+          'gender':g_ui['gender'],   // 이곳은 팀을 개설하려는 사람의 성별을 기준으로 입력되어야야 함
+        };
+        */
+
+        //intro_img_list = ['', '', ''];
+
+        for(int i=0; i < 3; i++){
+            intro_img_list.add(ds.data['intro_img_list'][i]);
+          debugPrint('222 intro_img_list[${i}] : ${intro_img_list[i]}');
+        }
+
+      });
+
       return _makePage_team();
     }
   }
@@ -61,15 +135,18 @@ class _TeamPageState extends State<TeamPage> {
     if(str.isEmpty) {
       return; // 빈 텍스트 무시
     }
-    if(tag_list.length == 10) {
+    if(w_tag_list.length == 10) {
       Scaffold.of(context).showSnackBar(SnackBar(
         content: Text("더 이상 추가할 수 없습니다", style: TextStyle(fontSize: txtSizeMidStr),),
         duration: Duration(seconds: 2),
       ));
       return; // 최대 10개
     }
+
     str = '#' + str;
-    tag_list.add(
+    tag_list.add(str);
+
+    w_tag_list.add(
       Card(
         key: Key(str),
         child: ListTile(
@@ -78,135 +155,35 @@ class _TeamPageState extends State<TeamPage> {
             icon: Icon(Icons.remove_circle_outline),
             onPressed: () {
               setState(() {
-                tag_list.removeWhere((item) => item.key == Key(str));
+                tag_list.remove(str);
+                debugPrint('tag_list : ${tag_list.toString()}');
+                w_tag_list.removeWhere((item) => item.key == Key(str));
               });
             },
           ),
         )
       ),
     );
+
+    debugPrint('tag_list : ${tag_list.toString()}');
   }
 
   Widget _makePage_team() {
 
+    debugPrint('_makePage_team called');
+
     var height10 = MediaQuery.of(context).size.height * 0.10;
-    var listHeight = MediaQuery.of(context).size.height * 0.10 + 50.0;
+    g_height10 = height10;
+
     var image_width = (MediaQuery.of(context).size.width - padding50 - padding50) / 3;
+    g_image_width = image_width;
+
+    var listHeight = MediaQuery.of(context).size.height * 0.10 + 50.0;
 
     var paddingRL = MediaQuery.of(context).size.width * 0.1;
 
-    w_profile_img_list.clear();
-    w_intro_img_list.clear();
-
-    w_profile_img_list.add(
-      Container(
-        padding: EdgeInsets.all(padding5),
-        child: Column(
-          children: <Widget>[
-            Padding(
-              padding: EdgeInsets.all(padding3),
-            ),
-            Stack(
-              children: <Widget>[
-                SizedBox(
-                    width: height10,
-                    height: height10,
-                    child: CircleAvatar(
-                      backgroundColor: Color(pointColor),
-                      backgroundImage: NetworkImage(
-                          'https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'
-                      ),
-                    )
-                ),
-              ],
-            ),
-            Container(
-              width: height10,
-              child: Text('cheonbrave123123123',
-                overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: txtSizeSmlStr),
-              ),
-            ),
-          ],
-        ),
-      )
-    );
-
-    w_profile_img_list.add(w_profile_img_list[0]);
-
-    w_profile_img_list.add(
-        Container(
-          padding: EdgeInsets.all(padding5),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(padding3),
-              ),
-              Stack(
-                children: <Widget>[
-                  SizedBox(
-                      width: height10,
-                      height: height10,
-                      child: CircleAvatar(
-                        child: Text('wait', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w700),),
-                        backgroundColor: Color(pointColor),
-                      )
-                  ),
-                ],
-              ),
-            ],
-          ),
-        )
-    );
-
-    w_profile_img_list.add(w_profile_img_list[2]);
-    w_profile_img_list.add(w_profile_img_list[2]);
-    w_profile_img_list.add(w_profile_img_list[2]);
-    w_profile_img_list.add(w_profile_img_list[2]);
-    w_profile_img_list.add(w_profile_img_list[2]);
-    w_profile_img_list.add(w_profile_img_list[2]);
-
-
-    w_intro_img_list.add(
-      Container(
-        width: image_width,
-        height: image_width,
-        decoration: BoxDecoration(
-          color: Colors.black87,
-          image: DecorationImage(
-            image:NetworkImage('https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'),
-            fit:BoxFit.cover,
-          ),
-        ),
-        child: Stack(
-          children: <Widget>[
-            SizedBox(
-                width: image_width,
-                height: image_width,
-                child: Icon(
-                  Icons.add_circle_outline,
-                  color: Colors.white,
-                  //size: image_width/4,
-                )
-            ),
-          ],
-        ),
-      ),
-    );
-
-    w_intro_img_list.add(w_intro_img_list[0]);
-    w_intro_img_list.add(w_intro_img_list[0]);
-
-    /* 인원선택 드랍다운 */
-    List<String> member_cnt_list = new List();
-    for(int i=2; i < 16; i++){
-      member_cnt_list.add(i.toString());
-    }
-
-    /* 데이트유형 드랍다운 */
-    List<String> date_type_list = new List();
-    date_type_list.add('같이 결정해요');
-    date_type_list.add('오늘밤에 만나요');
+    setProfileImageList();
+    setIntroImageList();
 
     /* 지역 드랍다운 */
     List<String> city_list = Translations.of(context).trans('city').split(",");
@@ -230,7 +207,7 @@ class _TeamPageState extends State<TeamPage> {
                       child: Text(Translations.of(context).trans('response_yes')),
                       onPressed: () {
                         setState(() {
-                          team_code = "";
+                          g_invitation_code = "";
                           txtCodeController.text = '';
                         });
                         Navigator.pop(context, true);
@@ -258,11 +235,14 @@ class _TeamPageState extends State<TeamPage> {
                     children: <Widget>[
                       Container(
                         height: listHeight,
-                        child: ListView(
-                          padding: EdgeInsets.only(left: 5.0),
-                          scrollDirection: Axis.horizontal,
-                          children: w_profile_img_list,
-                        ),
+                        child: ListView.builder(
+                            padding: EdgeInsets.only(left: 5.0),
+                            scrollDirection: Axis.horizontal,
+                            itemCount: w_profile_img_list.length,
+                            itemBuilder: (BuildContext ctxt, int index) {
+                              return w_profile_img_list[index];
+                            }
+                        )
                       ),
                       Padding(
                         padding: EdgeInsets.only(left: paddingRL, right: paddingRL, top: padding15, bottom: padding15),
@@ -283,7 +263,7 @@ class _TeamPageState extends State<TeamPage> {
                                 //splashColor: Color(pointColor2),
                                 splashColor: Colors.black87,
                                 //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
-                                child: Text("친구 초대하기 (2/10)", style: TextStyle(fontSize: txtSizeMidStr)),
+                                child: Text("친구 초대하기 (${w_profile_img_list.length}/${dropdownValue_memberCnt})", style: TextStyle(fontSize: txtSizeMidStr)),
                                 onPressed: () async {
 
                                   debugPrint('초대 클릭');
@@ -304,7 +284,7 @@ class _TeamPageState extends State<TeamPage> {
                             Container(
                               width: double.infinity,
                               alignment: Alignment.centerRight,
-                              child: Text("초대코드 : 0000", style: TextStyle(fontSize: txtSizeSmlStr)),
+                              child: Text("초대코드 : ${g_invitation_code.substring(0,4)} ${g_invitation_code.substring(4,8)}", style: TextStyle(fontSize: txtSizeSmlStr)),
                             ),
                             Padding(
                               padding: EdgeInsets.all(padding15),
@@ -318,7 +298,7 @@ class _TeamPageState extends State<TeamPage> {
                                   )
                               ),
                               isExpanded: true,
-                              value: dropdownValue_cnt,
+                              value: dropdownValue_memberCnt,
                               icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
                               iconSize: txtSizeTopTitle,
                               elevation:16, // 1,2,3,4,6,8,9,12,16,24
@@ -332,10 +312,21 @@ class _TeamPageState extends State<TeamPage> {
                                   color: Colors.black87
                               ),
                               onChanged: (String newValue) {
+
+                                List<dynamic> tempList = _teamData['members'];
+                                if(int.parse(newValue) < tempList.length){
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text("합류한 멤버 수 보다 작은 값은 선택할 수 없습니다", style: TextStyle(fontSize: txtSizeMidStr),),
+                                    duration: Duration(seconds: 2),
+                                  ));
+                                  return;
+                                }
+
                                 setState(() {
-                                  dropdownValue_cnt = newValue;
-                                  debugPrint("dropdownValue_cnt : ${dropdownValue_cnt}");
+                                  dropdownValue_memberCnt = newValue;
+                                  debugPrint("dropdownValue_memberCnt : ${dropdownValue_memberCnt}");
                                 });
+
                               },
                               items: member_cnt_list.map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
@@ -380,6 +371,7 @@ class _TeamPageState extends State<TeamPage> {
                                   dropdownValue_type = newValue;
                                   debugPrint("dropdownValue_type : ${dropdownValue_type}");
                                 });
+
                               },
                               items: date_type_list.map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
@@ -424,6 +416,7 @@ class _TeamPageState extends State<TeamPage> {
                                   dropdownValue_city = newValue;
                                   debugPrint("dropdownValue_city : ${dropdownValue_city}");
                                 });
+
                               },
                               items: city_list.map<DropdownMenuItem<String>>((String value) {
                                 return DropdownMenuItem<String>(
@@ -443,7 +436,8 @@ class _TeamPageState extends State<TeamPage> {
                             ),
                             Text("장소", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
                             TextField(
-                              //controller: widget.input_place,
+                              focusNode: txtPlaceFocusNode,
+                              controller: txtPlaceController,
                               maxLines : 1,
                               maxLength: 20,
                               textAlignVertical: TextAlignVertical.center,
@@ -463,14 +457,22 @@ class _TeamPageState extends State<TeamPage> {
                             Padding(
                               padding: EdgeInsets.all(padding3),
                             ),
-                            Row(
-                              children: w_intro_img_list,
+                            Container(
+                                height: g_image_width,
+                                child: ListView.builder(
+                                    padding: EdgeInsets.only(left: 5.0),
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: w_intro_img_list.length,
+                                    itemBuilder: (BuildContext ctxt, int index) {
+                                      return w_intro_img_list[index];
+                                    }
+                                )
                             ),
                             Padding(
                               padding: EdgeInsets.all(padding15),
                             ),
                             Text("매력 포인트", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
-                            Column(children: tag_list),
+                            Column(children: w_tag_list),
                             TextField(
                               controller: txtTagController,
                               onSubmitted: (input_str){
@@ -520,8 +522,27 @@ class _TeamPageState extends State<TeamPage> {
                                 child: Text("매칭 시작", style: TextStyle(fontSize: txtSizeMidStr)),
 
                                 //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
-                                onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
+                                onPressed: () {
 
+
+
+                                  String date_type = 'notyet';
+                                  if(dropdownValue_type == '오늘밤에 만나요'){
+                                    date_type = 'tonight';
+                                  }
+
+                                  _data = {
+                                    'count':int.parse(dropdownValue_memberCnt),
+                                    'date_type':date_type,
+                                    'area':dropdownValue_city,
+                                    'place':txtPlaceController.text,
+                                    'intro_img_list':intro_img_list,
+                                    'tags':tag_list,
+                                  };
+
+                                  dbio.update(collection_teams, g_invitation_code, _data);
+
+                                },
                               ),
                             ),
                             Padding(
@@ -592,13 +613,7 @@ class _TeamPageState extends State<TeamPage> {
                 child: Padding(
                   padding: EdgeInsets.only(left: paddingRL, right: paddingRL, top: padding25, bottom: padding50),
                   /* UI 작성 - START */
-                  /*
-            "team_code_input_explain" : "코드를 입력하고 팀에 합류 하세요",
-            "team_code_input_hint" : "초대코드를 입력하세요",
-            "code_check": "초대코드 확인",
-            "team_make_explain" : "팀을 만들어야 매칭을 시작할 수 있어요",
-            "team_make" : "팀 만들기",
-  */
+
                   child:Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
@@ -620,9 +635,10 @@ class _TeamPageState extends State<TeamPage> {
                           //splashColor: Color(pointColor2),
                           splashColor: Colors.black87,
                           child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
-
-                          //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
-                          onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
+                          onPressed: () {
+                            // g_invitation_code 생성, DB 초기값 insert
+                            make_invitation_code();
+                          },
                         ),
                       ),
                       Padding(
@@ -632,7 +648,7 @@ class _TeamPageState extends State<TeamPage> {
                       Padding(
                         padding: EdgeInsets.all(padding25),
                       ),
-                      Text(Translations.of(context).trans('team_code_input_explain'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w500, color: Colors.black87),),
+                      Text(Translations.of(context).trans('invitation_code_input_explain'), style: TextStyle(fontSize: txtSizeBigStr, fontWeight: FontWeight.w500, color: Colors.black87),),
                       Padding(
                         padding: EdgeInsets.all(padding15),
                       ),
@@ -683,10 +699,65 @@ class _TeamPageState extends State<TeamPage> {
                           //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
                           //onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
                           onPressed: (){
-                            if(txtCodeController.text != null && txtCodeController.text != ''){
-                              setState(() {
-                                team_code = txtCodeController.text;
+
+                            String txtCode = txtCodeController.text;
+                            txtCode = txtCode.replaceAll(new RegExp(r' '), '');
+                            debugPrint('txtCode : ${txtCode}');
+
+                            // 입력받은 초대코드 확인
+                            if(txtCode != null &&
+                                txtCode != '' &&
+                                txtCode.length == 8 ){
+
+                              // 초대코드에 해당하는 팀이 있는지 확인
+                              dbio.find_useDocName(collection_teams, txtCode).then((DocumentSnapshot ds){
+
+                                // 입력한 초대코드가 동일하고, 팀개설자의 성별과 초대코드 입력자의 성별이 같을때만 팀에 합류
+                                if( ds.data != null && ds.data['gender'] == g_ui['gender'] ){
+
+                                  List<dynamic> _members = ds.data['members'];
+
+                                  /* 이미 합류했던 사람인지 확인 */
+                                  bool joined = false;
+                                  for(int i=0; i < _members.length; i++){
+                                    if(_members[i] == g_ui['email']){
+                                      joined = true;
+                                      break;
+                                    }
+                                  }
+
+                                  if(joined){
+                                    setState(() {
+                                      g_invitation_code = txtCode;
+                                    });
+                                  }else{
+                                    _members.add(g_ui['email']);
+
+                                    if(ds.data['members'].length > ds.data['count']){
+                                      // 최대 합류 인원을 초과했다는 경고
+                                      debugPrint("최대 인원 초과");
+                                      return;
+                                    }
+
+                                    _data = {
+                                      'members':_members,
+                                    };
+
+                                    dbio.update(collection_teams, txtCode, _data).then((onValue){
+                                      setState(() {
+                                        g_invitation_code = txtCode;
+                                      });
+                                    });
+                                  }
+                                } else{
+                                  Scaffold.of(context).showSnackBar(SnackBar(
+                                    content: Text("초대코드를 확인하고 다시 입력하세요", style: TextStyle(fontSize: txtSizeMidStr),),
+                                    duration: Duration(seconds: 2),
+                                  ));
+                                  txtCodeFocusNode.requestFocus();
+                                }
                               });
+
 
                             }else{
                               Scaffold.of(context).showSnackBar(SnackBar(
@@ -710,4 +781,236 @@ class _TeamPageState extends State<TeamPage> {
       backgroundColor: Colors.white,
     );
   }
+
+  void setProfileImageList() {
+
+    debugPrint('setProfileImageList called');
+
+    w_profile_img_list.clear();
+
+    w_profile_img_list.add(
+        Container(
+          padding: EdgeInsets.all(padding5),
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: EdgeInsets.all(padding3),
+              ),
+              Stack(
+                children: <Widget>[
+                  SizedBox(
+                      width: g_height10,
+                      height: g_height10,
+                      child: CircleAvatar(
+                        backgroundColor: Color(pointColor),
+                        backgroundImage: NetworkImage(
+                            'https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'
+                        ),
+                      )
+                  ),
+                ],
+              ),
+              Container(
+                width: g_height10,
+                child: Text('cheonbrave123123123',
+                  overflow: TextOverflow.ellipsis,
+                  style: TextStyle(fontSize: txtSizeSmlStr),
+                ),
+              ),
+            ],
+          ),
+        )
+    );
+
+    for(int i=0; i < (int.parse(dropdownValue_memberCnt)-1); i++){
+
+      w_profile_img_list.add(
+          Container(
+            padding: EdgeInsets.all(padding5),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(padding3),
+                ),
+                Stack(
+                  children: <Widget>[
+                    SizedBox(
+                        width: g_height10,
+                        height: g_height10,
+                        child: CircleAvatar(
+                          child: Text('wait', overflow: TextOverflow.ellipsis, style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w700),),
+                          backgroundColor: Color(pointColor),
+                        )
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          )
+      );
+    }
+  }
+
+  void setIntroImageList() {
+    w_intro_img_list.clear();
+
+    // db에서 리스트 로딩
+
+
+    for (int i = 0; i < 3; i++) {
+      debugPrint('intro_img_list[${i}] : ${intro_img_list[i]}');
+      // 리스트 길이만큼 그리고, 모자라면 더미를 그림
+      w_intro_img_list.add(
+        Container(
+          width: g_image_width,
+          height: g_image_width,
+          decoration: BoxDecoration(
+            color: Colors.white,
+            image: DecorationImage(
+              image: (intro_img_list[i] != null && intro_img_list[i] != '') ? NetworkImage(intro_img_list[i]) : NetworkImage(''),
+              //fit:BoxFit.cover,
+            ),
+          ),
+          child: Stack(
+              children: <Widget>[
+                SizedBox(
+                  width: g_image_width,
+                  height: g_image_width,
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.add_circle_outline,
+                      color: (intro_img_list[i] != null && intro_img_list[i] != '') ? Colors.white : Color(pointColor),
+                    ),
+                    onPressed: () {
+                      _getImage(i);
+                    },
+                  ),
+                )
+              ]
+          ),
+        ),
+      );
+
+    }
+  }
+
+  /* 프로필 이미지 업로드 */
+  void uploadImage(File compressImgFile, int index) {
+
+    final fs = FirebaseStorage.instance.ref().child('teams').child(g_invitation_code).child('intro_img_${index}.jpg');
+    final task = fs.putFile(compressImgFile, StorageMetadata(contentType: 'image/jpg'));
+    task.onComplete.then((onValue) {
+      var url = onValue.ref.getDownloadURL();
+      url.then((onValue){
+        debugPrint('upload success url : ${onValue}');
+        // DB 반영
+
+        // 화면 반영
+        setState(() {
+          intro_img_list[index] = onValue;
+        });
+        setIntroImageList();
+
+      });
+    });
+  }
+
+  Future<File> compressAndGetFile(File file, String targetPath) async {
+    var result = await FlutterImageCompress.compressAndGetFile(
+      file.absolute.path,
+      targetPath,
+      quality: 50,
+    );
+
+    print(file.lengthSync());
+    print(result.lengthSync());
+
+    return result;
+  }
+
+  void _cropImage(File _origin, int index) async {
+
+    File croppedFile = await ImageCropper.cropImage(
+        sourcePath: _origin.path,
+        aspectRatioPresets: [
+          CropAspectRatioPreset.square,
+        ],
+        androidUiSettings: AndroidUiSettings(
+            toolbarTitle: 'Edit Pictures',
+            toolbarColor: Colors.white,
+            toolbarWidgetColor: Color(pointColor),
+            activeControlsWidgetColor: Color(pointColor),
+            activeWidgetColor: Color(pointColor),
+            initAspectRatio: CropAspectRatioPreset.square,
+            lockAspectRatio: true),
+        iosUiSettings: IOSUiSettings(
+          title: 'Edit Pictures',
+          minimumAspectRatio: 1.0,
+        )
+    );
+
+    final dir = await path_provider.getTemporaryDirectory();
+    final targetPath = dir.absolute.path + "/temp.jpg";
+    final compressImgFile = await compressAndGetFile(croppedFile, targetPath);
+
+    uploadImage(compressImgFile, index);
+
+  }
+
+  void _getImage(int index) {
+    ImagePicker.pickImage(source: ImageSource.gallery).then((onValue){
+      _cropImage(onValue, index);
+    });
+  }
+
+  make_invitation_code() {
+    String sCode = '';
+    int iCode = 0;
+    int len = 0;
+    int min = 1;
+    int max = 99999999;
+
+    final _random = new Random();
+    iCode = min + _random.nextInt( max - min );
+
+    sCode = iCode.toString();
+    len = sCode.length;
+    if(len < 8){
+      for(int i=0; i < (8-len); i++){
+        sCode = '0' + sCode;
+      }
+    }
+
+    debugPrint('sCode [${sCode}] find');
+
+    dbio.find_useDocName(collection_teams, sCode).then((DocumentSnapshot ds){
+      if(ds.data == null){
+        debugPrint('sCode [${sCode}] is not exist');
+
+        Map<String, dynamic> _data = {
+          'members':[g_ui['email']],
+          'count':2,
+          'date_type':'',
+          'area':'',
+          'place':'',
+          'intro_img_list':['','',''],
+          'tags':[],
+          'is_view':'n',
+          'up_time':'',
+          'gender':g_ui['gender'],   // 이곳은 팀을 개설하려는 사람의 성별을 기준으로 입력되어야야 함
+        };
+
+        dbio.upsert(collection_teams, sCode, _data).then((onValue){
+          setState(() {
+            g_invitation_code = sCode;
+          });
+        });
+
+      }else{
+        debugPrint('sCode [${sCode}] is exist');
+        make_invitation_code();
+      }
+    });
+  }
+
 }

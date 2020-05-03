@@ -1,4 +1,3 @@
-import 'package:campfire/pages/common/root_page.dart';
 import 'package:campfire/pages/join/input_code_page.dart';
 import 'package:campfire/pages/join/input_profile_page.dart';
 import 'package:campfire/pages/join/login_page.dart';
@@ -9,13 +8,16 @@ import 'package:campfire/pages/tap_pages/notification_page.dart';
 import 'package:campfire/pages/tap_pages/setting_page.dart';
 import 'package:campfire/pages/tap_pages/tap_page.dart';
 import 'package:campfire/pages/tap_pages/team_page.dart';
+import 'package:campfire/util/dbio/dbio.dart';
+import 'package:campfire/util/global.dart';
 import 'package:campfire/util/language/TranslationsDelegate.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:campfire/consts/common_values.dart';
-import 'package:campfire/util/global.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() => runApp(MyApp());
 
@@ -30,8 +32,44 @@ main.dart
 
 FirebaseAnalytics analytics = FirebaseAnalytics();
 
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+class MyApp extends StatefulWidget {
+  @override
+  _MyAppState createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  String email;
+
+  @override
+  void initState() {
+    super.initState();
+    _loadEmail();
+  }
+
+  void _loadEmail() async {
+    // SharedPreferences의 인스턴스를 필드에 저장
+    g_prefs = await SharedPreferences.getInstance();
+    setState(() {
+      email = (g_prefs.getString('email') ?? '');
+      g_ui['email'] = email;
+
+      g_invitation_code = (g_prefs.getString('invitation_code') ?? '');
+
+      if (email != '' && email != null){
+        DBIO dbio = new DBIO();
+        dbio.find_useDocName(collection_accounts, email).then((DocumentSnapshot ds) {
+          g_ui['profile_img'] = ds.data['profile_img'];
+          g_ui['nickname'] = ds.data['nickname'];
+          g_ui['birth_year'] = ds.data['birth_year'];
+          g_ui['gender'] = ds.data['gender'];
+          debugPrint('g_ui : ${g_ui.toString()}');
+        });
+      }
+    });
+    return;
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -41,8 +79,6 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         // 여기에 '/' 에 해당하는 경로는 들어올 수 없다
-        // common
-        RootPage.routeName: (BuildContext context) => RootPage(),
 
         // join
         InputCodePage.routeName: (BuildContext context) =>InputCodePage(),
@@ -108,7 +144,7 @@ class MyApp extends StatelessWidget {
       ),
 
       /* 홈 페이지 설정 */
-      home: RootPage(), // root page에서 로그인 상태 체크
+      home: (email != null && email != '') ? TapPage(tapIndex: 1,) : LoginPage(), // root page에서 로그인 상태 체크
 
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
