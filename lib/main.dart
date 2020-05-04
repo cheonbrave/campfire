@@ -44,29 +44,28 @@ class _MyAppState extends State<MyApp> {
   @override
   void initState() {
     super.initState();
-    _loadEmail();
+    _loadSP();
   }
 
-  void _loadEmail() async {
-    // SharedPreferences의 인스턴스를 필드에 저장
+  void _loadSP() async {
     g_prefs = await SharedPreferences.getInstance();
+
     setState(() {
       email = (g_prefs.getString('email') ?? '');
-      g_ui['email'] = email;
+      g_ui_email = email;
+    });
+
+    // 기존 로그인 사용자 일 경우
+    if (email != '' && email != null){
+      // 기본정보 로딩
+      DBIO dbio = new DBIO();
+      dbio.find_useDocName(collection_accounts, email).then((DocumentSnapshot ds) {
+        g_setInfo(ds.data['profile_img'], ds.data['nickname'], ds.data['birth_year'], ds.data['gender'], email);
+      });
 
       g_invitation_code = (g_prefs.getString('invitation_code') ?? '');
+    }
 
-      if (email != '' && email != null){
-        DBIO dbio = new DBIO();
-        dbio.find_useDocName(collection_accounts, email).then((DocumentSnapshot ds) {
-          g_ui['profile_img'] = ds.data['profile_img'];
-          g_ui['nickname'] = ds.data['nickname'];
-          g_ui['birth_year'] = ds.data['birth_year'];
-          g_ui['gender'] = ds.data['gender'];
-          debugPrint('g_ui : ${g_ui.toString()}');
-        });
-      }
-    });
     return;
   }
 
