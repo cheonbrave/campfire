@@ -1,26 +1,34 @@
 import 'package:shared_preferences/shared_preferences.dart';
 
-String g_invitation_code;
-
 SharedPreferences g_prefs;
 
-Map<String, dynamic> g_ui = {
-  'profile_img' : '',
-  'nickname' : '',
-  'birth_year' : '',
-  'gender' : '',
-  'email' : '',
-};
+String g_ui_profile_img;
+String g_ui_nickname;
+String g_ui_birth_year;
+String g_ui_gender;
+String g_ui_email;
 
-Map<String, dynamic> g_team_info = {
-  'members':[],
-  'count':2,
-  'date_type':'',
-  'area':'',
-  'place':'',
-  'intro_img_list':['','',''],
-  'tags':[],
-  'is_view':'n',
-  'up_time':'',
-  'gender':'',   // 이곳은 팀을 개설하려는 사람의 성별을 기준으로 입력되어야야 함
-};
+String g_invitation_code;
+
+void g_setInfo(String profile_img, String nickname, String birth_year, String gender, String email){
+
+  /* 자동로그인을 위한 email정보 저장 */
+  g_prefs.setString('email', email);
+
+  g_ui_profile_img = profile_img;
+  g_ui_nickname = nickname;
+  g_ui_birth_year = birth_year;
+  g_ui_gender = gender;
+  g_ui_email = email;
+}
+
+void g_clearInfo(){
+
+  g_prefs.setString('email', '');
+
+  g_ui_profile_img = '';
+  g_ui_nickname = '';
+  g_ui_birth_year = '';
+  g_ui_gender = '';
+  g_ui_email = '';
+}

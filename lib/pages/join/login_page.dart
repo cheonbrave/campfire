@@ -1,5 +1,6 @@
 import 'package:campfire/pages/join/input_profile_page.dart';
 import 'package:campfire/pages/tap_pages/tap_page.dart';
+import 'package:campfire/util/dbio/dbio.dart';
 import 'package:campfire/util/global.dart';
 import 'package:campfire/util/language/Translations.dart';
 import 'package:flutter/cupertino.dart';
@@ -153,9 +154,8 @@ class _LoginPageState extends State<LoginPage> {
                         /* accounts 컬렉션에서 기존 가입정보가 있는지 조회 */
                         /* 사용자의 이메일주소를 key로 갖는 document를 탐색 */
 
-                        var fdb = Firestore.instance.collection(collection_accounts);
-
-                        fdb.document(user.email).get().then((DocumentSnapshot ds){
+                        DBIO dbio = new DBIO();
+                        dbio.find_useDocName(collection_accounts, user.email).then((DocumentSnapshot ds){
                           if( ds.data == null ||
                               ds.data['profile_img'] == null ||
                               ds.data['nickname'] == null ||
@@ -164,13 +164,13 @@ class _LoginPageState extends State<LoginPage> {
                             //debugPrint('기존 가입정보 없음~~~');
                             Navigator.push(context, CupertinoPageRoute(builder: (context) => InputProfilePage(user: user,)));
                           }else{
-                            //debugPrint('기존 가입정보 있음!!!');
+                            /* 기본 사용자정보 셋팅 */
+                            g_setInfo(ds.data['profile_img'], ds.data['nickname'], ds.data['birth_year'], ds.data['gender'], user.email);
+
                             Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 1)), ModalRoute.withName(TapPage.routeName));
                           }
                         });
-
                       }
-
                     }),
                   ),
                   Padding(

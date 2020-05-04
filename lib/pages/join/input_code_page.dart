@@ -147,7 +147,10 @@ class _InputCodePageState extends State<InputCodePage> {
                           child: Text(Translations.of(context).trans('code_check'), style: TextStyle(fontSize: txtSizeBigStr)),
                           onPressed: () {
                             if(txtCodeController.text != null && txtCodeController.text != ''){
+
                               g_invitation_code = txtCodeController.text;
+                              g_prefs.setString('invitation_code', g_invitation_code);
+
                               Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName));
                             }else{
                               Scaffold.of(context).showSnackBar(SnackBar(

@@ -1,4 +1,5 @@
 import 'package:campfire/pages/join/login_page.dart';
+import 'package:campfire/util/global.dart';
 import 'package:campfire/util/language/Translations.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
@@ -36,8 +37,13 @@ class _SettingPageState extends State<SettingPage> {
                       child: Text(Translations.of(context).trans('response_yes')),
                       onPressed: () {
                         setState(() {
+
+                          // 전역변수에 관리하던 기본정보 제거
+                          g_clearInfo();
+                          // 로그아웃
                           FirebaseAuth.instance.signOut();
                           _gsi.signOut();
+
                           Navigator.pushReplacement(context, CupertinoPageRoute(builder: (context) => LoginPage()));
                         });
                       },

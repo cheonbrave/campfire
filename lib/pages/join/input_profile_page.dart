@@ -330,15 +330,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
                               DBIO dbio = new DBIO();
                               dbio.upsert(collection_accounts, widget.user.email, data).then((onValue) {
 
-                                g_ui['profile_img'] = photoUrl;
-                                g_ui['nickname'] = input_nick.text;
-                                g_ui['birth_year'] = input_birth.text;
-                                g_ui['gender'] = _genderStr;
-                                g_ui['email'] = widget.user.email;
-
-                                // 모든 프로필정보가 셋팅됐을때만 email정보를 sp에 저장하도록하여
-                                // 자동로그인 가능자는 프로필 작성이 완료된 사람으로 제한 하도록 함
-                                g_prefs.setString('email', widget.user.email);
+                                g_setInfo(photoUrl, input_nick.text, input_birth.text, _genderStr, widget.user.email);
 
                                 Navigator.push(context, CupertinoPageRoute(builder: (context) => InputCodePage()));
                               });
