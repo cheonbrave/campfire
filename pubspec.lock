@@ -364,6 +364,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.4.2"
+  loading_animations:
+    dependency: "direct main"
+    description:
+      name: loading_animations
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.1.0"
   logging:
     dependency: transitive
     description:
@@ -469,6 +476,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.2"
+  progress_indicators:
+    dependency: "direct main"
+    description:
+      name: progress_indicators
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.5"
   pub_semver:
     dependency: transitive
     description:

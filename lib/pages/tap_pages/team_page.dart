@@ -15,6 +15,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class TeamPage extends StatefulWidget {
   static const routeName = '/team_page';
@@ -25,16 +26,16 @@ class TeamPage extends StatefulWidget {
 
 class _TeamPageState extends State<TeamPage> {
 
-  List<Map<String,String>> ti_members;
-  int ti_count;
-  String ti_date_type;
-  String ti_area;
-  String ti_place;
-  List<String> ti_intro_img_list = ['','',''];
-  List<String> ti_tags;
-  String ti_is_view;
-  String ti_up_time;
-  String ti_gender;
+  List<Map<String,String>> ti_members = g_members;
+  int ti_count = g_count;
+  String ti_date_type = g_date_type;
+  String ti_area = g_area;
+  String ti_place = g_place;
+  List<String> ti_intro_img_list = g_intro_img_list;
+  List<String> ti_tags = g_tags;
+  String ti_is_view = g_is_view;
+  String ti_up_time = g_up_time;
+  String ti_gender = g_gender;
 
   String dropdownValue_memberCnt =  '2';
   String dropdownValue_type =  null;
@@ -63,6 +64,7 @@ class _TeamPageState extends State<TeamPage> {
   Map<String, dynamic> _data;
 
   void setTeamInfo(List<Map<String,String>> members, int count, String date_type, String area, String place, List<String> intro_img_list, List<String> tags, String is_view, String up_time, String gender){
+    debugPrint('setTeamInfo');
     setState(() {
       ti_members = members;
       ti_count = count;
@@ -78,8 +80,9 @@ class _TeamPageState extends State<TeamPage> {
   }
 
   void clearTeamInfo(){
+    debugPrint('clearTeamInfo');
     setState(() {
-      ti_members = [];
+      ti_members = null;
       ti_count = 0;
       ti_date_type = '';
       ti_area = '';
@@ -95,6 +98,7 @@ class _TeamPageState extends State<TeamPage> {
   @override
   void initState() {
     super.initState();
+
     txtCodeFocusNode = FocusNode();
     txtPlaceFocusNode = FocusNode();
 
@@ -115,6 +119,7 @@ class _TeamPageState extends State<TeamPage> {
         List<Map<String,String>> members_list = [];
         Map<String,String> temp_map;
         for(int i=0; i < temp_list.length; i++){
+          //debugPrint('temp_list nickname : ' + temp_list[i]['nickname']);
           temp_map = {
             'email' : temp_list[i]['email'],
             'nickname' : temp_list[i]['nickname'],
@@ -146,6 +151,18 @@ class _TeamPageState extends State<TeamPage> {
             ds.data['is_view'],
             ds.data['up_time'],
             ds.data['gender']);
+
+        g_setTeamInfo(members_list,
+            ds.data['count'],
+            ds.data['date_type'],
+            ds.data['area'],
+            ds.data['place'],
+            strList_introImgs,
+            strList_tags,
+            ds.data['is_view'],
+            ds.data['up_time'],
+            ds.data['gender']);
+
       });
     }
   }
@@ -226,10 +243,55 @@ class _TeamPageState extends State<TeamPage> {
 
     var paddingRL = MediaQuery.of(context).size.width * 0.1;
 
+    if(ti_members == null){
+      return Scaffold(
+          appBar: AppBar(
+            centerTitle: false,
+            title: Text("TEAM", style: TextStyle(fontSize: txtSizeTopTitle),),
+            elevation: 1.0,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.exit_to_app), onPressed: (){
+
+                showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      //Translations.of(context).trans('main_center_text')
+                      title: Text("팀에서 나가시겠습니까?"),
+                      actions: <Widget>[
+                        FlatButton(
+                          child: Text(Translations.of(context).trans('response_yes')),
+                          onPressed: () {
+                            setState(() {
+                              g_invitation_code = '';
+                              g_prefs.setString('invitation_code', '');
+                              txtCodeController.text = '';
+                            });
+                            Navigator.pop(context, true);
+                          },
+                        ),
+                        FlatButton(
+                          child: Text(Translations.of(context).trans('response_no')),
+                          onPressed: () => Navigator.pop(context, false),
+                        ),
+                      ],
+                    ));
+
+
+              },
+              ),
+            ],
+          ),
+          body: SafeArea( // 아이폰 노치 디자인 대응
+              child:Center(
+                child: CircularProgressIndicator(),
+              )
+          )
+      );
+    }
+
     setProfileImageList();
-
     setIntroImageList();
-
     /* 지역 드랍다운 */
     List<String> city_list = Translations.of(context).trans('city').split(",");
 
@@ -309,7 +371,9 @@ class _TeamPageState extends State<TeamPage> {
                                 //splashColor: Color(pointColor2),
                                 splashColor: Colors.black87,
                                 //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
-                                child: Text("친구 초대하기 (${w_profile_img_list.length}/${dropdownValue_memberCnt})", style: TextStyle(fontSize: txtSizeMidStr)),
+                                child: Text((ti_members.length.toString() != dropdownValue_memberCnt) ? "친구 초대하기 (${ti_members.length}/${dropdownValue_memberCnt})" : "모두 모였어요 (${ti_members.length}/${dropdownValue_memberCnt})",
+                                    style: TextStyle(fontSize: txtSizeMidStr)
+                                ),
                                 onPressed: () async {
 
                                   debugPrint('초대 클릭');
@@ -904,43 +968,46 @@ class _TeamPageState extends State<TeamPage> {
     debugPrint('setProfileImageList called');
 
     w_profile_img_list.clear();
-
-    w_profile_img_list.add(
-        Container(
-          padding: EdgeInsets.all(padding5),
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: EdgeInsets.all(padding3),
-              ),
-              Stack(
-                children: <Widget>[
-                  SizedBox(
+    int memberCntIdx = 0;
+    for(memberCntIdx=0; memberCntIdx < ti_members.length; memberCntIdx++) {
+      w_profile_img_list.add(
+          Container(
+            padding: EdgeInsets.all(padding5),
+            child: Column(
+              children: <Widget>[
+                Padding(
+                  padding: EdgeInsets.all(padding3),
+                ),
+                Stack(
+                  children: <Widget>[
+                    SizedBox(
                       width: _height10,
                       height: _height10,
                       child: CircleAvatar(
                         backgroundColor: Color(pointColor),
                         backgroundImage: NetworkImage(
-                            (ti_members == null) ? '' : ti_members[0]['profile_img']
-                        ),
-                      )
-                  ),
-                ],
-              ),
-              Container(
-                width: _height10,
-                child: Text(
-                  (ti_members == null) ? '' : ti_members[0]['nicknames'],
-                  overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: txtSizeSmlStr),
+                            ti_members[memberCntIdx]['profile_img']),
+                      ),
+                    ),
+                  ],
                 ),
-              ),
-            ],
-          ),
-        )
-    );
+                Container(
+                  width: _height10,
+                  child: Center(
+                    child: Text(
+                      ti_members[memberCntIdx]['nickname'],
+                      overflow: TextOverflow.ellipsis,
+                      style: TextStyle(fontSize: txtSizeSmlStr),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
+      );
+    }
 
-    for(int i=0; i < (int.parse(dropdownValue_memberCnt)-1); i++){
+    for(; memberCntIdx < (int.parse(dropdownValue_memberCnt)-1); memberCntIdx++){
 
       w_profile_img_list.add(
           Container(
@@ -1137,6 +1204,7 @@ class _TeamPageState extends State<TeamPage> {
             g_prefs.setString('invitation_code', g_invitation_code);
           });
           setTeamInfo(tempMemList, 2, "", "", "", tempImgList, tempTagList, "n", "", g_ui_gender);
+          g_setTeamInfo(tempMemList, 2, "", "", "", tempImgList, tempTagList, "n", "", g_ui_gender);
         });
 
       }else{

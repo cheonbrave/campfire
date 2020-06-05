@@ -54,6 +54,9 @@ dependencies:
   package_info: ^0.4.0+13
   # kakao 기능 사용을 위한 패키지 추가 END
 
+  progress_indicators: ^0.1.5
+  loading_animations: ^2.1.0
+
 
   #firebase_core: ^0.4.4+3
   #firebase_auth: ^0.15.5+3
