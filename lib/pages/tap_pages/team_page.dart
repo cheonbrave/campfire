@@ -1007,7 +1007,7 @@ class _TeamPageState extends State<TeamPage> {
       );
     }
 
-    for(; memberCntIdx < (int.parse(dropdownValue_memberCnt)-1); memberCntIdx++){
+    for(; memberCntIdx < int.parse(dropdownValue_memberCnt); memberCntIdx++){
 
       w_profile_img_list.add(
           Container(
@@ -1038,11 +1038,8 @@ class _TeamPageState extends State<TeamPage> {
 
   void setIntroImageList() {
     w_intro_img_list.clear();
-
-    // db에서 리스트 로딩
-
-
-    for (int i = 0; i < 3; i++) {
+    debugPrint('ti_intro_img_list : ${ti_intro_img_list.length}');
+    for (int i = 0; i < ti_intro_img_list.length; i++) {
       //debugPrint('intro_img_list[${i}] : ${intro_img_list[i]}');
       // 리스트 길이만큼 그리고, 모자라면 더미를 그림
       w_intro_img_list.add(
@@ -1052,7 +1049,7 @@ class _TeamPageState extends State<TeamPage> {
           decoration: BoxDecoration(
             color: Colors.white,
             image: DecorationImage(
-              image: (ti_intro_img_list[i] != null && ti_intro_img_list[i] != '') ? NetworkImage(ti_intro_img_list[i]) : AssetImage('lib/assets/images/back_img.png'),
+              image: (ti_intro_img_list != null && ti_intro_img_list[i] != '') ? NetworkImage(ti_intro_img_list[i]) : AssetImage('lib/assets/images/back_img.png'),
               //fit:BoxFit.cover,
             ),
           ),
@@ -1064,7 +1061,7 @@ class _TeamPageState extends State<TeamPage> {
                   child: IconButton(
                     icon: Icon(
                       Icons.add_circle_outline,
-                      color: (ti_intro_img_list[i] != null && ti_intro_img_list[i] != '') ? Colors.white : Color(pointColor),
+                      color: (ti_intro_img_list != null && ti_intro_img_list[i] != '') ? Colors.white : Color(pointColor),
                     ),
                     onPressed: () {
                       _getImage(i);
@@ -1183,7 +1180,7 @@ class _TeamPageState extends State<TeamPage> {
           'profile_img':g_ui_profile_img,
         };
         List<Map<String,String>> tempMemList =[map_item];
-        List<String> tempImgList = [];
+        List<String> tempImgList = ['','',''];
         List<String> tempTagList = [];
         _data = {
           'members':tempMemList,
