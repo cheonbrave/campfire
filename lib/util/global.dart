@@ -14,10 +14,10 @@ String g_ui_email = "";
 
 // team info
 List<Map<String,String>> g_members = null;
-int g_count = 0;
-String g_date_type = '';
-String g_area = '';
-String g_place = '';
+int g_count = 2;
+String g_date_type = null;
+String g_area = null;
+String g_place = null;
 List<String> g_intro_img_list = ['','',''];
 List<String> g_tags = [];
 String g_is_view = '';
@@ -62,10 +62,10 @@ void g_setTeamInfo(List<Map<String,String>> members, int count, String date_type
 
 void g_clearTeamInfo(){
   g_members = null;
-  g_count = 0;
-  g_date_type = '';
-  g_area = '';
-  g_place = '';
+  g_count = 2;
+  g_date_type = null;
+  g_area = null;
+  g_place = null;
   g_intro_img_list = ['','',''];
   g_tags = [];
   g_is_view = '';

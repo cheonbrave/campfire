@@ -1,3 +1,4 @@
+import 'dart:io';
 import 'package:campfire/pages/join/input_code_page.dart';
 import 'package:campfire/pages/join/input_profile_page.dart';
 import 'package:campfire/pages/join/login_page.dart';
@@ -64,6 +65,52 @@ class _MyAppState extends State<MyApp> {
       });
 
       g_invitation_code = (g_prefs.getString('invitation_code') ?? '');
+
+      /* 초대코드 값이 있을때만 팀 데이터 로딩 */
+      if(g_invitation_code != null && g_invitation_code != ''){
+        dbio.find_useDocName(collection_teams, g_invitation_code).then((DocumentSnapshot ds) {
+          List<dynamic> temp_list = ds.data['members'];
+          List<Map<String, String>> members_list = [];
+          Map<String, String> temp_map;
+          for (int i = 0; i < temp_list.length; i++) {
+            //debugPrint('temp_list nickname : ' + temp_list[i]['nickname']);
+            temp_map = {
+              'email': temp_list[i]['email'],
+              'nickname': temp_list[i]['nickname'],
+              'profile_img': temp_list[i]['profile_img'],
+            };
+            members_list.add(temp_map);
+          }
+
+          List<dynamic> dynamicList2;
+          List<String> strList_introImgs = [];
+          List<String> strList_tags = [];
+
+          dynamicList2 = ds.data['intro_img_list'];
+          for (int i = 0; i < dynamicList2.length; i++) {
+            strList_introImgs.add(dynamicList2[i]);
+          }
+
+          dynamicList2 = ds.data['tags'];
+          for (int i = 0; i < dynamicList2.length; i++) {
+            strList_tags.add(dynamicList2[i]);
+          }
+          setState(() {
+            g_setTeamInfo(
+                members_list,
+                ds.data['count'],
+                ds.data['date_type'],
+                ds.data['area'],
+                ds.data['place'],
+                strList_introImgs,
+                strList_tags,
+                ds.data['is_view'],
+                ds.data['up_time'],
+                ds.data['gender']);
+          });
+        });
+      }
+
     }
 
     return;
@@ -143,7 +190,7 @@ class _MyAppState extends State<MyApp> {
       ),
 
       /* 홈 페이지 설정 */
-      home: (email != null && email != '') ? TapPage(tapIndex: 1,) : LoginPage(), // root page에서 로그인 상태 체크
+      home: (g_ui_email != null && g_ui_email != '') ? TapPage(tapIndex: 1,) : LoginPage(), // root page에서 로그인 상태 체크
 
       navigatorObservers: [
         FirebaseAnalyticsObserver(analytics: analytics),
