@@ -16,6 +16,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:path_provider/path_provider.dart' as path_provider;
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:loading_overlay/loading_overlay.dart';
 
 class TeamPage extends StatefulWidget {
   static const routeName = '/team_page';
@@ -26,18 +27,10 @@ class TeamPage extends StatefulWidget {
 
 class _TeamPageState extends State<TeamPage> {
 
-  List<Map<String,String>> ti_members = g_members;
-  int ti_count = g_count;
-  String ti_date_type = g_date_type;
-  String ti_area = g_area;
-  String ti_place = g_place;
-  List<String> ti_intro_img_list = g_intro_img_list;
-  List<String> ti_tags = g_tags;
-  String ti_is_view = g_is_view;
-  String ti_up_time = g_up_time;
-  String ti_gender = g_gender;
+  bool _loading = false;
 
-  String dropdownValue_memberCnt =  '2';
+  String dropdownValue_memberCnt =  "${g_count}";
+
   String dropdownValue_type =  null;
   String dropdownValue_city =  null;
 
@@ -63,38 +56,6 @@ class _TeamPageState extends State<TeamPage> {
 
   Map<String, dynamic> _data;
 
-  void setTeamInfo(List<Map<String,String>> members, int count, String date_type, String area, String place, List<String> intro_img_list, List<String> tags, String is_view, String up_time, String gender){
-    debugPrint('setTeamInfo');
-    setState(() {
-      ti_members = members;
-      ti_count = count;
-      ti_date_type = date_type;
-      ti_area = area;
-      ti_place = place;
-      ti_intro_img_list = intro_img_list;
-      ti_tags = tags;
-      ti_is_view = is_view;
-      ti_up_time = up_time;
-      ti_gender = gender;
-    });
-  }
-
-  void clearTeamInfo(){
-    debugPrint('clearTeamInfo');
-    setState(() {
-      ti_members = null;
-      ti_count = 0;
-      ti_date_type = '';
-      ti_area = '';
-      ti_place = '';
-      ti_intro_img_list = ['','',''];
-      ti_tags = [];
-      ti_is_view = '';
-      ti_up_time = '';
-      ti_gender = '';
-    });
-  }
-
   @override
   void initState() {
     super.initState();
@@ -111,66 +72,53 @@ class _TeamPageState extends State<TeamPage> {
     date_type_list.add('같이 결정해요');
     date_type_list.add('오늘밤에 만나요');
 
-    /* 초대코드 값이 있을때만 팀 데이터 로딩 */
-    if(g_invitation_code != null && g_invitation_code != ''){
-      dbio.find_useDocName(collection_teams, g_invitation_code).then((DocumentSnapshot ds){
-
-        List<dynamic> temp_list = ds.data['members'];
-        List<Map<String,String>> members_list = [];
-        Map<String,String> temp_map;
-        for(int i=0; i < temp_list.length; i++){
-          //debugPrint('temp_list nickname : ' + temp_list[i]['nickname']);
-          temp_map = {
-            'email' : temp_list[i]['email'],
-            'nickname' : temp_list[i]['nickname'],
-            'profile_img' : temp_list[i]['profile_img'],
-          };
-          members_list.add(temp_map);
-        }
-
-        List<dynamic> dynamicList2;
-        List<String> strList_introImgs = [];
-        List<String> strList_tags = [];
-
-        dynamicList2 = ds.data['intro_img_list'];
-        for(int i = 0; i < dynamicList2.length; i++){
-          strList_introImgs.add(dynamicList2[i]);
-        }
-
-        dynamicList2 = ds.data['tags'];
-        for(int i = 0; i < dynamicList2.length; i++){
-          strList_tags.add(dynamicList2[i]);
-        }
-        setTeamInfo(members_list,
-            ds.data['count'],
-            ds.data['date_type'],
-            ds.data['area'],
-            ds.data['place'],
-            strList_introImgs,
-            strList_tags,
-            ds.data['is_view'],
-            ds.data['up_time'],
-            ds.data['gender']);
-
-        g_setTeamInfo(members_list,
-            ds.data['count'],
-            ds.data['date_type'],
-            ds.data['area'],
-            ds.data['place'],
-            strList_introImgs,
-            strList_tags,
-            ds.data['is_view'],
-            ds.data['up_time'],
-            ds.data['gender']);
-
-      });
+    if(g_date_type == "notyet"){
+      dropdownValue_type = '같이 결정해요';
+    }else if(g_date_type == "tonight"){
+      dropdownValue_type = '오늘밤에 만나요';
+    }else{
+      dropdownValue_type = null;
     }
+
+    debugPrint("g_area : ${g_area}");
+    if(g_area != ''){
+      dropdownValue_city = g_area;
+    }
+
+    for(int i=0; i < g_tags.length; i++){
+      initTagRow(g_tags[i]);
+    }
+
+    txtPlaceFocusNode.addListener(() {
+
+      if(txtPlaceController.text.isEmpty) {
+        return; // 빈 텍스트 무시
+      }
+
+      if(!txtPlaceFocusNode.hasFocus){
+        _data = {
+          'place' : txtPlaceController.text,
+        };
+
+        dbio.update(collection_teams, g_invitation_code, _data);
+
+        g_place = txtPlaceController.text;
+
+        debugPrint("g_place : ${g_place}");
+      }
+    });
+
+    txtPlaceController.text = g_place;
   }
 
   @override
   void dispose() {
     txtTagController.dispose();
+
     txtCodeFocusNode.dispose();
+
+    txtPlaceFocusNode.dispose();
+    txtPlaceController.dispose();
 
     super.dispose();
   }
@@ -200,7 +148,18 @@ class _TeamPageState extends State<TeamPage> {
     }
 
     str = '#' + str;
-    ti_tags.add(str);
+
+    for(int i = 0; i < g_tags.length; i++){
+      if(str == g_tags[i]){
+        Scaffold.of(context).showSnackBar(SnackBar(
+          content: Text("같은 내용은 추가할 수 없습니다", style: TextStyle(fontSize: txtSizeMidStr),),
+          duration: Duration(seconds: 2),
+        ));
+        return;
+      }
+    }
+
+    g_tags.add(str);
 
     w_tag_list.add(
       Card(
@@ -211,9 +170,14 @@ class _TeamPageState extends State<TeamPage> {
             icon: Icon(Icons.remove_circle_outline),
             onPressed: () {
               setState(() {
-                ti_tags.remove(str);
-                debugPrint('ti_tags : ${ti_tags.toString()}');
+                debugPrint("111 str : ${str}");
+                g_tags.remove(str);
+                debugPrint('g_tags : ${g_tags.toString()}');
                 w_tag_list.removeWhere((item) => item.key == Key(str));
+                _data = {
+                  'tags':g_tags,
+                };
+                dbio.update(collection_teams, g_invitation_code, _data);
               });
             },
           ),
@@ -222,11 +186,37 @@ class _TeamPageState extends State<TeamPage> {
     );
 
     _data = {
-      'tags':ti_tags,
+      'tags':g_tags,
     };
     dbio.update(collection_teams, g_invitation_code, _data);
 
-    debugPrint('ti_tags : ${ti_tags.toString()}');
+    debugPrint('g_tags : ${g_tags.toString()}');
+  }
+
+  initTagRow(String str_item) {
+    w_tag_list.add(
+      Card(
+          key: Key(str_item),
+          child: ListTile(
+            title: Center(child: Text(str_item, style: TextStyle(fontSize: txtSizeMidStr),)),
+            trailing: IconButton(
+              icon: Icon(Icons.remove_circle_outline),
+              onPressed: () {
+                setState(() {
+                  debugPrint("222 str_item : ${str_item}");
+                  g_tags.remove(str_item);
+                  debugPrint('g_tags : ${g_tags.toString()}');
+                  w_tag_list.removeWhere((item) => item.key == Key(str_item));
+                  _data = {
+                    'tags':g_tags,
+                  };
+                  dbio.update(collection_teams, g_invitation_code, _data);
+                });
+              },
+            ),
+          )
+      ),
+    );
   }
 
   Widget _makePage_team() {
@@ -243,7 +233,7 @@ class _TeamPageState extends State<TeamPage> {
 
     var paddingRL = MediaQuery.of(context).size.width * 0.1;
 
-    if(ti_members == null){
+    if(g_members == null){
       return Scaffold(
           appBar: AppBar(
             centerTitle: false,
@@ -263,9 +253,17 @@ class _TeamPageState extends State<TeamPage> {
                           child: Text(Translations.of(context).trans('response_yes')),
                           onPressed: () {
                             setState(() {
+
+                              /* 마지막 인원이 퇴장할경우 방폭 */
+                              debugPrint("g_members.length : ${g_members.length}");
+                              if(g_members.length == 1){
+                                dbio.delete_doc(collection_teams, g_invitation_code);
+                              }
+
                               g_invitation_code = '';
                               g_prefs.setString('invitation_code', '');
                               txtCodeController.text = '';
+                              g_clearTeamInfo();
                             });
                             Navigator.pop(context, true);
                           },
@@ -294,6 +292,7 @@ class _TeamPageState extends State<TeamPage> {
     setIntroImageList();
     /* 지역 드랍다운 */
     List<String> city_list = Translations.of(context).trans('city').split(",");
+    debugPrint("city_list.length : ${city_list.length}");
 
     return Scaffold(
       appBar: AppBar(
@@ -314,9 +313,18 @@ class _TeamPageState extends State<TeamPage> {
                       child: Text(Translations.of(context).trans('response_yes')),
                       onPressed: () {
                         setState(() {
+
+                          /* 마지막 인원이 퇴장할경우 방폭 */
+                          debugPrint("g_members.length : ${g_members.length}");
+                          if(g_members.length == 1){
+                            dbio.delete_doc(collection_teams, g_invitation_code);
+                          }
+
                           g_invitation_code = '';
                           g_prefs.setString('invitation_code', '');
                           txtCodeController.text = '';
+                          g_clearTeamInfo();
+
                         });
                         Navigator.pop(context, true);
                       },
@@ -334,434 +342,459 @@ class _TeamPageState extends State<TeamPage> {
         ],
       ),
       body: SafeArea( // 아이폰 노치 디자인 대응
-        child:Center(
-          child: Stack(
-            children: <Widget>[
-              SingleChildScrollView(
-                /* UI 작성 - START */
-                  child: Column(
-                    children: <Widget>[
-                      Container(
-                        height: listHeight,
-                        child: ListView.builder(
-                            padding: EdgeInsets.only(left: 5.0),
-                            scrollDirection: Axis.horizontal,
-                            itemCount: w_profile_img_list.length,
-                            itemBuilder: (BuildContext ctxt, int index) {
-                              return w_profile_img_list[index];
-                            }
-                        )
-                      ),
-                      Padding(
-                        padding: EdgeInsets.only(left: paddingRL, right: paddingRL, top: padding15, bottom: padding15),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            SizedBox(
-                              width: double.infinity,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
-                                ),
-                                padding: const EdgeInsets.all(12.0),
-                                //textColor: Color(pointColor),
-                                textColor: Colors.white,
-                                //color: Colors.white,
-                                color: Colors.black87,
-                                //splashColor: Color(pointColor2),
-                                splashColor: Colors.black87,
-                                //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
-                                child: Text((ti_members.length.toString() != dropdownValue_memberCnt) ? "친구 초대하기 (${ti_members.length}/${dropdownValue_memberCnt})" : "모두 모였어요 (${ti_members.length}/${dropdownValue_memberCnt})",
-                                    style: TextStyle(fontSize: txtSizeMidStr)
-                                ),
-                                onPressed: () async {
-
-                                  debugPrint('초대 클릭');
-
-                                  KakaoContext.clientId = "8a859e5bd31345db3d2afaac61111a91";
-                                  KakaoContext.javascriptClientId = "6a46541295b0c6578cf168632da58cab";
-
-                                  Uri uri = await LinkClient.instance.customWithTalk(24325, templateArgs: {
-                                    "code":"1234",
-                                  });
-                                  //defaultWithTalk(, serverCallbackArgs: null);
-                                  //custom(16761, templateArgs: {"key1": "value1"});
-                                  await LinkClient.instance.launchKakaoTalk(uri);
-
-                                },
-                              ),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              alignment: Alignment.centerRight,
-                              child: Text("초대코드 : ${g_invitation_code.substring(0,4)} ${g_invitation_code.substring(4,8)}", style: TextStyle(fontSize: txtSizeSmlStr)),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(padding15),
-                            ),
-                            Text("인원", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
-                            DropdownButton<String>(
-                              hint: Center(
-                                  child: Text(
-                                    '선택',
-                                    style: TextStyle(fontSize: txtSizeMidStr),
-                                  )
-                              ),
-                              isExpanded: true,
-                              value: dropdownValue_memberCnt,
-                              icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
-                              iconSize: txtSizeTopTitle,
-                              elevation:16, // 1,2,3,4,6,8,9,12,16,24
-                              style: TextStyle(
-                                  fontSize: txtSizeMidStr,
-                                  fontFamily: 'Noto Sans KR', // 폰트
-                                  color: Colors.black87
-                              ),
-                              underline: Container(
-                                  height: 1,
-                                  color: Colors.black87
-                              ),
-                              onChanged: (String newValue) {
-
-                                if(int.parse(newValue) < ti_members.length){
-                                  Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text("합류한 멤버 수 보다 작은 값은 선택할 수 없습니다", style: TextStyle(fontSize: txtSizeMidStr),),
-                                    duration: Duration(seconds: 2),
-                                  ));
-                                  return;
+        child:LoadingOverlay(
+          child: Center(
+            child: Stack(
+              children: <Widget>[
+                SingleChildScrollView(
+                  /* UI 작성 - START */
+                    child: Column(
+                      children: <Widget>[
+                        Container(
+                            height: listHeight,
+                            child: ListView.builder(
+                                padding: EdgeInsets.only(left: 5.0),
+                                scrollDirection: Axis.horizontal,
+                                itemCount: w_profile_img_list.length,
+                                itemBuilder: (BuildContext ctxt, int index) {
+                                  return w_profile_img_list[index];
                                 }
-
-                                setState(() {
-                                  dropdownValue_memberCnt = newValue;
-                                  debugPrint("dropdownValue_memberCnt : ${dropdownValue_memberCnt}");
-                                  ti_count = int.parse(dropdownValue_memberCnt);
-
-                                  _data = {
-                                    'count':ti_count,
-                                  };
-                                  dbio.update(collection_teams, g_invitation_code, _data);
-
-                                });
-
-                              },
-                              items: member_cnt_list.map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Center(
-                                      child: Text(value, style: TextStyle(
-                                          fontSize: txtSizeMidStr,
-                                          color: Colors.black87
-                                      ),
-                                      )
+                            )
+                        ),
+                        Padding(
+                          padding: EdgeInsets.only(left: paddingRL, right: paddingRL, top: padding15, bottom: padding15),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              SizedBox(
+                                width: double.infinity,
+                                child: FlatButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
                                   ),
-                                );
-                              }).toList(),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(padding15),
-                            ),
-                            Text("데이트 시기", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
-                            DropdownButton<String>(
-                              hint: Center(
-                                  child: Text(
-                                    '선택',
-                                    style: TextStyle(fontSize: txtSizeMidStr),
-                                  )
-                              ),
-                              isExpanded: true,
-                              value: dropdownValue_type,
-                              icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
-                              iconSize: txtSizeTopTitle,
-                              elevation:16, // 1,2,3,4,6,8,9,12,16,24
-                              style: TextStyle(
-                                fontSize: txtSizeMidStr,
-                                color: Colors.black87,
-                                fontFamily: 'Noto Sans KR', // 폰트
-                              ),
-                              underline: Container(
-                                  height: 1,
-                                  color: Colors.black87
-                              ),
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  dropdownValue_type = newValue;
-                                  debugPrint("dropdownValue_type : ${dropdownValue_type}");
-
-                                  if(dropdownValue_type == '오늘밤에 만나요'){
-                                    ti_date_type = 'tonight';
-                                  }else if(dropdownValue_type == '같이 결정해요'){
-                                    ti_date_type = 'notyet';
-                                  }
-
-                                  _data = {
-                                    'date_type':ti_date_type,
-                                  };
-
-                                  dbio.update(collection_teams, g_invitation_code, _data);
-                                });
-
-                              },
-                              items: date_type_list.map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Center(
-                                      child: Text(value, style: TextStyle(
-                                          fontSize: txtSizeMidStr,
-                                          color: Colors.black87
-                                      ),
-                                      )
+                                  padding: const EdgeInsets.all(12.0),
+                                  //textColor: Color(pointColor),
+                                  textColor: Colors.white,
+                                  //color: Colors.white,
+                                  color: Colors.black87,
+                                  //splashColor: Color(pointColor2),
+                                  splashColor: Colors.black87,
+                                  //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
+                                  child: Text((g_members.length.toString() != dropdownValue_memberCnt) ? "친구 초대하기 (${g_members.length}/${dropdownValue_memberCnt})" : "모두 모였어요 (${g_members.length}/${dropdownValue_memberCnt})",
+                                      style: TextStyle(fontSize: txtSizeMidStr)
                                   ),
-                                );
-                              }).toList(),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(padding15),
-                            ),
-                            Text("지역", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
-                            DropdownButton<String>(
-                              hint: Center(
-                                  child: Text(
-                                    '선택',
-                                    style: TextStyle(fontSize: txtSizeMidStr),
-                                  )
-                              ),
-                              isExpanded: true,
-                              value: dropdownValue_city,
-                              icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
-                              iconSize: txtSizeTopTitle,
-                              elevation:16, // 1,2,3,4,6,8,9,12,16,24
-                              style: TextStyle(
-                                  fontSize: txtSizeMidStr,
-                                  fontFamily: 'Noto Sans KR', // 폰트
-                                  color: Colors.black87
-                              ),
-                              underline: Container(
-                                  height: 1,
-                                  color: Colors.black87
-                              ),
-                              onChanged: (String newValue) {
-                                setState(() {
-                                  dropdownValue_city = newValue;
-                                  debugPrint("dropdownValue_city : ${dropdownValue_city}");
+                                  onPressed: () async {
 
-                                  ti_area = dropdownValue_city;
+                                    debugPrint('초대 클릭');
 
-                                  _data = {
-                                    'area':ti_area,
-                                  };
+                                    KakaoContext.clientId = "8a859e5bd31345db3d2afaac61111a91";
+                                    KakaoContext.javascriptClientId = "6a46541295b0c6578cf168632da58cab";
 
-                                  dbio.update(collection_teams, g_invitation_code, _data);
-                                });
-
-                              },
-                              items: city_list.map<DropdownMenuItem<String>>((String value) {
-                                return DropdownMenuItem<String>(
-                                  value: value,
-                                  child: Center(
-                                      child: Text(value, style: TextStyle(
-                                          fontSize: txtSizeMidStr,
-                                          color: Colors.black87
-                                      ),
-                                      )
-                                  ),
-                                );
-                              }).toList(),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(padding15),
-                            ),
-                            Text("장소", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
-                            TextField(
-                              focusNode: txtPlaceFocusNode,
-                              controller: txtPlaceController,
-                              maxLines : 1,
-                              maxLength: 20,
-                              textAlignVertical: TextAlignVertical.center,
-                              textAlign: TextAlign.center,
-                              style : TextStyle(fontSize: txtSizeMidStr),
-                              decoration: InputDecoration(
-                                hintText: '만나고 싶은 장소를 알려주세요',
-                                hintStyle: TextStyle(fontSize: txtSizeMidStr, color: Colors.black54),
-                                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
-                                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
-                              ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(padding15),
-                            ),
-                            Text("사진", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
-                            Padding(
-                              padding: EdgeInsets.all(padding3),
-                            ),
-                            Container(
-                                height: _image_width,
-                                child: ListView.builder(
-                                    padding: EdgeInsets.only(left: 5.0),
-                                    scrollDirection: Axis.horizontal,
-                                    itemCount: w_intro_img_list.length,
-                                    itemBuilder: (BuildContext ctxt, int index) {
-                                      return w_intro_img_list[index];
-                                    }
-                                )
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(padding15),
-                            ),
-                            Text("매력 포인트", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
-                            Column(children: w_tag_list),
-                            TextField(
-                              controller: txtTagController,
-                              onSubmitted: (input_str){
-                                setState(() {
-                                  buildTagRow(input_str);
-                                  txtTagController.text = '';
-                                });
-                              },
-                              maxLines : 1,
-                              maxLength: 10,
-                              textAlignVertical: TextAlignVertical.center,
-                              textAlign: TextAlign.center,
-                              style : TextStyle(fontSize: txtSizeMidStr),
-                              decoration: InputDecoration(
-                                hintText: '우리팀의 매력 포인트는?',
-                                hintStyle: TextStyle(fontSize: txtSizeMidStr, color: Colors.black54),
-                                focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
-                                enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
-                                suffixIcon: IconButton(
-                                  icon: Icon(Icons.add_circle_outline, color: Color(pointColor)),
-                                  onPressed: () {
-                                    setState(() {
-                                      buildTagRow(txtTagController.text);
-                                      txtTagController.text = '';
+                                    Uri uri = await LinkClient.instance.customWithTalk(24325, templateArgs: {
+                                      "code":"${g_invitation_code.substring(0,4)} ${g_invitation_code.substring(4,8)}",
                                     });
+                                    //defaultWithTalk(, serverCallbackArgs: null);
+                                    //custom(16761, templateArgs: {"key1": "value1"});
+                                    await LinkClient.instance.launchKakaoTalk(uri);
+
                                   },
                                 ),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(padding15),
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
+                              Container(
+                                width: double.infinity,
+                                alignment: Alignment.centerRight,
+                                child: Text("초대코드 : ${g_invitation_code.substring(0,4)} ${g_invitation_code.substring(4,8)}", style: TextStyle(fontSize: txtSizeSmlStr)),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(padding15),
+                              ),
+                              Text("인원", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                              DropdownButton<String>(
+                                hint: Center(
+                                    child: Text(
+                                      '선택',
+                                      style: TextStyle(fontSize: txtSizeMidStr),
+                                    )
                                 ),
-                                padding: const EdgeInsets.all(12.0),
-                                //textColor: Color(pointColor),
-                                textColor: Colors.white,
-                                //color: Colors.white,
-                                color: Colors.black87,
-                                //splashColor: Color(pointColor2),
-                                splashColor: Colors.black87,
-                                //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
-                                child: Text("매칭 시작", style: TextStyle(fontSize: txtSizeMidStr)),
+                                isExpanded: true,
+                                value: dropdownValue_memberCnt,
+                                icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
+                                iconSize: txtSizeTopTitle,
+                                elevation:16, // 1,2,3,4,6,8,9,12,16,24
+                                style: TextStyle(
+                                    fontSize: txtSizeMidStr,
+                                    fontFamily: 'Noto Sans KR', // 폰트
+                                    color: Colors.black87
+                                ),
+                                underline: Container(
+                                    height: 1,
+                                    color: Colors.black87
+                                ),
+                                onChanged: (String newValue) {
 
-                                //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
-                                onPressed: () {
-
-                                  if(ti_date_type == null || ti_date_type == ''){
+                                  if(int.parse(newValue) < g_members.length){
                                     Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text("데이트 시기를 선택하세요", style: TextStyle(fontSize: txtSizeMidStr),),
+                                      content: Text("합류한 멤버 수 보다 작은 값은 선택할 수 없습니다", style: TextStyle(fontSize: txtSizeMidStr),),
                                       duration: Duration(seconds: 2),
                                     ));
                                     return;
                                   }
 
-                                  if(ti_area == null || ti_area == ''){
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text("지역을 선택하세요", style: TextStyle(fontSize: txtSizeMidStr),),
-                                      duration: Duration(seconds: 2),
-                                    ));
-                                    return;
-                                  }
+                                  setState(() {
+                                    dropdownValue_memberCnt = newValue;
+                                    debugPrint("dropdownValue_memberCnt : ${dropdownValue_memberCnt}");
+                                    g_count = int.parse(dropdownValue_memberCnt);
 
-                                  if(ti_place == null || ti_place == ''){
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text("장소를 입력하세요", style: TextStyle(fontSize: txtSizeMidStr),),
-                                      duration: Duration(seconds: 2),
-                                    ));
-                                    return;
-                                  }
+                                    _data = {
+                                      'count':g_count,
+                                    };
+                                    dbio.update(collection_teams, g_invitation_code, _data);
 
-                                  if(ti_intro_img_list == null || ti_intro_img_list.length == 0){
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text("사진을 최소 1장 이상 등록해주세요", style: TextStyle(fontSize: txtSizeMidStr),),
-                                      duration: Duration(seconds: 2),
-                                    ));
-                                    return;
-                                  }
-
-                                  if(ti_tags == null || ti_tags.length < 3){
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text("매력 포인트를 3개 이상 입력해주세요", style: TextStyle(fontSize: txtSizeMidStr),),
-                                      duration: Duration(seconds: 2),
-                                    ));
-                                    return;
-                                  }
-
-                                  if(ti_members.length != ti_count){
-                                    Scaffold.of(context).showSnackBar(SnackBar(
-                                      content: Text("팀원이 모두 합류한 후에 매칭을 시작할 수 있습니다", style: TextStyle(fontSize: txtSizeMidStr),),
-                                      duration: Duration(seconds: 2),
-                                    ));
-                                    return;
-                                  }
-
-                                  _data = {
-                                    'is_view' : 'Y',
-                                  };
-
-                                  dbio.update(collection_teams, g_invitation_code, _data);
+                                  });
 
                                 },
+                                items: member_cnt_list.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Center(
+                                        child: Text(value, style: TextStyle(
+                                            fontSize: txtSizeMidStr,
+                                            color: Colors.black87
+                                        ),
+                                        )
+                                    ),
+                                  );
+                                }).toList(),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(padding15),
-                            ),
-                            SizedBox(
-                              width: double.infinity,
-                              child: FlatButton(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(10.0),
+                              Padding(
+                                padding: EdgeInsets.all(padding15),
+                              ),
+                              Text("데이트 시기", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                              DropdownButton<String>(
+                                hint: Center(
+                                    child: Text(
+                                      '선택',
+                                      style: TextStyle(fontSize: txtSizeMidStr),
+                                    )
                                 ),
-                                padding: const EdgeInsets.all(12.0),
-                                //textColor: Color(pointColor),
-                                textColor: Colors.white,
-                                //color: Colors.white,
-                                color: Colors.black87,
-                                //splashColor: Color(pointColor2),
-                                splashColor: Colors.black87,
-                                //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
-                                child: Text("우리팀 UP 하기", style: TextStyle(fontSize: txtSizeMidStr)),
+                                isExpanded: true,
+                                value: dropdownValue_type,
+                                icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
+                                iconSize: txtSizeTopTitle,
+                                elevation:16, // 1,2,3,4,6,8,9,12,16,24
+                                style: TextStyle(
+                                  fontSize: txtSizeMidStr,
+                                  color: Colors.black87,
+                                  fontFamily: 'Noto Sans KR', // 폰트
+                                ),
+                                underline: Container(
+                                    height: 1,
+                                    color: Colors.black87
+                                ),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    dropdownValue_type = newValue;
+                                    debugPrint("dropdownValue_type : ${dropdownValue_type}");
 
-                                //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
-                                onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
+                                    if(dropdownValue_type == '오늘밤에 만나요'){
+                                      g_date_type = 'tonight';
+                                    }else if(dropdownValue_type == '같이 결정해요'){
+                                      g_date_type = 'notyet';
+                                    }
+
+                                    _data = {
+                                      'date_type':g_date_type,
+                                    };
+
+                                    dbio.update(collection_teams, g_invitation_code, _data);
+                                  });
+
+                                },
+                                items: date_type_list.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Center(
+                                        child: Text(value, style: TextStyle(
+                                            fontSize: txtSizeMidStr,
+                                            color: Colors.black87
+                                        ),
+                                        )
+                                    ),
+                                  );
+                                }).toList(),
                               ),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(padding3),
-                            ),
-                            Container(
-                              width: double.infinity,
-                              alignment: Alignment.center,
-                              child: Text("현재 우리팀 노출순위 : 100번째", style: TextStyle(fontSize: txtSizeSmlStr)),
-                            ),
-                            Padding(
-                              padding: EdgeInsets.all(padding15),
-                            ),
-                          ],
-                        ),
-                      ),
-                    ],
-                  )
-                /* UI 작성 - END */
-              ),
-            ],
-          ),
-        ),
+                              Padding(
+                                padding: EdgeInsets.all(padding15),
+                              ),
+                              Text("지역", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                              DropdownButton<String>(
+                                hint: Center(
+                                    child: Text(
+                                      '선택',
+                                      style: TextStyle(fontSize: txtSizeMidStr),
+                                    )
+                                ),
+                                isExpanded: true,
+                                value: dropdownValue_city,
+                                icon: Icon(Icons.arrow_drop_down, color: Color(pointColor)),
+                                iconSize: txtSizeTopTitle,
+                                elevation:16, // 1,2,3,4,6,8,9,12,16,24
+                                style: TextStyle(
+                                    fontSize: txtSizeMidStr,
+                                    fontFamily: 'Noto Sans KR', // 폰트
+                                    color: Colors.black87
+                                ),
+                                underline: Container(
+                                    height: 1,
+                                    color: Colors.black87
+                                ),
+                                onChanged: (String newValue) {
+                                  setState(() {
+                                    dropdownValue_city = newValue;
+                                    debugPrint("dropdownValue_city : ${dropdownValue_city}");
 
+                                    g_area = dropdownValue_city;
+
+                                    _data = {
+                                      'area':g_area,
+                                    };
+
+                                    dbio.update(collection_teams, g_invitation_code, _data);
+                                  });
+
+                                },
+                                items: city_list.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Center(
+                                        child: Text(value, style: TextStyle(
+                                            fontSize: txtSizeMidStr,
+                                            color: Colors.black87
+                                        ),
+                                        )
+                                    ),
+                                  );
+                                }).toList(),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(padding15),
+                              ),
+                              Text("장소", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                              TextField(
+                                focusNode: txtPlaceFocusNode,
+                                controller: txtPlaceController,
+                                maxLines : 1,
+                                maxLength: 20,
+                                textAlignVertical: TextAlignVertical.center,
+                                textAlign: TextAlign.center,
+                                style : TextStyle(fontSize: txtSizeMidStr),
+                                decoration: InputDecoration(
+                                  hintText: '만나고 싶은 장소를 알려주세요',
+                                  hintStyle: TextStyle(fontSize: txtSizeMidStr, color: Colors.black54),
+                                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
+                                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
+                                ),
+                                onSubmitted: (input_str){
+
+                                  if(input_str.isEmpty) {
+                                    return; // 빈 텍스트 무시
+                                  }
+
+                                  setState(() {
+                                    _data = {
+                                      'place' : input_str,
+                                    };
+
+                                    dbio.update(collection_teams, g_invitation_code, _data);
+
+                                    g_place = input_str;
+
+                                    debugPrint("g_place : ${g_place}");
+                                  });
+                                },
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(padding15),
+                              ),
+                              Text("사진", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500)),
+                              Padding(
+                                padding: EdgeInsets.all(padding3),
+                              ),
+                              Container(
+                                  height: _image_width,
+                                  child: ListView.builder(
+                                      padding: EdgeInsets.only(left: 5.0),
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: w_intro_img_list.length,
+                                      itemBuilder: (BuildContext ctxt, int index) {
+                                        return w_intro_img_list[index];
+                                      }
+                                  )
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(padding15),
+                              ),
+                              Text("매력 포인트", style: TextStyle(fontSize: txtSizeMidStr, fontWeight: FontWeight.w500),),
+                              Column(children: w_tag_list),
+                              TextField(
+                                controller: txtTagController,
+                                onSubmitted: (input_str){
+                                  setState(() {
+                                    buildTagRow(input_str);
+                                    txtTagController.text = '';
+                                  });
+                                },
+                                maxLines : 1,
+                                maxLength: 10,
+                                textAlignVertical: TextAlignVertical.center,
+                                textAlign: TextAlign.center,
+                                style : TextStyle(fontSize: txtSizeMidStr),
+                                decoration: InputDecoration(
+                                  hintText: '우리팀의 매력 포인트를 입력하세요',
+                                  hintStyle: TextStyle(fontSize: txtSizeMidStr, color: Colors.black54),
+                                  focusedBorder: UnderlineInputBorder(borderSide: BorderSide(color: Color(pointColor))),
+                                  enabledBorder: UnderlineInputBorder(borderSide: BorderSide(color: Colors.black87)),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(Icons.add_circle_outline, color: Color(pointColor)),
+                                    onPressed: () {
+                                      setState(() {
+                                        buildTagRow(txtTagController.text);
+                                        txtTagController.text = '';
+                                      });
+                                    },
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(padding15),
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: FlatButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  padding: const EdgeInsets.all(12.0),
+                                  //textColor: Color(pointColor),
+                                  textColor: Colors.white,
+                                  //color: Colors.white,
+                                  color: Colors.black87,
+                                  //splashColor: Color(pointColor2),
+                                  splashColor: Colors.black87,
+                                  //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
+                                  child: Text("매칭 시작", style: TextStyle(fontSize: txtSizeMidStr)),
+
+                                  //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
+                                  onPressed: () {
+
+                                    var now = new DateTime.now();
+                                    String up_time = now.toString().replaceAll(' ', '_');
+                                    debugPrint("up_time : ${up_time}");
+
+                                    if(g_date_type == null || g_date_type == ''){
+                                      Scaffold.of(context).showSnackBar(SnackBar(
+                                        content: Text("데이트 시기를 선택하세요", style: TextStyle(fontSize: txtSizeMidStr),),
+                                        duration: Duration(seconds: 2),
+                                      ));
+                                      return;
+                                    }
+
+                                    if(g_area == null || g_area == ''){
+                                      Scaffold.of(context).showSnackBar(SnackBar(
+                                        content: Text("지역을 선택하세요", style: TextStyle(fontSize: txtSizeMidStr),),
+                                        duration: Duration(seconds: 2),
+                                      ));
+                                      return;
+                                    }
+
+                                    if(g_place == null || g_place == ''){
+                                      Scaffold.of(context).showSnackBar(SnackBar(
+                                        content: Text("장소를 입력하세요", style: TextStyle(fontSize: txtSizeMidStr),),
+                                        duration: Duration(seconds: 2),
+                                      ));
+                                      return;
+                                    }
+
+                                    if(g_intro_img_list == null || g_intro_img_list.length == 0){
+                                      Scaffold.of(context).showSnackBar(SnackBar(
+                                        content: Text("사진을 최소 1장 이상 등록해주세요", style: TextStyle(fontSize: txtSizeMidStr),),
+                                        duration: Duration(seconds: 2),
+                                      ));
+                                      return;
+                                    }
+
+                                    if(g_tags == null || g_tags.length < 3){
+                                      Scaffold.of(context).showSnackBar(SnackBar(
+                                        content: Text("매력 포인트를 3개 이상 입력해주세요", style: TextStyle(fontSize: txtSizeMidStr),),
+                                        duration: Duration(seconds: 2),
+                                      ));
+                                      return;
+                                    }
+
+                                    if(g_members.length != g_count){
+                                      Scaffold.of(context).showSnackBar(SnackBar(
+                                        content: Text("팀원이 모두 합류한 후에 매칭을 시작할 수 있습니다", style: TextStyle(fontSize: txtSizeMidStr),),
+                                        duration: Duration(seconds: 2),
+                                      ));
+                                      return;
+                                    }
+
+                                    _data = {
+                                      'is_view' : 'Y',
+                                      'up_time' : up_time,
+                                    };
+
+                                    dbio.update(collection_teams, g_invitation_code, _data);
+
+                                  },
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(padding15),
+                              ),
+                              SizedBox(
+                                width: double.infinity,
+                                child: FlatButton(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  ),
+                                  padding: const EdgeInsets.all(12.0),
+                                  //textColor: Color(pointColor),
+                                  textColor: Colors.white,
+                                  //color: Colors.white,
+                                  color: Colors.black87,
+                                  //splashColor: Color(pointColor2),
+                                  splashColor: Colors.black87,
+                                  //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
+                                  child: Text("우리팀 UP 하기", style: TextStyle(fontSize: txtSizeMidStr)),
+
+                                  //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
+                                  onPressed: () => Navigator.pushAndRemoveUntil(context, CupertinoPageRoute(builder: (context) => TapPage(tapIndex: 0)), ModalRoute.withName(TapPage.routeName)),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(padding3),
+                              ),
+                              Container(
+                                width: double.infinity,
+                                alignment: Alignment.center,
+                                child: Text("현재 우리팀 노출순위 : 100번째", style: TextStyle(fontSize: txtSizeSmlStr)),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.all(padding15),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    )
+                  /* UI 작성 - END */
+                ),
+              ],
+            ),
+          ),
+            isLoading: _loading
+        )
       ),
       backgroundColor: Colors.white,
     );
@@ -887,7 +920,18 @@ class _TeamPageState extends State<TeamPage> {
                                 // 입력한 초대코드가 동일하고, 팀개설자의 성별과 초대코드 입력자의 성별이 같을때만 팀에 합류
                                 if( ds.data != null && ds.data['gender'] == g_ui_gender ){
 
-                                  List<Map<String,String>> _members = ds.data['members'];
+                                  List<Map<String,String>> _members = [];
+                                  List<dynamic> temp_list = ds.data['members'];
+
+                                  Map<String,String> temp_map;
+                                  for(int i=0; i < temp_list.length; i++){
+                                    temp_map = {
+                                      'email' : temp_list[i]['email'],
+                                      'nickname' : temp_list[i]['nickname'],
+                                      'profile_img' : temp_list[i]['profile_img'],
+                                    };
+                                    _members.add(temp_map);
+                                  }
 
                                   /* 이미 합류했던 사람인지 확인 */
                                   bool joined = false;
@@ -916,6 +960,10 @@ class _TeamPageState extends State<TeamPage> {
                                     if(ds.data['members'].length > ds.data['count']){
                                       // 최대 합류 인원을 초과했다는 경고
                                       debugPrint("최대 인원 초과");
+                                      Scaffold.of(context).showSnackBar(SnackBar(
+                                        content: Text("이미 인원이 가득 찼습니다", style: TextStyle(fontSize: txtSizeMidStr),),
+                                        duration: Duration(seconds: 2),
+                                      ));
                                       return;
                                     }
 
@@ -932,7 +980,7 @@ class _TeamPageState extends State<TeamPage> {
                                   }
                                 } else{
                                   Scaffold.of(context).showSnackBar(SnackBar(
-                                    content: Text("초대코드를 확인하고 다시 입력하세요", style: TextStyle(fontSize: txtSizeMidStr),),
+                                    content: Text("초대코드가 잘못되었거나, 이미 없어진 팀 입니다", style: TextStyle(fontSize: txtSizeMidStr),),
                                     duration: Duration(seconds: 2),
                                   ));
                                   txtCodeFocusNode.requestFocus();
@@ -969,7 +1017,7 @@ class _TeamPageState extends State<TeamPage> {
 
     w_profile_img_list.clear();
     int memberCntIdx = 0;
-    for(memberCntIdx=0; memberCntIdx < ti_members.length; memberCntIdx++) {
+    for(memberCntIdx=0; memberCntIdx < g_members.length; memberCntIdx++) {
       w_profile_img_list.add(
           Container(
             padding: EdgeInsets.all(padding5),
@@ -986,7 +1034,7 @@ class _TeamPageState extends State<TeamPage> {
                       child: CircleAvatar(
                         backgroundColor: Color(pointColor),
                         backgroundImage: NetworkImage(
-                            ti_members[memberCntIdx]['profile_img']),
+                            g_members[memberCntIdx]['profile_img']),
                       ),
                     ),
                   ],
@@ -995,7 +1043,7 @@ class _TeamPageState extends State<TeamPage> {
                   width: _height10,
                   child: Center(
                     child: Text(
-                      ti_members[memberCntIdx]['nickname'],
+                      g_members[memberCntIdx]['nickname'],
                       overflow: TextOverflow.ellipsis,
                       style: TextStyle(fontSize: txtSizeSmlStr),
                     ),
@@ -1038,8 +1086,8 @@ class _TeamPageState extends State<TeamPage> {
 
   void setIntroImageList() {
     w_intro_img_list.clear();
-    debugPrint('ti_intro_img_list : ${ti_intro_img_list.length}');
-    for (int i = 0; i < ti_intro_img_list.length; i++) {
+    debugPrint('g_intro_img_list : ${g_intro_img_list.length}');
+    for (int i = 0; i < g_intro_img_list.length; i++) {
       //debugPrint('intro_img_list[${i}] : ${intro_img_list[i]}');
       // 리스트 길이만큼 그리고, 모자라면 더미를 그림
       w_intro_img_list.add(
@@ -1049,7 +1097,7 @@ class _TeamPageState extends State<TeamPage> {
           decoration: BoxDecoration(
             color: Colors.white,
             image: DecorationImage(
-              image: (ti_intro_img_list != null && ti_intro_img_list[i] != '') ? NetworkImage(ti_intro_img_list[i]) : AssetImage('lib/assets/images/back_img.png'),
+              image: (g_intro_img_list != null && g_intro_img_list[i] != '') ? NetworkImage(g_intro_img_list[i]) : AssetImage('lib/assets/images/back_img.png'),
               //fit:BoxFit.cover,
             ),
           ),
@@ -1061,7 +1109,7 @@ class _TeamPageState extends State<TeamPage> {
                   child: IconButton(
                     icon: Icon(
                       Icons.add_circle_outline,
-                      color: (ti_intro_img_list != null && ti_intro_img_list[i] != '') ? Colors.white : Color(pointColor),
+                      color: (g_intro_img_list != null && g_intro_img_list[i] != '') ? Colors.white : Color(pointColor),
                     ),
                     onPressed: () {
                       _getImage(i);
@@ -1079,6 +1127,10 @@ class _TeamPageState extends State<TeamPage> {
   /* 프로필 이미지 업로드 */
   void uploadImage(File compressImgFile, int index) {
 
+    setState(() {
+      _loading = true;
+    });
+
     final fs = FirebaseStorage.instance.ref().child('teams').child(g_invitation_code).child('intro_img_${index}.jpg');
     final task = fs.putFile(compressImgFile, StorageMetadata(contentType: 'image/jpg'));
     task.onComplete.then((onValue) {
@@ -1087,17 +1139,21 @@ class _TeamPageState extends State<TeamPage> {
         debugPrint('upload success url : ${onValue}');
         // 화면 반영
         setState(() {
-          ti_intro_img_list[index] = onValue;
+          g_intro_img_list[index] = onValue;
 
         });
         // DB 반영
         _data = {
-          'intro_img_list':ti_intro_img_list,
+          'intro_img_list':g_intro_img_list,
         };
 
         dbio.update(collection_teams, g_invitation_code, _data);
 
         setIntroImageList();
+
+        setState(() {
+          _loading = false;
+        });
 
       });
     });
@@ -1152,7 +1208,7 @@ class _TeamPageState extends State<TeamPage> {
   }
 
   make_invitation_code() {
-    String sCode = '';
+    String invitation_code = '';
     int iCode = 0;
     int len = 0;
     int min = 1;
@@ -1161,19 +1217,19 @@ class _TeamPageState extends State<TeamPage> {
     final _random = new Random();
     iCode = min + _random.nextInt( max - min );
 
-    sCode = iCode.toString();
-    len = sCode.length;
+    invitation_code = iCode.toString();
+    len = invitation_code.length;
     if(len < 8){
       for(int i=0; i < (8-len); i++){
-        sCode = '0' + sCode;
+        invitation_code = '0' + invitation_code;
       }
     }
 
-    debugPrint('sCode [${sCode}] find');
+    debugPrint('invitation_code [${invitation_code}] find');
 
-    dbio.find_useDocName(collection_teams, sCode).then((DocumentSnapshot ds){
+    dbio.find_useDocName(collection_teams, invitation_code).then((DocumentSnapshot ds){
       if(ds.data == null){
-        debugPrint('sCode [${sCode}] is not exist');
+        debugPrint('invitation_code [${invitation_code}] is not exist');
         Map<String,String> map_item = {
           'email':g_ui_email,
           'nickname':g_ui_nickname,
@@ -1195,17 +1251,16 @@ class _TeamPageState extends State<TeamPage> {
           'gender':g_ui_gender,   // 이곳은 팀을 개설하려는 사람의 성별을 기준으로 입력되어야야 함
         };
 
-        dbio.upsert(collection_teams, sCode, _data).then((onValue){
+        dbio.upsert(collection_teams, invitation_code, _data).then((onValue){
           setState(() {
-            g_invitation_code = sCode;
+            g_invitation_code = invitation_code;
             g_prefs.setString('invitation_code', g_invitation_code);
           });
-          setTeamInfo(tempMemList, 2, "", "", "", tempImgList, tempTagList, "n", "", g_ui_gender);
           g_setTeamInfo(tempMemList, 2, "", "", "", tempImgList, tempTagList, "n", "", g_ui_gender);
         });
 
       }else{
-        debugPrint('sCode [${sCode}] is exist');
+        debugPrint('invitation_code [${invitation_code}] is exist');
         // 랜덤숫자가 이미 다른 팀에서 사용중인 초대코드일경우 재귀함수 호출 형태로 재수행
         make_invitation_code();
       }
