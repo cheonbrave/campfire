@@ -141,6 +141,7 @@ class _TeamPageState extends State<TeamPage> {
           'email': temp_list[i]['email'],
           'nickname': temp_list[i]['nickname'],
           'profile_img': temp_list[i]['profile_img'],
+          'birth_year' : temp_list[i]['birth_year'],
         };
         members_list.add(temp_map);
       }
@@ -761,7 +762,8 @@ class _TeamPageState extends State<TeamPage> {
                                   onPressed: () {
 
                                     var now = new DateTime.now();
-                                    String up_time = now.toString().replaceAll(' ', '_');
+                                    //String up_time = now.toString().replaceAll(' ', '_');
+                                    String up_time = now.toString();
                                     debugPrint("up_time : ${up_time}");
 
                                     if(g_date_type == null || g_date_type == ''){
@@ -1006,6 +1008,7 @@ class _TeamPageState extends State<TeamPage> {
                                       'email' : temp_list[i]['email'],
                                       'nickname' : temp_list[i]['nickname'],
                                       'profile_img' : temp_list[i]['profile_img'],
+                                      'birth_year' : temp_list[i]['birth_year'],
                                     };
                                     _members.add(temp_map);
                                   }
@@ -1030,6 +1033,7 @@ class _TeamPageState extends State<TeamPage> {
                                       'email':g_ui_email,
                                       'nickname':g_ui_nickname,
                                       'profile_img':g_ui_profile_img,
+                                      'birth_year' : g_ui_birth_year,
                                     };
 
                                     _members.add(map_item);
@@ -1312,6 +1316,7 @@ class _TeamPageState extends State<TeamPage> {
           'email':g_ui_email,
           'nickname':g_ui_nickname,
           'profile_img':g_ui_profile_img,
+          'birth_year' : g_ui_birth_year,
         };
         List<Map<String,String>> tempMemList =[map_item];
         List<String> tempImgList = ['','',''];
