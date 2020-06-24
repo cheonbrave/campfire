@@ -78,6 +78,7 @@ class _MyAppState extends State<MyApp> {
               'email': temp_list[i]['email'],
               'nickname': temp_list[i]['nickname'],
               'profile_img': temp_list[i]['profile_img'],
+              'birth_year' : temp_list[i]['birth_year'],
             };
             members_list.add(temp_map);
           }

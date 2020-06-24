@@ -6,6 +6,8 @@ const double txtSizeBigStr = 16;
 const double txtSizeMidStr = 14;
 const double txtSizeSmlStr = 12;
 
+const double txtSizeXSmlStr = 11;
+
 const double txtSizeExplain = 10;
 
 // 패딩
