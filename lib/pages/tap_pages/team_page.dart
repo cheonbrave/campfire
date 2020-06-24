@@ -34,6 +34,8 @@ class _TeamPageState extends State<TeamPage> {
   String dropdownValue_type =  null;
   String dropdownValue_city =  null;
 
+  String _btnStartTxt = "매칭 시작";
+
   double _image_width = 0.0;
   double _height10 = 0.0;
 
@@ -59,6 +61,11 @@ class _TeamPageState extends State<TeamPage> {
   @override
   void initState() {
     super.initState();
+
+    /* 초대코드 값이 있을때만 팀 데이터 로딩 */
+    if(g_invitation_code != null && g_invitation_code != ''){
+      loadTeamInfo();
+    }
 
     txtCodeFocusNode = FocusNode();
     txtPlaceFocusNode = FocusNode();
@@ -121,6 +128,67 @@ class _TeamPageState extends State<TeamPage> {
     txtPlaceController.dispose();
 
     super.dispose();
+  }
+
+  loadTeamInfo(){
+    dbio.find_useDocName(collection_teams, g_invitation_code).then((DocumentSnapshot ds) {
+      List<dynamic> temp_list = ds.data['members'];
+      List<Map<String, String>> members_list = [];
+      Map<String, String> temp_map;
+      for (int i = 0; i < temp_list.length; i++) {
+        //debugPrint('temp_list nickname : ' + temp_list[i]['nickname']);
+        temp_map = {
+          'email': temp_list[i]['email'],
+          'nickname': temp_list[i]['nickname'],
+          'profile_img': temp_list[i]['profile_img'],
+        };
+        members_list.add(temp_map);
+      }
+
+      List<dynamic> dynamicList2;
+      List<String> strList_introImgs = [];
+      List<String> strList_tags = [];
+
+      dynamicList2 = ds.data['intro_img_list'];
+      for (int i = 0; i < dynamicList2.length; i++) {
+        strList_introImgs.add(dynamicList2[i]);
+      }
+
+      dynamicList2 = ds.data['tags'];
+      for (int i = 0; i < dynamicList2.length; i++) {
+        strList_tags.add(dynamicList2[i]);
+      }
+      setState(() {
+        g_setTeamInfo(
+            members_list,
+            ds.data['count'],
+            ds.data['date_type'],
+            ds.data['area'],
+            ds.data['place'],
+            strList_introImgs,
+            strList_tags,
+            ds.data['is_view'],
+            ds.data['up_time'],
+            ds.data['gender']);
+
+        if(g_date_type == "notyet"){
+          dropdownValue_type = '같이 결정해요';
+        }else if(g_date_type == "tonight"){
+          dropdownValue_type = '오늘밤에 만나요';
+        }else{
+          dropdownValue_type = null;
+        }
+
+        debugPrint("g_area : ${g_area}");
+        if(g_area != ''){
+          dropdownValue_city = g_area;
+        }
+
+
+        txtPlaceController.text = g_place;
+
+      });
+    });
   }
 
   @override
@@ -219,6 +287,36 @@ class _TeamPageState extends State<TeamPage> {
     );
   }
 
+  exitProcess(){
+    setState(() {
+
+      /* 마지막 인원이 퇴장할경우 방폭 */
+      debugPrint("g_members.length : ${g_members.length}");
+      if(g_members.length == 1){
+        dbio.delete_doc(collection_teams, g_invitation_code);
+      }else{
+
+        g_members.removeWhere((item) => item['email'] == g_ui_email);
+
+        _data = {
+          "is_view" : "N",
+          "members" : g_members,
+        };
+        dbio.update(collection_teams, g_invitation_code, _data);
+
+        setState(() {
+          _btnStartTxt = "매칭 시작";
+        });
+
+      }
+
+      g_invitation_code = '';
+      g_prefs.setString('invitation_code', '');
+      txtCodeController.text = '';
+      g_clearTeamInfo();
+    });
+  }
+
   Widget _makePage_team() {
 
     debugPrint('_makePage_team called');
@@ -252,19 +350,7 @@ class _TeamPageState extends State<TeamPage> {
                         FlatButton(
                           child: Text(Translations.of(context).trans('response_yes')),
                           onPressed: () {
-                            setState(() {
-
-                              /* 마지막 인원이 퇴장할경우 방폭 */
-                              debugPrint("g_members.length : ${g_members.length}");
-                              if(g_members.length == 1){
-                                dbio.delete_doc(collection_teams, g_invitation_code);
-                              }
-
-                              g_invitation_code = '';
-                              g_prefs.setString('invitation_code', '');
-                              txtCodeController.text = '';
-                              g_clearTeamInfo();
-                            });
+                            exitProcess();
                             Navigator.pop(context, true);
                           },
                         ),
@@ -312,20 +398,7 @@ class _TeamPageState extends State<TeamPage> {
                     FlatButton(
                       child: Text(Translations.of(context).trans('response_yes')),
                       onPressed: () {
-                        setState(() {
-
-                          /* 마지막 인원이 퇴장할경우 방폭 */
-                          debugPrint("g_members.length : ${g_members.length}");
-                          if(g_members.length == 1){
-                            dbio.delete_doc(collection_teams, g_invitation_code);
-                          }
-
-                          g_invitation_code = '';
-                          g_prefs.setString('invitation_code', '');
-                          txtCodeController.text = '';
-                          g_clearTeamInfo();
-
-                        });
+                        exitProcess();
                         Navigator.pop(context, true);
                       },
                     ),
@@ -682,7 +755,7 @@ class _TeamPageState extends State<TeamPage> {
                                   //splashColor: Color(pointColor2),
                                   splashColor: Colors.black87,
                                   //child: Text(Translations.of(context).trans('team_make'), style: TextStyle(fontSize: txtSizeBigStr)),
-                                  child: Text("매칭 시작", style: TextStyle(fontSize: txtSizeMidStr)),
+                                  child: Text(_btnStartTxt, style: TextStyle(fontSize: txtSizeMidStr)),
 
                                   //pushAndRemoveUntil 함수는 3번째 파라미터인 modalroute.withName에 할당된 페이지까지에 화면이동 히스토리를 지우는 기능
                                   onPressed: () {
@@ -745,6 +818,10 @@ class _TeamPageState extends State<TeamPage> {
                                     };
 
                                     dbio.update(collection_teams, g_invitation_code, _data);
+
+                                    setState(() {
+                                      _btnStartTxt = "매칭 중";
+                                    });
 
                                   },
                                 ),
@@ -975,6 +1052,7 @@ class _TeamPageState extends State<TeamPage> {
                                       setState(() {
                                         g_invitation_code = txtCode;
                                         g_prefs.setString('invitation_code', g_invitation_code);
+                                        loadTeamInfo();
                                       });
                                     });
                                   }
