@@ -4,6 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:campfire/util/dbio/dbio.dart';
+
 
 class CampfirePage extends StatefulWidget {
   static const routeName = '/campfire_page';
@@ -13,11 +15,11 @@ class CampfirePage extends StatefulWidget {
 
 class _CampfirePageState extends State<CampfirePage> {
 
+  DBIO dbio = new DBIO();
+  Map<String, dynamic> _data;
+
   /* 매칭상대 리스트 */
   final List<Widget> w_team_list = [];
-
-  /* 프로필이미지 리스트 */
-  final List<Widget> w_profile_img_list = [];
 
   /* 소개이미지 리스트 */
   final List<String> imgList = [];
@@ -30,11 +32,19 @@ class _CampfirePageState extends State<CampfirePage> {
     /* 매칭상대 리스트 */
     w_team_list.clear();
 
-    /* 프로필이미지 리스트 */
-    w_profile_img_list.clear();
 
     /* 태그 리스트 */
     w_w_tag_list.clear();
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+
+
+
+
   }
 
   @override
@@ -73,22 +83,20 @@ class _CampfirePageState extends State<CampfirePage> {
     /* 매칭상대 리스트 */
     w_team_list.clear();
 
-    /* 프로필이미지 리스트 */
-    w_profile_img_list.clear();
-
     /* 태그 리스트 */
     w_w_tag_list.clear();
 
     imgList.clear();
-    imgList.add('https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg');
-    imgList.add('https://images.unsplash.com/photo-1522205408450-add114ad53fe?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=368f45b0888aeb0b7b08e3a1084d3ede&auto=format&fit=crop&w=1950&q=80');
-    imgList.add('https://images.unsplash.com/photo-1519125323398-675f0ddb6308?ixlib=rb-0.3.5&ixid=eyJhcHBfaWQiOjEyMDd9&s=94a1e718d89ca60a6337a6008341ca50&auto=format&fit=crop&w=1950&q=80');
 
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      imgList.forEach((imageUrl) {
-        precacheImage(NetworkImage(imageUrl), context);
+    imgList.add('https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg');
+
+    if(imgList.length > 0){
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        imgList.forEach((imageUrl) {
+          precacheImage(NetworkImage(imageUrl), context);
+        });
       });
-    });
+    }
 
     /* 태그 리스트 */
     for(int i=0; i < 1; i++){
@@ -109,26 +117,6 @@ class _CampfirePageState extends State<CampfirePage> {
         );
     }
 
-    /* 프로필이미지 리스트 */
-    for(int i=0; i < 4; i++){
-      w_profile_img_list.add(
-          Container(
-            padding: EdgeInsets.only(right: 5.0, top: 5.0),
-            width: height_profile_img,
-            child: SizedBox(
-                width: height_profile_img,
-                height: height_profile_img,
-                child: CircleAvatar(
-                  backgroundColor: Color(pointColor),
-                  backgroundImage: NetworkImage(
-                      'https://pds.joins.com/news/component/htmlphoto_mmdata/201911/25/5400f271-49e2-4061-ad1a-5efc68ef2ec3.jpg'
-                  ),
-                )
-            ),
-          )
-      );
-    }
-
     // initState에서 화면에 뿌려질 리스트를 수신받아서 리스트 구성
     w_team_list.add(
       Container(
@@ -146,16 +134,6 @@ class _CampfirePageState extends State<CampfirePage> {
                   Padding(
                     padding: EdgeInsets.all(padding3),
                   ),
-                  /*Container(
-                    height: height_profile_img,
-                    child: ListView(
-                        scrollDirection: Axis.horizontal,
-                        children: w_profile_img_list,
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.all(padding3),
-                  ),*/
                 ],
               ),
             ),
@@ -167,53 +145,6 @@ class _CampfirePageState extends State<CampfirePage> {
                   });
                   Navigator.push(context, CupertinoPageRoute(builder: (context) => CampfireDetailPage()));
                 }),
-            /*Column(
-              children: <Widget>[
-                CarouselSlider(
-                  options: CarouselOptions(
-                    autoPlay: false,
-                    aspectRatio: 1/1, // 1/1, 4/3, 16/9
-                    enlargeCenterPage: false,
-                    viewportFraction: 1.0,
-                    onPageChanged: (index, reason) {
-                      setState(() {
-                        _current = index;
-                      });
-                    },
-                  ),
-                  items: imgList.map((item) => GestureDetector(
-                    child: Container(
-                      child: Center(
-                          child: Image.network(item, fit: BoxFit.cover, width: width_img_slide)
-                      ),
-                    ),
-                    onTap: () {
-                      setState(() {
-                        clearLists();
-                      });
-                      Navigator.push(context, CupertinoPageRoute(builder: (context) => CampfireDetailPage()));
-                    },
-                  )).toList(),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: imgList.map((url) {
-                    int index = imgList.indexOf(url);
-                    return Container(
-                      width: 8.0,
-                      height: 8.0,
-                      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _current == index
-                            ? Color(pointColor)
-                            : Colors.black26,
-                      ),
-                    );
-                  }).toList(),
-                ),
-              ],
-            ),*/
             Padding(
               padding: EdgeInsets.all(padding3),
             ),
@@ -240,12 +171,6 @@ class _CampfirePageState extends State<CampfirePage> {
         ),
       ),
     );
-
-    w_team_list.add(w_team_list[0]);
-    w_team_list.add(w_team_list[0]);
-    w_team_list.add(w_team_list[0]);
-    w_team_list.add(w_team_list[0]);
-
 
     return Scaffold(
       backgroundColor: Colors.white,
