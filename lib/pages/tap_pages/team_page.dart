@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:campfire/consts/common_values.dart';
 import 'package:flutter/services.dart';
 import 'package:campfire/util/global.dart';
-import 'package:kakao_flutter_sdk/all.dart';
+//import 'package:kakao_flutter_sdk/all.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -460,7 +460,7 @@ class _TeamPageState extends State<TeamPage> {
                                   onPressed: () async {
 
                                     debugPrint('초대 클릭');
-
+                                    /*
                                     KakaoContext.clientId = "8a859e5bd31345db3d2afaac61111a91";
                                     KakaoContext.javascriptClientId = "6a46541295b0c6578cf168632da58cab";
 
@@ -470,7 +470,7 @@ class _TeamPageState extends State<TeamPage> {
                                     //defaultWithTalk(, serverCallbackArgs: null);
                                     //custom(16761, templateArgs: {"key1": "value1"});
                                     await LinkClient.instance.launchKakaoTalk(uri);
-
+                                    */
                                   },
                                 ),
                               ),
@@ -1266,7 +1266,7 @@ class _TeamPageState extends State<TeamPage> {
             toolbarColor: Colors.white,
             toolbarWidgetColor: Color(pointColor),
             activeControlsWidgetColor: Color(pointColor),
-            activeWidgetColor: Color(pointColor),
+            //activeWidgetColor: Color(pointColor),
             initAspectRatio: CropAspectRatioPreset.square,
             lockAspectRatio: true),
         iosUiSettings: IOSUiSettings(

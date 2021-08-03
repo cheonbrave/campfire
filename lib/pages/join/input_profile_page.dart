@@ -88,7 +88,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
         elevation: 0.0,
       ),
       resizeToAvoidBottomInset: false,
-      resizeToAvoidBottomPadding: false,
+      //resizeToAvoidBottomPadding: false,
       body: _makeBody(),
       backgroundColor: Colors.white,
     );
@@ -394,7 +394,7 @@ class _InputProfilePageState extends State<InputProfilePage> {
             toolbarColor: Colors.white,
             toolbarWidgetColor: Color(pointColor),
             activeControlsWidgetColor: Color(pointColor),
-            activeWidgetColor: Color(pointColor),
+            //activeWidgetColor: Color(pointColor),
             initAspectRatio: CropAspectRatioPreset.square,
             lockAspectRatio: true),
         iosUiSettings: IOSUiSettings(
