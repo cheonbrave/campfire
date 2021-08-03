@@ -46,7 +46,7 @@ dependencies:
   path_provider: ^1.6.7
 
   # kakao 기능 사용을 위한 패키지 추가 START
-  kakao_flutter_sdk: ^0.4.2
+  #kakao_flutter_sdk: ^0.4.2
   dio: ^3.0.3
   json_serializable: ^3.0.0
   shared_preferences: ^0.5.6
